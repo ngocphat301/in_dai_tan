@@ -38,7 +38,7 @@ header.dm-header
                       - slice.each do |cat|
                         li = link_to cat.name, product_category_nav_url(cat)
             - else
-              p.dm-muted style="margin:0;font-size:0.9rem" Chưa có danh mục — chạy db:seed hoặc thêm trong quản trị.
+              p.dm-muted style="margin:0;font-size:0.9rem" Chưa có danh mục.
         li.dm-nav__item class="#{'is-active' if nav_active?(:blog)}"
           = link_to "Tin tức", blog_news_index_path, class: nav_link_class(:blog)
         li.dm-nav__item class="#{'is-active' if nav_active?(:blog_projects)}"
