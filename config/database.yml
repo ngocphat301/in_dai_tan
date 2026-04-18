@@ -68,18 +68,20 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: <%= ENV['DATABASE_URL'] %>
-    username: <%= ENV['DB_USERNAME'] %>
-    password: <%= ENV["DB_PASSWORD"] %>
+    host: <%= ENV.fetch("DB_HOST", "127.0.0.1") %>
+    port: <%= ENV.fetch("DB_PORT", "5432").to_i %>
+    database: <%= ENV.fetch("DB_NAME", "app_production") %>
+    username: <%= ENV.fetch("DB_USERNAME", "app") %>
+    password: <%= ENV["DB_PASSWORD"] || ENV["APP_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
-    database: app_production_cache
+    database: <%= ENV.fetch("DB_CACHE_NAME") { "#{ENV.fetch('DB_NAME', 'app_production')}_cache" } %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: app_production_queue
+    database: <%= ENV.fetch("DB_QUEUE_NAME") { "#{ENV.fetch('DB_NAME', 'app_production')}_queue" } %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: app_production_cable
+    database: <%= ENV.fetch("DB_CABLE_NAME") { "#{ENV.fetch('DB_NAME', 'app_production')}_cable" } %>
     migrations_paths: db/cable_migrate
