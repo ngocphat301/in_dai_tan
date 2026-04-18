@@ -18,3 +18,7 @@
       = f.label :remember_me, "Ghi nhớ đăng nhập"
   .devise-actions
     = f.submit "Đăng nhập", class: "devise-submit"
+- if devise_mapping.registerable?
+  p.devise-card__footer
+    | Chưa có tài khoản? 
+    = link_to "Đăng ký", new_registration_path(resource_name), class: "devise-card__back"
