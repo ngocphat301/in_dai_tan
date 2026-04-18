@@ -1,0 +1,31 @@
+- content_for :title, "Đăng ký"
+- content_for :devise_lead, "Tạo tài khoản"
+
+- if notice.present?
+  p.devise-alert.devise-alert--notice = notice
+- if alert.present?
+  p.devise-alert.devise-alert--error = alert
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "devise-form" }) do |f|
+  - if resource.errors.any?
+    .devise-errors role="alert"
+      p.devise-errors__title Không thể tạo tài khoản:
+      ul.devise-errors__list
+        - resource.errors.full_messages.each do |message|
+          li = message
+  .devise-field
+    = f.label :email, "Email"
+    = f.email_field :email, autofocus: true, autocomplete: "email", class: "devise-input"
+  .devise-field
+    = f.label :password, "Mật khẩu"
+    - if @minimum_password_length
+      span.devise-field__hint = "(tối thiểu #{@minimum_password_length} ký tự)"
+    = f.password_field :password, autocomplete: "new-password", class: "devise-input"
+  .devise-field
+    = f.label :password_confirmation, "Xác nhận mật khẩu"
+    = f.password_field :password_confirmation, autocomplete: "new-password", class: "devise-input"
+  .devise-actions
+    = f.submit "Đăng ký", class: "devise-submit"
+p.devise-card__footer
+  | Đã có tài khoản? 
+  = link_to "Đăng nhập", new_session_path(resource_name), class: "devise-card__back"
