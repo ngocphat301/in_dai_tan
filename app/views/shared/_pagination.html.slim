@@ -1,0 +1,20 @@
+- total_pages = local_assigns.fetch(:total_pages, 1).to_i
+- page = local_assigns.fetch(:page, 1).to_i
+- total_count = local_assigns.fetch(:total_count, nil)
+- prev_path = local_assigns[:prev_path]
+- next_path = local_assigns[:next_path]
+- if total_pages > 1
+  nav.dm-pagination aria-label="Phân trang"
+    - if prev_path.present?
+      = link_to "← Trước", prev_path, class: "dm-pagination__link", rel: "prev"
+    - else
+      span.dm-pagination__link.dm-pagination__link--disabled ← Trước
+    p.dm-pagination__meta
+      span Trang #{page} / #{total_pages}
+      - if total_count.present?
+        span.dm-pagination__count
+          = " (#{total_count} mục)"
+    - if next_path.present?
+      = link_to "Sau →", next_path, class: "dm-pagination__link", rel: "next"
+    - else
+      span.dm-pagination__link.dm-pagination__link--disabled Sau →

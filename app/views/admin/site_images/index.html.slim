@@ -1,0 +1,40 @@
+- content_for :title, "Ảnh site (banner / poster)"
+- q_p = params[:q].presence
+.admin-index-page
+  h1 Ảnh site
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Alt, link, tiêu đề popup…"
+    .admin-index-toolbar__right
+      = link_to "Thêm ảnh", new_admin_site_image_path, class: "btn"
+- if @site_images.any?
+  .admin-table-wrap
+    table
+      thead
+        tr
+          th Ảnh
+          th = admin_sort_link("category", "Danh mục")
+          th = admin_sort_link("position", "Thứ tự")
+          th = admin_sort_link("published", "Hiển thị")
+          th Link
+          th = admin_sort_link("updated_at", "Cập nhật")
+          th
+      tbody
+        - @site_images.each do |img|
+          tr
+            td
+              - if img.file.attached?
+                = image_tag img.file, style: "width:96px;height:54px;object-fit:cover;border-radius:4px"
+              - else
+                span.muted —
+            td = SiteImage.category_label_for(img.category)
+            td = img.position
+            td = img.published? ? "Có" : "Không"
+            td.muted = img.link_url.present? ? img.link_url.truncate(32) : "—"
+            td = img.updated_at.strftime("%d/%m/%Y %H:%M")
+            td.admin-table-actions
+              = admin_icon_edit_link(edit_admin_site_image_path(img), title: "Sửa ảnh")
+              = admin_icon_destroy_link(admin_site_image_path(img), confirm: "Xóa ảnh này?", title: "Xóa ảnh")
+- else
+  p Chưa có ảnh. Thêm ảnh loại «banner» (đã bật hiển thị) để làm slide trang chủ.
+= render "admin/shared/pagination"

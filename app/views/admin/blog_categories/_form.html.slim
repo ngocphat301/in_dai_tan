@@ -1,0 +1,18 @@
+- if blog_category.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - blog_category.errors.full_messages.each do |msg|
+        li = msg
+= form_with model: [:admin, blog_category] do |f|
+  = f.label :name, "Tên danh mục"
+  = f.text_field :name
+  = f.label :slug, "Slug (URL)"
+  p.muted Dùng trong tham số lọc blog (?category=slug). Để trống sẽ tự tạo từ tên.
+  = f.text_field :slug, placeholder: "vd: services"
+  = f.label :position, "Thứ tự hiển thị"
+  = f.number_field :position, min: 0, step: 1
+  = f.label :kind, "Loại danh mục"
+  p.muted Dùng để phân loại nội dung (ví dụ «Sản phẩm» hiển thị khối trên trang chủ).
+  = f.select :kind, [ [ "Tin tức", "news" ], [ "Dự án", "project" ], [ "Dịch vụ", "service" ], [ "Sản phẩm", "product" ], [ "Quảng cáo / Ads", "ads" ], [ "Quy mô xưởng in", "factory_scale" ] ]
+  p style="margin-top:1rem"
+    = f.submit (blog_category.new_record? ? "Tạo" : "Cập nhật"), class: "btn"

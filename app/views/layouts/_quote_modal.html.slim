@@ -1,0 +1,12 @@
+dialog.dm-quote-modal#quote-request-dialog data-quote-modal-target="dialog" data-action="click->quote-modal#backdropClose"
+  .dm-quote-modal__panel
+    .dm-quote-modal__head
+      h2.dm-quote-modal__title
+        | Yêu cầu 
+        span báo giá
+      button.dm-quote-modal__x type="button" data-action="click->quote-modal#close" aria-label="Đóng"
+        | ×
+    .dm-quote-modal__body
+      p.dm-muted.dm-quote-modal__intro
+        | Điền thông tin — chúng tôi sẽ liên hệ tư vấn và báo giá.
+      = render "quote_requests/form"

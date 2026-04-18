@@ -1,0 +1,21 @@
+- posts = local_assigns[:posts]
+- heading_id = local_assigns.fetch(:heading_id, "dm-related-articles-title")
+- if posts.present?
+  section.dm-related-products.dm-related-products--aside aria-labelledby=heading_id
+    h2 id=heading_id class="dm-related-products__title" Bài viết liên quan
+    ul.dm-related-products__stack role="list"
+      - posts.each do |post|
+        li.dm-related-products__stack-item
+          = link_to blog_post_related_path(post), class: "dm-related-products__stack-link" do
+            .dm-related-products__stack-media
+              - if post.avatar.attached?
+                = blog_post_avatar_tag post, variant: { resize_to_fill: [208, 144] }, alt: post.title, class: "dm-related-products__stack-img", loading: "lazy"
+              - else
+                = image_tag "blog_avatar_placeholder.svg", alt: post.title, class: "dm-related-products__stack-img", loading: "lazy"
+            .dm-related-products__stack-body
+              span.dm-related-products__stack-name= post.title
+              - desc = post.excerpt.presence || truncate(post.search_body_plain, length: 320).presence
+              p.dm-related-products__stack-desc= desc.presence || "…"
+              - if post.published_at.present?
+                time.dm-related-products__stack-meta datetime=post.published_at.iso8601
+                  = post.published_at.strftime("%d/%m/%Y")

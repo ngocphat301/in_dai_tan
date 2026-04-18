@@ -1,0 +1,14 @@
+- q_val = params[:q].to_s
+- kind = header_search_kind
+- post_scope_for_suggest = (kind == "post" ? header_search_post_scope : "")
+- suggest_url = search_suggestions_path(format: :json)
+.dm-header__search.dm-header__search--suggest role="search" data-controller="search-suggest" data-search-suggest-url-value=suggest_url data-search-suggest-kind-value=kind data-search-suggest-post-scope-value=post_scope_for_suggest
+  = form_with url: search_path, method: :get, local: true, class: "dm-header-search", data: { turbo: false } do
+    = hidden_field_tag :kind, kind
+    - if kind == "post"
+      = hidden_field_tag :post_scope, header_search_post_scope
+    label.visually-hidden for="dm_header_q" Từ khóa
+    = text_field_tag :q, q_val, id: "dm_header_q", class: "dm-header-search__input", placeholder: header_search_placeholder, autocomplete: "off", data: { search_suggest_target: "input", action: "input->search-suggest#onInput focus->search-suggest#onFocus" }
+    button.dm-header-search__submit type="submit" aria-label="Tìm kiếm"
+      | ⌕
+  ul.dm-search-suggest.dm-search-suggest--header data-search-suggest-target="panel" hidden=true aria-live="polite"

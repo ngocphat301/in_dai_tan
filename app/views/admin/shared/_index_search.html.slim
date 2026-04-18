@@ -1,0 +1,10 @@
+.admin-index-search
+  = form_with url: request.path, method: :get, local: true, class: "admin-index-search__form", role: "search" do
+    - request.query_parameters.except("q", "page").each do |key, val|
+      - next if val.blank?
+      = hidden_field_tag key, val
+    = label_tag :q, "Tìm kiếm", class: "visually-hidden"
+    = text_field_tag :q, params[:q], placeholder: (local_assigns[:placeholder] || "Tìm…"), class: "admin-input admin-index-search__input", id: "admin_index_q", autocomplete: "off", aria: { label: "Tìm kiếm" }
+    = submit_tag "Tìm", class: "btn btn--sm"
+    - if params[:q].present?
+      = link_to "Xóa tìm", admin_clear_search_url, class: "admin-search-clear"

@@ -1,0 +1,5 @@
+- content_for :title, "Sửa ảnh site"
+h1 Sửa ảnh
+= render "form", site_image: @site_image
+p style="margin-top:1rem"
+  = link_to "← Danh sách", admin_site_images_path, class: "btn ghost"

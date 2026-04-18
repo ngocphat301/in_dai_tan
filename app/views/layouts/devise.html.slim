@@ -1,0 +1,24 @@
+doctype html
+html lang="vi"
+  head
+    title
+      - if content_for?(:title)
+        = "#{yield :title} | Đăng nhập"
+      - else
+        | Đăng nhập | In Tân Đại
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    = csrf_meta_tags
+    = csp_meta_tag
+    link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any"
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_importmap_tags
+  body.devise-body
+    .devise-page
+      .devise-card
+        .devise-card__brand
+          = link_to root_path, class: "devise-card__logo-link"
+            = image_tag site_brand_logo_url, alt: "In Tân Đại", width: 300, height: 88, loading: "eager"
+          p.devise-card__lead Đăng nhập quản trị viên
+        = yield
+        p.devise-card__footer
+          = link_to "← Về trang chủ", root_path, class: "devise-card__back"

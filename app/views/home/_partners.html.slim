@@ -1,0 +1,30 @@
+- partner_shown = @partner_images.select { |img| img.file.attached? }
+- collage_items = partner_shown.first(7)
+- areas = %w[hero c2 c3 c4 c5 c6 c7]
+section#dm-partners.dm-partners.dm-partners--collage aria-labelledby="dm-partners-heading"
+  h2#dm-partners-heading.visually-hidden Đối tác của chúng tôi
+  .dm-partners__shell
+    .dm-partners__decor.dm-partners__decor--tl aria-hidden="true"
+      svg viewBox="0 0 200 120" preserveAspectRatio="xMinYMin slice" focusable="false"
+        path fill="none" stroke="#5c4a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.35" d="M0 90 Q40 20 95 45 T190 10 M15 115 Q55 50 100 70 T200 40"
+    .dm-partners__decor.dm-partners__decor--br aria-hidden="true"
+      svg viewBox="0 0 200 120" preserveAspectRatio="xMaxYMax slice" focusable="false"
+        path fill="none" stroke="#5c4a3a" stroke-width="1.2" stroke-linecap="round" opacity="0.35" d="M10 110 Q60 60 110 85 T200 50 M0 70 Q50 30 120 55 T200 20"
+    header.dm-partners__head
+      p.dm-partners__subheading Đối tác của chúng tôi
+      .dm-partners__accent-line aria-hidden="true"
+    - if collage_items.any?
+      ul.dm-partners__collage-grid role="list"
+        - collage_items.each_with_index do |img, i|
+          - area = areas[i]
+          - url = img.link_url.presence || "#"
+          - alt = img.alt_text.presence || "Đối tác"
+          li.dm-partners__tile class="dm-partners__tile--#{area}"
+            - if url == "#"
+              .dm-partners__tile-inner
+                = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
+            - else
+              = link_to url, target: "_blank", rel: "noopener noreferrer", class: "dm-partners__tile-inner dm-partners__link" do
+                = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
+    - else
+      p.dm-muted.dm-partners__empty Không có logo đối tác. Thêm ảnh loại «Đối tác» trong quản trị (Ảnh site).

@@ -1,0 +1,58 @@
+.dm-topbar
+  .dm-container.dm-topbar__inner
+    span.dm-topbar__addr
+      | Lô D10 – 7, Cụm làng nghề Triều Khúc – Tân Triều – Thanh Trì – Hà Nội
+    .dm-topbar__contact
+      = link_to social_hotline_tel, class: "dm-topbar__link" do
+        span.dm-topbar__icon aria-hidden="true" ☎
+        = social_hotline_display
+      = link_to "mailto:kinhdoanh@indaiminh.com", class: "dm-topbar__link" do
+        span.dm-topbar__icon aria-hidden="true" ✉
+        | kinhdoanh@indaiminh.com
+      button.dm-topbar__cta type="button" data-action="click->quote-modal#open" data-return-to="home"
+        | Gửi yêu cầu báo giá
+
+header.dm-header
+  .dm-container.dm-header__row
+    = link_to root_path, class: "dm-brand" do
+      = image_tag site_brand_logo_url, alt: "In Tân Đại", class: "dm-brand__logo", width: 300, height: 88, loading: "lazy"
+    = render "shared/header_search"
+    input#dm-menu-toggle.dm-menu-toggle type="checkbox" tabindex="-1" aria-hidden="true"
+    label.dm-menu-burger for="dm-menu-toggle" aria-label="Mở menu"
+      span
+      span
+      span
+    nav.dm-nav aria-label="Menu chính"
+      ul.dm-nav__list
+        li.dm-nav__item.dm-nav__item--mega class="#{'is-active' if nav_active?(:services_mega)}"
+          button.dm-nav__trigger type="button" aria-expanded="false" class=nav_trigger_class(:services_mega)
+            | Dịch vụ in
+            span.dm-nav__caret aria-hidden="true"
+          .dm-mega
+            - cats = @header_product_categories&.to_a || []
+            - if cats.any?
+              .dm-mega__grid
+                - cats.each_slice(4) do |slice|
+                  .dm-mega__col
+                    ul.dm-mega__links
+                      - slice.each do |cat|
+                        li = link_to cat.name, product_category_nav_url(cat)
+            - else
+              p.dm-muted style="margin:0;font-size:0.9rem" Chưa có danh mục — chạy db:seed hoặc thêm trong quản trị.
+        li.dm-nav__item class="#{'is-active' if nav_active?(:blog)}"
+          = link_to "Tin tức", blog_news_index_path, class: nav_link_class(:blog)
+        li.dm-nav__item class="#{'is-active' if nav_active?(:blog_projects)}"
+          = link_to "Dự án", blog_projects_path, class: nav_link_class(:blog_projects)
+        li.dm-nav__item class="#{'is-active' if nav_active?(:about)}"
+          = link_to "Giới thiệu", about_path, class: nav_link_class(:about)
+        li.dm-nav__item class="#{'is-active' if nav_active?(:contact)}"
+          = link_to "Liên hệ", contact_path, class: nav_link_class(:contact)
+        - if current_admin?
+          li.dm-nav__item
+            = link_to "Quản trị", admin_blog_posts_path, class: "dm-nav__link dm-nav__link--accent"
+        - if nav_user
+          li.dm-nav__item
+            = link_to "Đăng xuất", destroy_user_session_path, class: "dm-nav__link", data: { turbo_method: :delete }
+        - else
+          li.dm-nav__item
+            = link_to "Đăng nhập", new_user_session_path, class: "dm-nav__link"

@@ -1,0 +1,10 @@
+- outline = local_assigns[:outline]
+- title_id = local_assigns.fetch(:outline_title_id, "dm-blog-outline-title")
+- if outline.present?
+  nav.dm-blog-outline aria-labelledby=title_id
+    p id=title_id class="dm-blog-outline__title" Mục lục
+    ol.dm-blog-outline__list
+      - outline.each do |item|
+        li class="dm-blog-outline__item dm-blog-outline__item--#{item[:level]}"
+          a.dm-blog-outline__link href="##{item[:id]}"
+            = item[:text].truncate(100)

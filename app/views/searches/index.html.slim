@@ -1,0 +1,49 @@
+- content_for :title, "Tìm kiếm"
+.dm-article.dm-search-page
+  h1.dm-search-page__title Kết quả tìm kiếm
+
+  - if @q.blank?
+    p.dm-muted Nhập từ khóa ở ô tìm trên header rồi bấm tìm.
+  - else
+    - if @kind == "product"
+      - if @products.any?
+        .dm-pro-grid style="margin-top:1rem"
+          - @products.each do |product|
+            = link_to product_path(product), class: "dm-card" do
+              - if product.cover_image&.file&.attached?
+                = image_tag product.cover_image.file, alt: product.name, class: "dm-card__img"
+              - else
+                .dm-card__ph Chưa có ảnh
+              .dm-card__meta
+                strong== search_highlight(product.name, @q)
+                p.dm-muted= product.product_category&.name
+                p.dm-muted= number_to_currency(product.sale_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+      - else
+        p.dm-muted Không có sản phẩm nào phù hợp với «#{@q}».
+    - else
+      - if @posts.any?
+        p.dm-muted
+          strong= @posts.size
+          |  bài viết phù hợp.
+        ul.dm-blog-list style="margin-top:1rem"
+          - @posts.each do |post|
+            li.dm-blog-list__item
+              = link_to blog_post_path(post.slug), class: "dm-blog-list__thumb" do
+                = blog_post_avatar_tag post, variant: { resize_to_fill: [160, 112] }, alt: post.title, class: "dm-blog-list__img", loading: "lazy"
+              .dm-blog-list__body
+                = link_to blog_post_path(post.slug) do
+                  strong== search_highlight(post.title, @q)
+                p.dm-muted
+                  = post.category_label
+                  - if post.published_at.present?
+                    |  
+                    time datetime=post.published_at.iso8601
+                      = post.published_at.strftime("%d/%m/%Y")
+                  - if post.excerpt.present?
+                    |  — 
+                    == search_highlight(post.excerpt.truncate(180), @q)
+      - else
+        p.dm-muted Không có bài viết phù hợp.
+
+  p style="margin-top:2rem"
+    = link_to "Về trang chủ", root_path, class: "dm-back"

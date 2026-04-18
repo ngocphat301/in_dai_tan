@@ -1,0 +1,20 @@
+- if product_category.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - product_category.errors.full_messages.each do |msg|
+        li = msg
+= form_with model: [:admin, product_category] do |f|
+  = f.label :name, "Tên danh mục"
+  = f.text_field :name
+  = f.label :slug, "Slug (URL)"
+  p.muted Để trống sẽ tự tạo từ tên. Chỉ dùng chữ thường, số và gạch ngang.
+  = f.text_field :slug, placeholder: "vd: an-pham-van-phong"
+  = f.label :position, "Thứ tự hiển thị"
+  = f.number_field :position, min: 0, step: 1
+  = f.label :blog_post_id, "Bài blog «Dịch vụ» (tùy chọn)"
+  = f.collection_select :blog_post_id, @service_blog_posts, :id, :title,
+    { include_blank: "— Không gắn — (menu chỉ lọc sản phẩm trên trang chủ)" }, {}
+  p.muted
+    | Khi đã chọn và bài đang xuất bản: menu «Dịch vụ in» và lọc sản phẩm sẽ dẫn tới bài blog này. Chỉ chọn bài thuộc danh mục blog Dịch vụ.
+  p style="margin-top:1rem"
+    = f.submit (product_category.new_record? ? "Tạo" : "Cập nhật"), class: "btn"

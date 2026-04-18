@@ -1,0 +1,18 @@
+- if user.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - user.errors.full_messages.each do |msg|
+        li = msg
+= form_with model: [:admin, user] do |f|
+  = f.label :email, "Email"
+  = f.email_field :email, autocomplete: "email"
+  = f.label :role, "Vai trò"
+  = f.select :role, [["Member", "member"], ["Admin", "admin"]]
+  = f.label :password, "Mật khẩu"
+  - if user.persisted?
+    p.muted style="margin:0.25rem 0 0.5rem" Để trống nếu không đổi mật khẩu.
+  = f.password_field :password, autocomplete: "new-password"
+  = f.label :password_confirmation, "Xác nhận mật khẩu"
+  = f.password_field :password_confirmation, autocomplete: "new-password"
+  p style="margin-top:1rem"
+    = f.submit (user.new_record? ? "Tạo" : "Cập nhật"), class: "btn"

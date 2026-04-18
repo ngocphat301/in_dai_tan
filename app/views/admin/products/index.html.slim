@@ -1,0 +1,43 @@
+- content_for :title, "Sản phẩm"
+.admin-index-page
+  h1 Danh sách sản phẩm
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Tìm theo tên, mô tả…"
+    .admin-index-toolbar__right
+      = link_to "Thêm sản phẩm", new_admin_product_path, class: "btn"
+- if @products.any?
+  .admin-table-wrap
+    table
+      thead
+        tr
+          th Ảnh
+          th = admin_sort_link("name", "Tên")
+          th Danh mục
+          th = admin_sort_link("sale_price_vnd", "Giá")
+          th = admin_sort_link("updated_at", "Cập nhật")
+          th Hiển thị
+          th
+      tbody
+        - @products.each do |p|
+          tr
+            td
+              - if p.cover_image&.file&.attached?
+                = image_tag p.cover_image.file, style: "width:48px;height:48px;object-fit:cover;border-radius:4px"
+              - else
+                span.muted —
+            td = link_to p.name, admin_product_path(p)
+            td = p.product_category&.name
+            td = number_to_currency(p.sale_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+            td = p.updated_at.strftime("%d/%m/%Y %H:%M")
+            td
+              = button_to toggle_published_admin_product_path(p), method: :patch, class: "admin-status-toggle#{' is-on' if p.published?}", form: { data: { turbo: true } } do
+                span.admin-status-toggle__track
+                  span.admin-status-toggle__knob
+                span.visually-hidden = p.published? ? "Đang hiển thị — bấm để ẩn" : "Đang ẩn — bấm để hiện"
+            td.admin-table-actions
+              = admin_icon_edit_link(edit_admin_product_path(p), title: "Sửa sản phẩm")
+              = admin_icon_destroy_link(admin_product_path(p), confirm: "Xóa sản phẩm này?", title: "Xóa sản phẩm")
+- else
+  p Chưa có sản phẩm.
+= render "admin/shared/pagination"

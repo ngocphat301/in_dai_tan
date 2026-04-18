@@ -1,0 +1,37 @@
+- content_for :title, "Danh mục sản phẩm"
+.admin-index-page
+  h1 Danh mục sản phẩm
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Tên hoặc slug…"
+    .admin-index-toolbar__right
+      = link_to "Thêm danh mục", new_admin_product_category_path, class: "btn"
+- if @product_categories.any?
+  .admin-table-wrap
+    table
+      thead
+        tr
+          th = admin_sort_link("name", "Tên")
+          th = admin_sort_link("slug", "Slug")
+          th Bài blog (Dịch vụ)
+          th = admin_sort_link("position", "Thứ tự")
+          th = admin_sort_link("updated_at", "Cập nhật")
+          th
+      tbody
+        - @product_categories.each do |c|
+          tr
+            td = c.name
+            td.muted = c.slug
+            td
+              - if c.blog_post.present?
+                = link_to c.blog_post.title.truncate(40), edit_admin_blog_post_path(c.blog_post), class: "admin-table-action"
+              - else
+                span.muted —
+            td = c.position
+            td = c.updated_at.strftime("%d/%m/%Y %H:%M")
+            td.admin-table-actions
+              = admin_icon_edit_link(edit_admin_product_category_path(c), title: "Sửa danh mục")
+              = admin_icon_destroy_link(admin_product_category_path(c), confirm: "Xóa danh mục? (chỉ khi không còn sản phẩm)", title: "Xóa danh mục")
+- else
+  p Chưa có danh mục.
+= render "admin/shared/pagination"

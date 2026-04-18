@@ -1,0 +1,98 @@
+- content_for :title, @blog_list_title
+- if @blog_list_layout == :hub
+  article.dm-article.dm-news-hub
+    header.dm-news-hub__header
+      h1.dm-news-hub__page-title= @blog_list_title
+
+    - if @featured_post
+      = link_to blog_post_path(@featured_post.slug), class: "dm-news-hub__featured"
+        .dm-news-hub__featured-media
+          = blog_post_avatar_tag @featured_post, variant: { resize_to_fill: [960, 540] }, alt: @featured_post.title, class: "dm-news-hub__featured-img", loading: "eager"
+        .dm-news-hub__featured-body
+          span.dm-news-hub__featured-badge= @featured_post.blog_category&.name.presence || "Tin"
+          h2.dm-news-hub__featured-title= @featured_post.title
+          - feat_desc = @featured_post.excerpt.presence || truncate(@featured_post.search_body_plain, length: 320)
+          - if feat_desc.present?
+            p.dm-news-hub__featured-desc= feat_desc
+          - if @featured_post.published_at.present?
+            time.dm-news-hub__featured-date datetime=@featured_post.published_at.iso8601
+              = @featured_post.published_at.strftime("%d/%m/%Y")
+          span.dm-news-hub__featured-cta Xem Ngay
+
+    section.dm-news-hub__all aria-labelledby="dm-news-hub-all-title"
+      - if @blog_posts.any?
+        .dm-news-hub__grid
+          - @blog_posts.each do |p|
+            article.dm-news-hub__card
+              = link_to blog_post_path(p.slug), class: "dm-news-hub__card-link"
+                .dm-news-hub__card-media
+                  = blog_post_avatar_tag p, variant: { resize_to_fill: [560, 320] }, alt: p.title, class: "dm-news-hub__card-img", loading: "lazy"
+                .dm-news-hub__card-body
+                  h3.dm-news-hub__card-title= p.title.truncate(90)
+                  - if p.excerpt.present?
+                    p.dm-news-hub__card-excerpt= p.excerpt.to_s.truncate(160)
+                  span.dm-news-hub__card-read
+                    | Đọc bài
+                    span.dm-news-hub__card-read-arrow aria-hidden="true" →
+                span.dm-news-hub__card-accent aria-hidden="true"
+      - elsif @featured_post.blank?
+        p.dm-muted Chưa có bài tin nào được xuất bản.
+
+    = render "shared/pagination", page: @page, total_pages: @total_pages, total_count: @total_count, prev_path: @prev_path, next_path: @next_path
+- elsif @blog_list_layout == :project_cards
+  article.dm-article.dm-project-hub
+    header.dm-project-hub__intro
+      .dm-project-hub__intro-main
+        p.dm-project-hub__eyebrow Dự án của chúng tôi
+        h1#dm-project-hub-title.dm-project-hub__headline
+          | Kiến tạo 
+          span.dm-project-hub__accent thương hiệu
+          |  – Gói trọn mọi 
+          span.dm-project-hub__accent giải pháp in ấn
+      .dm-project-hub__intro-aside
+        p.dm-project-hub__intro-text
+          | Từ hộp giấy, bao bì đến ấn phẩm thương mại — mỗi dự án được chúng tôi đồng hành từ lúc chốt thông số kỹ thuật, chọn chất liệu và quy cách in, đến khi bàn giao thành phẩm đúng tiến độ. Xem các dự án đã xuất bản bên dưới; mỗi thẻ là một hồ sơ minh họa quy trình và chất lượng in tại xưởng.
+
+    - if @blog_posts.any?
+      .dm-project-tiles role="list"
+        - @blog_posts.each do |p|
+          = link_to blog_post_path(p.slug), class: "dm-project-tile", role: "listitem"
+            .dm-project-tile__media
+              - if p.avatar.attached?
+                = blog_post_avatar_tag p, variant: { resize_to_fill: [720, 960] }, alt: p.title, class: "dm-project-tile__img", loading: "lazy"
+              - else
+                = image_tag "blog_avatar_placeholder.svg", alt: p.title, class: "dm-project-tile__img dm-project-tile__img--ph", loading: "lazy"
+            .dm-project-tile__overlay aria-hidden="true"
+            .dm-project-tile__body
+              h2.dm-project-tile__title= p.title
+              - desc = p.excerpt.presence || truncate(p.search_body_plain, length: 140)
+              - if desc.present?
+                p.dm-project-tile__desc= desc
+              span.dm-project-tile__cta Xem thêm
+    - else
+      p.dm-muted Chưa có dự án nào được xuất bản.
+
+    = render "shared/pagination", page: @page, total_pages: @total_pages, total_count: @total_count, prev_path: @prev_path, next_path: @next_path
+- else
+  article.dm-article
+    h1= @blog_list_title
+    p.dm-muted= @blog_list_subtitle.presence || "Các bài tin đã xuất bản."
+
+    - if @blog_posts.any?
+      ul.dm-blog-list
+        - @blog_posts.each do |p|
+          li.dm-blog-list__item
+            = link_to blog_post_path(p.slug), class: "dm-blog-list__thumb" do
+              = blog_post_avatar_tag p, variant: { resize_to_fill: [160, 112] }, alt: p.title, class: "dm-blog-list__img", loading: "lazy"
+            .dm-blog-list__body
+              = link_to blog_post_path(p.slug) do
+                strong= p.title
+              p.dm-muted
+                = p.published_at&.strftime("%d/%m/%Y")
+                - if p.excerpt.present?
+                  |  — 
+                  = p.excerpt.truncate(180)
+    - else
+      p.dm-muted Chưa có bài tin nào được xuất bản.
+
+    = render "shared/pagination", page: @page, total_pages: @total_pages, total_count: @total_count, prev_path: @prev_path, next_path: @next_path

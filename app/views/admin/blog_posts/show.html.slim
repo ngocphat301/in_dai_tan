@@ -1,0 +1,22 @@
+- content_for :title, @blog_post.title
+.admin-post-toolbar
+  .admin-post-toolbar__left
+    = link_to "← Danh sách", admin_blog_posts_path, class: "btn ghost"
+  .admin-post-toolbar__right
+    = link_to "Sửa", edit_admin_blog_post_path(@blog_post), class: "btn"
+    - if @blog_post.published_for_public?
+      = link_to "Xem công khai", blog_post_path(@blog_post.slug), class: "btn ghost", target: "_blank", rel: "noopener"
+p = blog_post_avatar_tag @blog_post, variant: { resize_to_limit: [560, 320] }, alt: @blog_post.title, class: "admin-blog-avatar-preview"
+h1 = @blog_post.title
+p.muted
+  | Slug: #{@blog_post.slug} · Danh mục: #{@blog_post.category_label} · Trạng thái: #{@blog_post.status_label} · Tác giả: #{@blog_post.user.email}
+  - if @blog_post.publish?
+    |  · Đã xuất bản #{@blog_post.published_at&.strftime("%d/%m/%Y %H:%M")}
+  - else
+    |  · Ẩn / nháp
+- if @blog_post.excerpt.present?
+  h2 Tóm tắt
+  p == simple_format @blog_post.excerpt
+h2 Nội dung
+.admin-blog-preview
+  == @blog_post.body

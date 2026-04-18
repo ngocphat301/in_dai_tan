@@ -1,0 +1,5 @@
+- content_for :title, "Sửa danh mục blog"
+h1 Sửa danh mục blog
+= render "form", blog_category: @blog_category
+p style="margin-top:1rem"
+  = link_to "← Danh sách", admin_blog_categories_path, class: "btn ghost"

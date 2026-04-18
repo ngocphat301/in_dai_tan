@@ -1,0 +1,33 @@
+- ow = local_assigns.fetch(:output_width)
+- oh = local_assigns.fetch(:output_height)
+- batch_flag = local_assigns.fetch(:batch, false)
+- adjustable = local_assigns.fetch(:adjustable, true)
+- min_o = local_assigns.fetch(:min_output, 50)
+- max_o = local_assigns.fetch(:max_output, 4000)
+.admin-image-crop data-controller="image-crop" data-image-crop-output-width-value=ow data-image-crop-output-height-value=oh data-image-crop-min-output-value=min_o data-image-crop-max-output-value=max_o data-image-crop-batch-value=batch_flag.to_s
+  = yield
+  dialog.admin-image-crop__dialog data-image-crop-target="dialog" data-action="click->image-crop#backdrop"
+    .admin-image-crop__panel
+      p.admin-image-crop__title
+        | Cắt ảnh — xuất ra
+        span data-image-crop-target="dimsDisplay"
+          strong #{ow}×#{oh}px
+        |  (kéo vùng chọn, sau đó bấm Áp dụng).
+      - if adjustable
+        .admin-image-crop__size
+          p.admin-image-crop__size-hint Kích thước xuất (ảnh sẽ được scale về đúng kích thước này)
+          .admin-image-crop__size-row
+            label.admin-image-crop__field
+              span.admin-image-crop__field-label Rộng (px)
+              input.admin-image-crop__num type="number" min=min_o max=max_o step="1" value=ow data-image-crop-target="widthInput" data-action="input->image-crop#sizeInputsChanged"
+            label.admin-image-crop__field
+              span.admin-image-crop__field-label Cao (px)
+              input.admin-image-crop__num type="number" min=min_o max=max_o step="1" value=oh data-image-crop-target="heightInput" data-action="input->image-crop#sizeInputsChanged"
+          label.admin-image-crop__lock
+            input type="checkbox" checked=true data-image-crop-target="lockRatio" data-action="change->image-crop#lockToggled"
+            span Khóa tỷ lệ theo rộng / cao (bỏ chọn để cắt tỷ lệ tự do)
+      .admin-image-crop__stage
+        img.admin-image-crop__img data-image-crop-target="image" alt=""
+      .admin-image-crop__actions
+        button.btn type="button" data-action="click->image-crop#apply" Áp dụng
+        button.btn.ghost type="button" data-action="click->image-crop#cancel" Hủy

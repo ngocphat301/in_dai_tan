@@ -1,0 +1,33 @@
+- content_for :title, "Thêm ảnh"
+h1 Thêm ảnh cho: #{@product.name}
+p.muted
+  | Ảnh đại diện: tối đa 1. Ảnh đi kèm: tối đa #{Image::MAX_GALLERY_IMAGES} (còn lại #{@gallery_remaining} ô).
+  - if @cover_exists
+    |  Đã có ảnh đại diện — chọn "Ảnh đi kèm" trừ khi bạn muốn thay (ảnh cũ sẽ chuyển thành đi kèm).
+- if @image.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - @image.errors.full_messages.each do |msg|
+        li = msg
+= form_with model: [:admin, @product, @image], multipart: true, data: { controller: "admin-product-image-form" } do |f|
+  = f.label :kind, "Loại ảnh"
+  = f.select :kind, [["Ảnh đại diện", "cover"], ["Ảnh đi kèm", "gallery"]], {}, data: { admin_product_image_form_target: "kind", action: "change->admin-product-image-form#kindChanged" }
+  div data-admin-product-image-form-target="coverBlock" class=(@image.gallery? ? "is-hidden" : nil)
+    = f.label :file, "Tệp ảnh"
+    p.muted Sau khi chọn ảnh, hệ thống mở cắt (mặc định 1000×1250px — có thể chỉnh trong hộp thoại).
+    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250 do
+      = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
+  div data-admin-product-image-form-target="galleryBlock" class=(@image.gallery? ? nil : "is-hidden")
+    = label_tag "image_gallery_files", "Ảnh đi kèm (có thể chọn nhiều file)"
+    p.muted
+      | Mỗi ảnh mở hộp thoại cắt (mặc định 1000×1250px, chỉnh được). Tối đa #{Image::MAX_IMAGES_PER_PRODUCT - @product.images.count} file mỗi lần theo số ô còn lại.
+    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250, batch: true do
+      = file_field_tag "image[gallery_files][]", multiple: true, accept: "image/*", id: "image_gallery_files", data: { image_crop_target: "file", action: "change->image-crop#pick" }
+  = f.label :caption, "Chú thích"
+  = f.text_field :caption
+  = f.label :position, "Thứ tự (trong cùng loại)"
+  p.muted Dùng khi tải một ảnh đại diện / một ảnh đi kèm qua bước cắt. Khi chọn nhiều ảnh đi kèm, thứ tự tự tăng theo thứ tự file.
+  = f.number_field :position, value: (@product.images.maximum(:position).to_i + 1)
+  p style="margin-top:1rem"
+    = f.submit "Tải lên", class: "btn"
+p = link_to "Quay lại", admin_product_path(@product), class: "btn ghost"

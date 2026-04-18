@@ -1,0 +1,34 @@
+doctype html
+html lang="vi" data-controller="quote-modal" data-quote-modal-open-on-load-value=(quote_modal_open? ? "true" : "false")
+  head
+    title
+      - if content_for?(:title)
+        = "#{yield :title} | In Tân Đại"
+      - else
+        | In Tân Đại - Dịch vụ in ấn giá rẻ
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any"
+    = stylesheet_link_tag "application", "actiontext", "data-turbo-track": "reload"
+    link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" crossorigin="anonymous"
+    script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"
+    script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js" crossorigin="anonymous"
+    = javascript_importmap_tags
+  body
+    = render "layouts/site_header"
+    main.dm-main
+      .dm-container
+        = render "layouts/breadcrumbs"
+        - if notice.present?
+          p.flash.flash--notice role="status" = notice
+        - if alert.present?
+          p.flash.flash--alert role="alert" = alert
+        = yield
+    = render "layouts/quote_modal"
+    = render "layouts/social_float"
+    - if ads_popup_enabled?
+      div data-controller="ads-popup" data-ads-popup-preview-value=(@ads_popup_preview ? "true" : "false")
+        = render "layouts/ads_popup"
+    = render "layouts/site_footer"

@@ -1,0 +1,5 @@
+- content_for :title, "Sửa danh mục sản phẩm"
+h1 Sửa danh mục sản phẩm
+= render "form", product_category: @product_category
+p style="margin-top:1rem"
+  = link_to "← Danh sách", admin_product_categories_path, class: "btn ghost"

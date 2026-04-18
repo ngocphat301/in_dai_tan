@@ -1,0 +1,5 @@
+- content_for :title, "Sửa #{@product.name}"
+h1 Sửa sản phẩm
+= render "form", product: @product
+p style="margin-top:1rem"
+  = link_to "Chi tiết & ảnh", admin_product_path(@product), class: "btn ghost"

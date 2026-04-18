@@ -1,0 +1,5 @@
+- content_for :title, "Thêm người dùng"
+h1 Thêm người dùng
+= render "form", user: @user
+p style="margin-top:1rem"
+  = link_to "Danh sách", admin_users_path, class: "btn ghost"

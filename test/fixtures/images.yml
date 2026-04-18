@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  position: 1
+  caption: MyString
+  kind: cover
+
+two:
+  product: two
+  position: 1
+  caption: MyString
+  kind: gallery

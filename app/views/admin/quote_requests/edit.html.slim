@@ -1,0 +1,84 @@
+- content_for :title do
+  | Yêu cầu báo giá #
+  = @quote_request.id
+
+.admin-quote-edit
+  h1.admin-quote-edit__title
+    | Yêu cầu báo giá #
+    = @quote_request.id
+
+  h2.admin-quote-edit__section-title Chi tiết yêu cầu
+  .admin-table-wrap.admin-table-wrap--quote-detail
+    table.admin-detail-table.admin-detail-table--readonly
+      tbody
+        tr
+          th scope="row" Loại yêu cầu
+          td = @quote_request.request_type_label
+        tr
+          th scope="row" Khách hàng
+          td = @quote_request.customer_name
+        tr
+          th scope="row" Số điện thoại
+          td
+            = link_to @quote_request.phone, "tel:#{@quote_request.phone.gsub(/\s+/, '')}", class: "admin-detail-table__link"
+        tr
+          th scope="row" Danh mục quan tâm
+          td = @quote_request.product_category&.name || "—"
+        tr
+          th scope="row" Danh mục / bài tham chiếu
+          td = @quote_request.quote_subject_label || "—"
+        tr
+          th scope="row" NV khách chọn tiếp nhận
+          td = @quote_request.assigned_to&.quote_display_name || "—"
+        tr
+          th scope="row" Tiếp nhận
+          td
+            span.admin-detail-table__badge class="#{@quote_request.staff_received? ? 'is-on' : 'is-off'}"
+              = @quote_request.staff_received_label
+        tr
+          th scope="row" Trạng thái đơn hàng
+          td = @quote_request.purchase_status_label
+        tr
+          th scope="row" Gửi lúc
+          td = l(@quote_request.created_at, format: :long)
+        tr
+          th scope="row" Cập nhật lúc
+          td = l(@quote_request.updated_at, format: :long)
+        tr.admin-detail-table__row--body
+          th scope="row" Nội dung báo giá
+          td.admin-detail-table__body-cell
+            pre.admin-quote-body= @quote_request.body
+
+  p.admin-quote-edit__hint
+    | Trạng thái «Đã tiếp nhận» chỉnh từ cột tiếp nhận trong
+    =<> link_to "danh sách báo giá", admin_quote_requests_path, class: "btn ghost"
+    | .
+
+  h2.admin-quote-edit__section-title Cập nhật (nhân viên)
+
+  = form_with model: [ :admin, @quote_request ], html: { class: "admin-quote-edit__form" } do |f|
+    - if @quote_request.errors.any?
+      ul.admin-quote-edit__errors
+        - @quote_request.errors.full_messages.each do |msg|
+          li = msg
+
+    .admin-table-wrap.admin-table-wrap--quote-detail
+      table.admin-detail-table.admin-detail-table--form
+        tbody
+          tr
+            th scope="row"
+              = f.label :purchase_status, "Trạng thái đơn hàng"
+            td
+              = f.select :purchase_status, QuoteRequest.purchase_status_options_for_admin, {}, { class: "admin-select", id: "quote_request_purchase_status" }
+          tr
+            th scope="row"
+              = f.label :assigned_to_id, "Gán nhân viên tiếp nhận"
+            td
+              = f.collection_select :assigned_to_id, User.quote_assignable, :id, :quote_display_name,
+                { include_blank: "— Chưa gán —" },
+                { class: "admin-select", id: "quote_request_assigned_to_id" }
+          tr.admin-detail-table__row--actions
+            td colspan="2"
+              = f.submit "Lưu", class: "btn"
+              = " "
+              = link_to "Danh sách", admin_quote_requests_path, class: "btn ghost"

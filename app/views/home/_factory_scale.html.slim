@@ -1,0 +1,20 @@
+- scale_posts = @factory_scale_mosaic_posts
+- if (ld = factory_scale_itemlist_json_ld(scale_posts)).present?
+  - content_for :head do
+    = ld
+
+section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="dm-factory-scale-title"
+  h2#dm-factory-scale-title.dm-section-title.dm-factory-scale__title
+    | Quy mô  
+    span xưởng in
+
+  - if scale_posts.size >= 6
+    ul.dm-factory-scale-grid role="list"
+      - scale_posts.each do |post|
+        li.dm-factory-scale-grid__cell
+          = link_to blog_post_path(post.slug), class: "dm-factory-scale-grid__link", title: post.title do
+            - alt = "#{post.title} — quy mô xưởng in"
+            = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+    p.visually-hidden Sáu ảnh đại diện cùng kích thước, hai hàng ba cột; bấm ảnh để xem bài quy mô xưởng in.
+  - else
+    p.dm-muted Cần ít nhất 6 bài «Quy mô xưởng in» xuất bản (có ảnh đại diện) để hiển thị. Thêm bài trong quản trị.

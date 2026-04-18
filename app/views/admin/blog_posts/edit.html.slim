@@ -1,0 +1,9 @@
+- content_for :title, "Sửa bài"
+h1 Sửa bài viết
+= render "form", blog_post: @blog_post
+.admin-post-toolbar.admin-post-toolbar--after-form
+  .admin-post-toolbar__left
+    = link_to "Danh sách", admin_blog_posts_path, class: "btn ghost"
+  .admin-post-toolbar__right
+    - if @blog_post.published_for_public?
+      = link_to "Xem công khai", blog_post_path(@blog_post.slug), class: "btn ghost", target: "_blank", rel: "noopener"

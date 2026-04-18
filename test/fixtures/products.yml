@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  original_price_vnd: 0
+  sale_price_vnd: 1
+  published: false
+  product_category: one
+
+two:
+  name: MyStringTwo
+  description: MyText
+  original_price_vnd: 0
+  sale_price_vnd: 1
+  published: false
+  product_category: one

@@ -1,0 +1,25 @@
+- if product.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - product.errors.full_messages.each do |msg|
+        li = msg
+= form_with model: [:admin, product] do |f|
+  = f.label :product_category_id, "Danh mục"
+  = f.collection_select :product_category_id, ProductCategory.ordered, :id, :name, {}, {}
+  = f.label :name, "Tên"
+  = f.text_field :name
+  = f.label :description, "Mô tả"
+  = f.text_area :description, rows: 8
+  = f.label :original_price_vnd, "Giá gốc (VNĐ)"
+  = f.number_field :original_price_vnd, min: 0, step: 1
+  = f.label :sale_price_vnd, "Giá bán (VNĐ)"
+  = f.number_field :sale_price_vnd, min: 0, step: 1
+  = f.label :promo_starts_at, "Khuyến mãi — bắt đầu (để trống nếu không dùng)"
+  = f.datetime_field :promo_starts_at, include_seconds: true
+  = f.label :promo_ends_at, "Khuyến mãi — kết thúc"
+  = f.datetime_field :promo_ends_at, include_seconds: true
+  = f.label :published do
+    = f.check_box :published
+    |  Hiển thị trên trang chủ
+  p style="margin-top:1rem"
+    = f.submit (product.new_record? ? "Tạo" : "Cập nhật"), class: "btn"

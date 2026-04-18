@@ -1,0 +1,64 @@
+- content_for :title, @blog_post.meta_title.presence || @blog_post.title
+- content_for :head do
+  meta name="description" content=(@blog_post.meta_description.presence || @blog_post.excerpt.to_s).truncate(300)
+
+- if @blog_post.blog_category&.service?
+  - show_service_aside = @blog_outline.present? || @related_product_posts.present?
+  article.dm-article.dm-blog-show.dm-blog-show--service
+    div class=["dm-blog-show-layout", ("dm-blog-show-layout--single" unless show_service_aside)].compact.join(" ")
+      .dm-blog-show-layout__main
+        h1 = @blog_post.title
+        - if @blog_post.excerpt.present?
+          p.dm-blog-lead == simple_format @blog_post.excerpt
+        .dm-blog-prose
+          - if @blog_post_html.present?
+            == @blog_post_html
+          - else
+            == @blog_post.body
+        .dm-service-quote-cta
+          p.dm-service-quote-cta__text Bạn cần báo giá theo nội dung dịch vụ trên?
+          button.dm-service-quote-cta__btn type="button" data-action="click->quote-modal#open" data-return-to="blog" data-blog-post-id=@blog_post.id data-product-category-id=@blog_post.linked_product_category&.id
+            | Yêu cầu báo giá
+
+      - if show_service_aside
+        aside.dm-blog-show-layout__aside aria-label="Mục lục và bài liên quan"
+          = render "blog_outline", outline: @blog_outline, outline_title_id: "dm-outline-title"
+          = render "related_articles_stack", posts: @related_product_posts, heading_id: "dm-related-articles-title"
+
+- elsif @blog_post.blog_category&.project?
+  - show_project_aside = @blog_outline.present? || @related_project_posts.present?
+  article.dm-article.dm-blog-show.dm-blog-show--story
+    div class=["dm-blog-show-layout", ("dm-blog-show-layout--single" unless show_project_aside)].compact.join(" ")
+      .dm-blog-show-layout__main
+        h1 = @blog_post.title
+        - if @blog_post.excerpt.present?
+          p.dm-blog-lead == simple_format @blog_post.excerpt
+        .dm-blog-prose
+          - if @blog_post_html.present?
+            == @blog_post_html
+          - else
+            == @blog_post.body
+
+      - if show_project_aside
+        aside.dm-blog-show-layout__aside aria-label="Mục lục và bài liên quan"
+          = render "blog_outline", outline: @blog_outline, outline_title_id: "dm-project-outline-title"
+          = render "related_articles_stack", posts: @related_project_posts, heading_id: "dm-project-related-title"
+
+- else
+  - show_story_aside = @blog_outline.present? || @related_blog_posts.present?
+  article.dm-article.dm-blog-show.dm-blog-show--story
+    div class=["dm-blog-show-layout", ("dm-blog-show-layout--single" unless show_story_aside)].compact.join(" ")
+      .dm-blog-show-layout__main
+        h1 = @blog_post.title
+        - if @blog_post.excerpt.present?
+          p.dm-blog-lead == simple_format @blog_post.excerpt
+        .dm-blog-prose
+          - if @blog_post_html.present?
+            == @blog_post_html
+          - else
+            == @blog_post.body
+
+      - if show_story_aside
+        aside.dm-blog-show-layout__aside aria-label="Mục lục và bài liên quan"
+          = render "blog_outline", outline: @blog_outline, outline_title_id: "dm-story-outline-title"
+          = render "related_articles_stack", posts: @related_blog_posts, heading_id: "dm-story-related-title"

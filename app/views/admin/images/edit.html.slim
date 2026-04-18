@@ -1,0 +1,27 @@
+- content_for :title, "Sửa ảnh"
+h1 Sửa ảnh
+p.muted
+  | Ảnh đi kèm tối đa #{Image::MAX_GALLERY_IMAGES}. Tổng tối đa #{Image::MAX_IMAGES_PER_PRODUCT} ảnh (1 đại diện + 4 đi kèm).
+  - if @gallery_remaining
+    |  Còn #{@gallery_remaining} ô ảnh đi kèm.
+- if @image.errors.any?
+  .flash.alert
+    ul style="margin:0;padding-left:1.25rem"
+      - @image.errors.full_messages.each do |msg|
+        li = msg
+- if @image.file.attached?
+  p = image_tag @image.file, style: "max-width:280px;border-radius:8px"
+= form_with model: [:admin, @product, @image], multipart: true do |f|
+  = f.label :kind, "Loại ảnh"
+  = f.select :kind, [["Ảnh đại diện", "cover"], ["Ảnh đi kèm", "gallery"]]
+  = f.label :file, "Thay ảnh (tuỳ chọn)"
+  p.muted Chọn ảnh mới để mở cắt (mặc định 1000×1250px, chỉnh được trong hộp thoại).
+  = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250 do
+    = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
+  = f.label :caption, "Chú thích"
+  = f.text_field :caption
+  = f.label :position, "Thứ tự"
+  = f.number_field :position
+  p style="margin-top:1rem"
+    = f.submit "Cập nhật", class: "btn"
+p = link_to "Quay lại", admin_product_path(@product), class: "btn ghost"

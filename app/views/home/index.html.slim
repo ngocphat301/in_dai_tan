@@ -1,0 +1,90 @@
+- content_for :title, "Trang chủ"
+h1.visually-hidden In Tân Đại — xưởng in offset, hộp giấy, bao bì và ấn phẩm thương mại
+- dm = "https://indaiminh.com"
+- fallback_hero = "https://indaiminh.com/wp-content/uploads/2025/10/Banner-web-Tet-2025-web-1536x364.jpg"
+- icons = [ { src: "https://indaiminh.com/wp-content/uploads/2021/11/d1.png", t: "Giá thành tốt nhất", d: "Báo giá minh bạch, cạnh tranh." }, { src: "https://indaiminh.com/wp-content/uploads/2021/11/d2.png", t: "Chất lượng đảm bảo", d: "Quy trình kiểm soát chặt chẽ." }, { src: "https://indaiminh.com/wp-content/uploads/2021/11/d3.png", t: "Đúng tiến độ", d: "Cam kết thời gian giao hàng." }, { src: "https://indaiminh.com/wp-content/uploads/2021/11/d4.png", t: "Thân thiện môi trường", d: "Vật liệu và công nghệ xanh." } ]
+
+- if @banner_slides.any?
+  - n = @banner_slides.size
+  .dm-hero.dm-hero-carousel.dm-hero--banner role="region" aria-roledescription="carousel" aria-label="Banner trang chủ" data-controller="carousel" data-carousel-interval-value="6000"
+    .dm-hero-carousel__viewport
+      .dm-hero-carousel__track style="width:#{n * 100}%" data-carousel-target="track"
+        - @banner_slides.each do |slide|
+          .dm-hero-carousel__slide style="flex:0 0 #{100.0 / n}%;width:#{100.0 / n}%" data-carousel-target="slide"
+            - url = slide.link_url.presence || dm
+            - alt = slide.alt_text.presence || "In Tân Đại — dịch vụ in ấn"
+            = link_to url, target: "_blank", rel: "noopener", class: "dm-hero-carousel__link" do
+              = image_tag slide.file, alt: alt, loading: "lazy", class: "dm-hero-carousel__img"
+    - if n > 1
+      button.dm-hero-carousel__btn.dm-hero-carousel__btn--prev type="button" data-action="carousel#prev" aria-label="Ảnh trước"
+        | ‹
+      button.dm-hero-carousel__btn.dm-hero-carousel__btn--next type="button" data-action="carousel#next" aria-label="Ảnh sau"
+        | ›
+      .dm-hero-carousel__dots role="tablist" aria-label="Chọn slide"
+        - n.times do |i|
+          button.dm-hero-carousel__dot type="button" role="tab" data-action="carousel#goTo" data-index=i aria-label="Slide #{i + 1}" data-carousel-target="dot"
+- else
+  figure.dm-hero.dm-hero--banner
+    = link_to dm, target: "_blank", rel: "noopener" do
+      = image_tag fallback_hero, alt: "In Tân Đại — dịch vụ in ấn", loading: "lazy"
+
+h2.dm-section-title
+  | Dịch vụ in ấn 
+  span được lựa chọn nhiều nhất
+
+- if @home_service_frames.any?
+  .dm-services-wrap
+    p.dm-services__eyebrow Khám phá dịch vụ in ấn
+    .dm-services.dm-services--frames.dm-services--home
+      - @home_service_frames.each do |f|
+        - if f[:type] == :blog
+          - post = f[:post]
+          = link_to blog_post_path(post.slug), class: "dm-svc-frame" do
+            .dm-svc-frame__media
+              = blog_post_avatar_tag post, variant: { resize_to_fill: [400, 520] }, alt: post.title, class: "dm-svc-frame__img", loading: "lazy"
+            .dm-svc-frame__overlay aria-hidden="true"
+            .dm-svc-frame__content
+              span.dm-svc-frame__title= post.title
+              span.dm-svc-frame__cta Tìm hiểu thêm
+        - else
+          - cat = f[:category]
+          = link_to products_path(category: cat.slug), class: "dm-svc-frame" do
+            .dm-svc-frame__media
+              = image_tag "blog_avatar_placeholder.svg", alt: cat.name, class: "dm-svc-frame__img", loading: "lazy"
+            .dm-svc-frame__overlay aria-hidden="true"
+            .dm-svc-frame__content
+              span.dm-svc-frame__title= cat.name
+              span.dm-svc-frame__cta Xem sản phẩm
+  p.dm-muted style="margin-top:1rem;margin-bottom:2.5rem"
+    = link_to "Xem tất cả bài Dịch vụ trên blog", blog_services_path, class: "dm-back"
+- else
+  p.dm-muted Chưa có danh mục sản phẩm. Thêm danh mục trong quản trị.
+  p.dm-muted
+    | Xem 
+    = link_to "trang tin tức", blog_posts_path, class: "dm-back"
+    | .
+
+= render "home/factory_scale"
+
+= render "home/printing_process"
+
+section#dm-featured-posts
+  h2.dm-section-title
+    | Bài viết 
+    span nổi bật
+  - if @featured_blog_posts.any?
+    .dm-featured-grid.dm-featured-grid--home
+      - @featured_blog_posts.each do |post|
+        = link_to blog_post_path(post.slug), class: "dm-featured-card" do
+          .dm-featured-card__media
+            = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 320] }, alt: post.title, class: "dm-featured-card__img", loading: "lazy"
+          .dm-featured-card__body
+            strong.dm-featured-card__title= post.title.truncate(72)
+            - if post.excerpt.present?
+              p.dm-featured-card__excerpt= post.excerpt.to_s.truncate(120)
+    p.dm-muted style="margin-top:1rem;margin-bottom:2.5rem"
+      = link_to "Xem thêm bài viết", blog_posts_path, class: "dm-back"
+  - else
+    p.dm-muted Chưa có bài tin tức nào được xuất bản. Thêm bài trong quản trị (danh mục Tin tức).
+
+= render "home/partners"

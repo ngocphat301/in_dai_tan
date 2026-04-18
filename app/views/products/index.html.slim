@@ -1,0 +1,24 @@
+- content_for :title, "Sản phẩm"
+.dm-article
+  h1 Sản phẩm
+  p.dm-muted Các bài giới thiệu bao bì và giải pháp in (danh mục blog loại Sản phẩm).
+
+  - if @product_blog_posts.any?
+    p.dm-muted style="margin:0 0 1rem"
+      | Hiển thị 
+      strong= @product_blog_posts.size
+      - if @total_count.to_i > @product_blog_posts.size
+        |  / #{@total_count}
+      |  bài.
+    .dm-pro-grid
+      - @product_blog_posts.each do |post|
+        = link_to blog_post_path(post.slug), class: "dm-card" do
+          = blog_post_avatar_tag post, variant: { resize_to_fill: [400, 300] }, alt: post.title, class: "dm-card__img"
+          .dm-card__meta
+            strong= post.title.truncate(72)
+            - if post.excerpt.present?
+              p.dm-muted= post.excerpt.to_s.truncate(100)
+  - else
+    p.dm-muted Chưa có bài blog loại Sản phẩm nào được xuất bản.
+
+  = render "shared/pagination", page: @page, total_pages: @total_pages, total_count: @total_count, prev_path: @prev_path, next_path: @next_path

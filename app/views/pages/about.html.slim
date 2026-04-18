@@ -1,0 +1,79 @@
+- content_for :title, "Giới thiệu"
+- content_for :head do
+  meta name="description" content="Giới thiệu Công ty Bao bì In Tân Đại — triết lý kinh doanh, năng lực sản xuất, công nghệ in ấn và đội ngũ."
+
+article.dm-article.dm-about
+  .dm-container
+    h1.dm-about__page-title Giới thiệu
+
+    section.dm-about__stats aria-label="Thành tựu nổi bật"
+      .dm-about__stats-grid
+        .dm-about__stat
+          span.dm-about__stat-num 2020
+          span.dm-about__stat-label 5 năm kinh nghiệm
+        .dm-about__stat
+          span.dm-about__stat-num 200
+          span.dm-about__stat-label nhân viên
+        .dm-about__stat
+          span.dm-about__stat-num +3.000+
+          span.dm-about__stat-label khách hàng
+        .dm-about__stat
+          span.dm-about__stat-num 4.9/5
+          span.dm-about__stat-label đánh giá khách hàng
+
+    section.dm-about__philosophy
+      .dm-about__philosophy-grid
+        figure.dm-about__philosophy-fig
+          = image_tag "about/section-philosophy.png", alt: "Không gian và sản phẩm minh họa", class: "dm-about__philosophy-img", loading: "lazy", width: 640, height: 480
+        .dm-about__philosophy-copy
+          p.dm-about__eyebrow Về chúng tôi
+          h2.dm-about__h2 Triết lý kinh doanh
+          p.dm-about__lead
+            | Triết lý kinh doanh của chúng tôi là tôn trọng và duy trì chất lượng sản phẩm bao bì ở mức cao nhất. In Tân Đại tin rằng mỗi đơn hàng không chỉ mang giá trị vật chất mà còn là cầu nối gắn kết thương hiệu của khách hàng với người tiêu dùng cuối cùng một cách trọn vẹn và chuyên nghiệp. Mục tiêu của chúng tôi không chỉ đáp ứng mà còn vượt qua kỳ vọng bằng cách mang đến giải pháp bao bì tối ưu về chi phí, thẩm mỹ và độ bền — qua đó khẳng định đẳng cấp thương hiệu của đối tác. Chúng tôi cam kết minh bạch, chân thành trong mọi giao dịch, làm nền tảng cho sự tin tưởng và hợp tác lâu dài.
+
+    section.dm-about__split
+      .dm-about__split-grid
+        figure.dm-about__split-fig
+          = image_tag "about/section-showcase.png", alt: "Hình ảnh minh họa quy trình và không gian làm việc", class: "dm-about__split-img", loading: "lazy", width: 640, height: 720
+        .dm-about__split-copy
+          p.dm-about__eyebrow.dm-about__eyebrow--muted VỀ CHÚNG TÔI
+          h2.dm-about__h2
+            | Tạo ra những 
+            span.dm-about__accent không gian & giải pháp
+            |  bao bì chất lượng
+          p
+            | Với kinh nghiệm tích lũy qua nhiều năm hoạt động trong lĩnh vực in ấn và bao bì giấy, chúng tôi đã đồng hành cùng hàng ngàn đối tác trên khắp cả nước. Mỗi dự án là sự kết hợp giữa thẩm mỹ, công năng bảo vệ sản phẩm và tính bền vững trong sản xuất.
+          p
+            | Đội ngũ kỹ thuật, thiết kế và kinh doanh luôn sẵn sàng lắng nghe để biến yêu cầu của bạn thành bản in, khuôn bế và thành phẩm bao bì đạt chuẩn — góp phần tạo nên trải nghiệm thương hiệu nhất quán trên kệ hàng.
+          .dm-about__mini-stats
+            .dm-about__mini-stat
+              span.dm-about__mini-num 500+
+              span.dm-about__mini-label dự án hoàn thành
+            .dm-about__mini-stat
+              span.dm-about__mini-num 50+
+              span.dm-about__mini-label đối tác lớn
+            .dm-about__mini-stat
+              span.dm-about__mini-num 100%
+              span.dm-about__mini-label cam kết tiến độ
+          p.dm-about__cta-wrap
+            = link_to "Tìm hiểu thêm →", products_path, class: "dm-about__cta"
+
+    section.dm-about__block.dm-about__block--center
+      h2.dm-about__h2.dm-about__h2--center Về doanh nghiệp
+      p.dm-about__prose
+        | Công ty Bao Bì Tân Đại là đơn vị chuyên sản xuất và in ấn bao bì giấy, carton với định hướng phát triển bền vững và lấy chất lượng làm nền tảng. Doanh nghiệp cung cấp đa dạng giải pháp bao bì cho nhiều ngành như thời trang, thực phẩm, điện tử và tiêu dùng. Với phương châm «gắn kết bền vững, bảo vệ hoàn hảo», Tân Đại không ngừng cải tiến để mang đến sản phẩm tối ưu về chi phí, thẩm mỹ và độ bền.
+
+    section.dm-about__block.dm-about__block--center
+      h2.dm-about__h2.dm-about__h2--center Về công nghệ, máy móc
+      p.dm-about__prose
+        | Tân Đại đầu tư hệ thống máy móc hiện đại phục vụ toàn bộ quy trình sản xuất bao bì khép kín từ in offset, cán màng, bồi sóng, bế đến dán hoàn thiện. Việc ứng dụng công nghệ in tiên tiến giúp đảm bảo màu sắc chuẩn xác, chất lượng đồng đều và đáp ứng tốt các đơn hàng số lượng lớn. Xưởng sản xuất được tổ chức khoa học, tối ưu năng suất và kiểm soát chất lượng nghiêm ngặt ở từng công đoạn, giúp rút ngắn thời gian sản xuất và giảm chi phí cho khách hàng.
+
+    section.dm-about__block.dm-about__block--center
+      h2.dm-about__h2.dm-about__h2--center Về đội ngũ nhân viên
+      p.dm-about__prose
+        | Đội ngũ nhân sự tại Tấn Đại bao gồm các kỹ thuật viên, công nhân lành nghề và nhân viên kinh doanh giàu kinh nghiệm trong lĩnh vực bao bì. Nhân viên được đào tạo bài bản, có tinh thần trách nhiệm cao và luôn cập nhật xu hướng mới trong ngành in ấn. Sự phối hợp chặt chẽ giữa các bộ phận từ thiết kế, sản xuất đến chăm sóc khách hàng giúp đảm bảo tiến độ, chất lượng và mang lại trải nghiệm dịch vụ chuyên nghiệp cho đối tác.
+
+    p.dm-about__footer-actions
+      = link_to "Liên hệ", contact_path, class: "dm-about__cta dm-about__cta--ghost"
+      = " "
+      = link_to "Sản phẩm", products_path, class: "dm-about__cta"

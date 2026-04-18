@@ -1,0 +1,57 @@
+- content_for :title, "Blog"
+.admin-index-page
+  h1 Bài viết
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Tiêu đề, slug, tóm tắt, meta…"
+    .admin-index-toolbar__right
+      = link_to "Viết bài mới", new_admin_blog_post_path, class: "btn"
+  - if @blog_categories.any?
+    nav.admin-cat-tabs aria-label="Lọc theo danh mục"
+      .admin-cat-tabs__list
+        = link_to admin_blog_posts_path(admin_blog_posts_index_params),
+          class: [ "admin-cat-tabs__tab", ("is-active" if params[:blog_category_id].blank?) ].compact.join(" ") do
+          | Tất cả
+        - @blog_categories.each do |c|
+          = link_to admin_blog_posts_path(admin_blog_posts_index_params.merge(blog_category_id: c.id)),
+            class: [ "admin-cat-tabs__tab", ("is-active" if params[:blog_category_id].to_s == c.id.to_s) ].compact.join(" ") do
+            = c.name
+- if @blog_posts.any?
+  .admin-table-wrap
+    table.admin-blog-posts-table
+      thead
+        tr
+          th Ảnh
+          th = admin_sort_link("title", "Tiêu đề")
+          th Danh mục
+          th Tác giả
+          th = admin_sort_link("status", "Hiển thị")
+          th = admin_sort_link("published_at", "Xuất bản")
+          th.admin-th--actions Thao tác
+      tbody
+        - @blog_posts.each do |p|
+          tr
+            td
+              = blog_post_avatar_tag p, variant: { resize_to_fill: [48, 48] }, alt: p.title, class: "admin-blog-thumb"
+            td.admin-table-cell--title
+              = link_to p.title, admin_blog_post_path(p), class: "admin-table-title-link", title: p.title
+            td = p.category_label
+            td = p.user.email
+            td
+              = button_to toggle_status_admin_blog_post_path(p), method: :patch, class: "admin-status-toggle#{' is-on' if p.publish?}", form: { data: { turbo: true } } do
+                span.admin-status-toggle__track
+                  span.admin-status-toggle__knob
+                span.visually-hidden = p.publish? ? "Đang xuất bản — bấm để ẩn" : "Đang ẩn — bấm để xuất bản"
+            td = p.publish? && p.published_at ? p.published_at.strftime("%d/%m/%Y") : "—"
+            td.admin-table-actions
+              .admin-table-actions__inner
+                = admin_icon_edit_link(edit_admin_blog_post_path(p), title: "Sửa bài viết")
+                = admin_icon_destroy_link(admin_blog_post_path(p), confirm: "Xóa bài viết?", title: "Xóa bài viết")
+- else
+  p
+    - if params[:blog_category_id].present?
+      | Không có bài viết trong danh mục này.
+      =<> link_to "Xem tất cả", admin_blog_posts_path(admin_blog_posts_index_params), class: "btn ghost"
+    - else
+      | Chưa có bài viết.
+= render "admin/shared/pagination"

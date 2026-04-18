@@ -1,0 +1,68 @@
+- content_for :title, @product.name
+- gal = product_gallery_items(@product)
+- desc_present = @product.description.present?
+- layout_opts = { class: "dm-product-show__layout" }.merge(desc_present ? { data: { controller: "product-show-desc" } } : {})
+- media_opts = { class: "dm-product-show__media" }.merge(desc_present ? { data: { product_show_desc_target: "media" } } : {})
+- above_opts = { class: "dm-product-show__above-desc" }.merge(desc_present ? { data: { product_show_desc_target: "aboveDesc" } } : {})
+article.dm-article.dm-product-show
+  p style="margin-top:0"
+    = link_to "← Về trang chủ", root_path, class: "dm-back"
+
+  = tag.div(**layout_opts) do
+    = tag.div(**media_opts) do
+      - if gal.any?
+        .dm-pgallery data-controller="product-gallery" data-product-gallery-items-json-value=gal.to_json
+          .dm-pgallery__body
+            .dm-pgallery__stage
+              .dm-pgallery__main
+                button.dm-pgallery__arrow.dm-pgallery__arrow--overlay.dm-pgallery__arrow--prev type="button" aria-label="Ảnh trước" data-action="click->product-gallery#mainPrev" ‹
+                img.dm-pgallery__hero data-product-gallery-target="hero" src=gal.first[:url] alt=gal.first[:alt] width="520" height="520" loading="eager" decoding="async"
+                button.dm-pgallery__arrow.dm-pgallery__arrow--overlay.dm-pgallery__arrow--next type="button" aria-label="Ảnh sau" data-action="click->product-gallery#mainNext" ›
+            .dm-pgallery__thumbs-row
+              .dm-pgallery__strip
+                - gal.each_with_index do |it, i|
+                  button.dm-pgallery__thumb type="button" class=("is-active" if i.zero?) data-product-gallery-target="thumb" data-index=i data-action="click->product-gallery#pick"
+                    img src=it[:thumb] alt="" width="84" height="84" loading="lazy" decoding="async"
+      - else
+        .dm-pgallery.dm-pgallery--empty
+          p.dm-muted Chưa có ảnh minh họa.
+
+    .dm-product-show__info
+      = tag.div(**above_opts) do
+        .dm-product-show__info-head
+          h1.dm-product-show__title = @product.name
+          - if @product.product_category.present?
+            p.dm-muted.dm-product-show__cat = @product.product_category.name
+
+          - if @product.promo_active?
+            .dm-product-show__flash role="status"
+              span.dm-product-show__flash-label Flash sale
+              span.dm-product-show__flash-meta
+                | Kết thúc trong
+                span.dm-product-show__cd data-controller="promo-countdown" data-promo-countdown-ends-at-value=@product.promo_ends_at.iso8601
+                  |  …
+          - elsif @product.promo_starts_at.present? && @product.promo_ends_at.present?
+            p.dm-muted.dm-product-show__promo-range
+              | Khuyến mãi từ
+              = " #{l(@product.promo_starts_at, format: :short)} "
+              | đến
+              = " #{l(@product.promo_ends_at, format: :short)}"
+
+        .dm-product-show__prices
+          - show_orig = @product.original_price_vnd.positive? && @product.original_price_vnd > @product.sale_price_vnd
+          - if show_orig
+            del.dm-product-show__original= number_to_currency(@product.original_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+          p.dm-product-show__sale= number_to_currency(@product.sale_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+          - if show_orig
+            span.dm-product-show__badge Giá ưu đãi
+
+        p.dm-product-show__quote-wrap
+          button.dm-product-show__quote-btn type="button" data-action="click->quote-modal#open" data-return-to="product" data-product-category-id=@quote_request.product_category_id
+            | Yêu cầu báo giá
+
+      - if desc_present
+        section.dm-product-show__desc
+          .dm-product-show__desc-scroll data-product-show-desc-target="scroll"
+            h2.dm-product-show__desc-title Mô tả sản phẩm
+            .dm-product-show__desc-body == simple_format @product.description
+          button.dm-product-show__desc-more type="button" data-product-show-desc-target="moreBtn" data-action="click->product-show-desc#toggle" hidden Xem thêm

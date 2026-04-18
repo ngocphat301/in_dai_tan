@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Chung
+  slug: chung
+  position: 0
+
+two:
+  name: Test category
+  slug: test-cat
+  position: 1

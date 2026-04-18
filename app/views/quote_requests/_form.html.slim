@@ -1,0 +1,49 @@
+- categories = product_categories_for_quote_select
+- prefill_pc_id = (defined?(@blog_post) && @blog_post&.blog_category&.service? && @blog_post.linked_product_category) ? @blog_post.linked_product_category.id : nil
+- category_select_html = { class: "dm-select dm-quote__category-select select2-quote-category" }
+- category_select_html[:data] = { prefill_category_id: prefill_pc_id } if prefill_pc_id.present?
+= form_with model: @quote_request, url: quote_requests_path, scope: :quote_request, method: :post, class: "dm-quote-modal__form", data: { turbo: false } do |f|
+  = hidden_field_tag :return_to, (@quote_return_to.presence || "home"), id: "quote-return-to-field"
+  - if params[:news_context].present?
+    = hidden_field_tag :news_context, params[:news_context]
+  = f.hidden_field :blog_post_id, id: "quote-blog-post-id-field"
+  - if @quote_request.errors.any?
+    ul.dm-quote__errors role="alert"
+      - @quote_request.errors.full_messages.each do |msg|
+        li = msg
+
+  .dm-quote__row
+    = f.label :customer_name, class: "dm-quote__label dm-quote__label--line" do
+      span Tên
+      span.dm-quote__req aria-hidden="true" *
+    = f.text_field :customer_name, required: true, class: "dm-input", autocomplete: "name", placeholder: "Họ và tên"
+
+  .dm-quote__row
+    = f.label :phone, class: "dm-quote__label dm-quote__label--line" do
+      span Số điện thoại
+      span.dm-quote__req aria-hidden="true" *
+    = f.telephone_field :phone, required: true, class: "dm-input", autocomplete: "tel", placeholder: "VD: 0912 345 678"
+
+  - if categories.any?
+    .dm-quote__row.dm-quote__row--category
+      = f.label :product_category_id, class: "dm-quote__label dm-quote__label--line dm-quote__label--optional" do
+        span Danh mục sản phẩm
+        span.dm-quote__optional  (tuỳ chọn)
+      = f.select :product_category_id,
+        options_from_collection_for_select(categories, :id, :name),
+        { include_blank: "Chọn danh mục sản phẩm…" },
+        category_select_html
+  - else
+    p.dm-muted.dm-quote__category-fallback Chưa có danh mục sản phẩm — mô tả nhu cầu trong phần nội dung bên dưới.
+
+  .dm-quote__row
+    = f.label :body, class: "dm-quote__label dm-quote__label--line" do
+      span Nội dung yêu cầu báo giá
+      span.dm-quote__req aria-hidden="true" *
+    = f.text_area :body, required: true, rows: 4, class: "dm-input dm-quote__textarea", placeholder: "Mô tả quy cách, số lượng, chất liệu, thời gian cần giao…"
+
+  p.dm-quote__actions
+    = f.submit "Gửi yêu cầu báo giá", class: "dm-quote__submit"
+    = " "
+    button.dm-quote__cancel type="button" data-action="click->quote-modal#close"
+      | Đóng

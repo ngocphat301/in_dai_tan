@@ -1,0 +1,49 @@
+- content_for :title, "Yêu cầu báo giá"
+.admin-index-page
+  h1 Yêu cầu báo giá (khách)
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Tên khách, SĐT, nội dung…"
+
+= form_with url: admin_quote_requests_path, method: :get, class: "admin-filters", style: "margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end" do
+  = hidden_field_tag :q, params[:q] if params[:q].present?
+  = hidden_field_tag :sort, params[:sort] if params[:sort].present?
+  = hidden_field_tag :dir, params[:dir] if params[:dir].present?
+  
+- if @quote_requests.any?
+  .admin-table-wrap
+    table
+      thead
+        tr
+          th = admin_sort_link("updated_at", "Cập nhật")
+          th Loại
+          th = admin_sort_link("customer_name", "Khách")
+          th = admin_sort_link("phone", "SĐT")
+          th Danh mục
+          th Danh mục / bài
+          th NV được chọn
+          th = admin_sort_link("staff_received", "Tiếp nhận")
+          th = admin_sort_link("purchase_status", "Đơn hàng")
+          th
+      tbody
+        - @quote_requests.each do |q|
+          tr
+            td = q.updated_at.strftime("%d/%m/%Y %H:%M")
+            td = q.request_type_label
+            td = q.customer_name
+            td = q.phone
+            td = q.product_category&.name || "—"
+            td = q.quote_subject_label || "—"
+            td = q.assigned_to&.quote_display_name || "—"
+            td
+              = button_to toggle_staff_received_admin_quote_request_path(q), method: :patch, class: "admin-status-toggle#{' is-on' if q.staff_received?}", form: { data: { turbo: true } } do
+                span.admin-status-toggle__track
+                  span.admin-status-toggle__knob
+                span.visually-hidden = q.staff_received? ? "Đã tiếp nhận — bấm để chưa" : "Chưa tiếp nhận — bấm để đã"
+            td = q.purchase_status_label
+            td.admin-table-actions
+              = admin_icon_edit_link(edit_admin_quote_request_path(q), title: "Chi tiết / cập nhật yêu cầu")
+- else
+  p Chưa có yêu cầu báo giá nào.
+
+= render "admin/shared/pagination"

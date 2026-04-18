@@ -1,0 +1,5 @@
+- content_for :title, "Danh mục sản phẩm — mới"
+h1 Danh mục sản phẩm mới
+= render "form", product_category: @product_category
+p style="margin-top:1rem"
+  = link_to "← Danh sách", admin_product_categories_path, class: "btn ghost"

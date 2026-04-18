@@ -1,0 +1,5 @@
+- content_for :title, "Bài viết mới"
+h1 Viết bài mới
+= render "form", blog_post: @blog_post
+p style="margin-top:1rem"
+  = link_to "Danh sách", admin_blog_posts_path, class: "btn ghost"

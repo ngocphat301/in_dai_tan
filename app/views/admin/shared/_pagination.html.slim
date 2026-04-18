@@ -1,0 +1,20 @@
+- page = (@admin_page || 1).to_i
+- total_pages = (@admin_total_pages || 1).to_i
+- total_count = (@admin_total_count || 0).to_i
+- if total_pages > 1
+  nav.admin-pagination aria-label="Phân trang"
+    - if page > 1
+      = link_to "← Trước", admin_page_path(page - 1), class: "admin-pagination__link", rel: "prev"
+    - else
+      span.admin-pagination__link.admin-pagination__link--disabled ← Trước
+    p.admin-pagination__meta
+      span Trang #{page} / #{total_pages}
+      - if total_count.positive?
+        span.admin-pagination__count
+          = " (#{total_count} mục)"
+    - if page < total_pages
+      = link_to "Sau →", admin_page_path(page + 1), class: "admin-pagination__link", rel: "next"
+    - else
+      span.admin-pagination__link.admin-pagination__link--disabled Sau →
+- elsif total_count.positive?
+  p.admin-pagination__meta.admin-pagination__meta--only #{total_count} mục

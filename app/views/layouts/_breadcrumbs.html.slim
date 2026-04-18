@@ -1,0 +1,10 @@
+- crumbs = @breadcrumbs
+- if crumbs.present?
+  nav.dm-breadcrumb aria-label="Breadcrumb"
+    ol.dm-breadcrumb__list
+      - crumbs.each do |c|
+        li.dm-breadcrumb__item
+          - if c[:path].present?
+            = link_to c[:label], c[:path]
+          - else
+            span.dm-breadcrumb__current aria-current="page"= c[:label]

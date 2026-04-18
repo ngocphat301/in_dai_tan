@@ -1,0 +1,50 @@
+doctype html
+html lang="vi"
+  head
+    title
+      - if content_for?(:title)
+        = "#{content_for(:title)} | Quản trị"
+      - else
+        | Quản trị
+    meta name="viewport" content="width=device-width,initial-scale=1"
+    = csrf_meta_tags
+    = csp_meta_tag
+    link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any"
+    = stylesheet_link_tag "application", "actiontext", "data-turbo-track": "reload"
+    link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" crossorigin="anonymous"
+    = javascript_importmap_tags
+  body.admin-body
+    input#admin-sidebar-toggle.admin-sidebar-toggle type="checkbox" tabindex="-1" aria-hidden="true"
+    .admin-app
+      label.admin-sidebar-scrim for="admin-sidebar-toggle" aria-hidden="true"
+      aside.admin-sidebar
+        .admin-sidebar__brand
+          = link_to admin_blog_posts_path, class: "admin-sidebar__brand-link" do
+            | Quản trị
+          p.admin-sidebar__muted In Tân Đại
+        = render "layouts/admin_sidebar"
+        .admin-sidebar__footer
+          = link_to root_path, class: "admin-sidebar__link admin-sidebar__link--site" do
+            | ← Về trang chủ
+      .admin-main
+        header.admin-topbar
+          .admin-topbar__left
+            label.admin-topbar__burger for="admin-sidebar-toggle" aria-label="Mở/đóng menu"
+              span
+              span
+              span
+          .admin-topbar__right
+            - if user_signed_in?
+              span.admin-topbar__user title="Đã đăng nhập"
+                = current_user.email
+                - if current_user.admin?
+                  span.admin-badge admin
+              = button_to "Đăng xuất", destroy_user_session_path, method: :delete, class: "admin-topbar__logout", form: { class: "admin-inline-form" }
+            - else
+              = link_to "Đăng nhập", new_user_session_path, class: "btn btn--sm"
+        .admin-content
+          - if notice.present?
+            p.flash.admin-flash.admin-flash--notice role="status" = notice
+          - if alert.present?
+            p.flash.admin-flash.admin-flash--alert role="alert" = alert
+          = yield

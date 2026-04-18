@@ -1,0 +1,17 @@
+- ads_visual_url = @ads_popup_post ? blog_post_path(@ads_popup_post.slug) : root_path
+- ads_alt = @ads_popup_post&.title.presence || "Ưu đãi"
+dialog#dm-ads-popup.dm-ads-popup data-ads-popup-target="dialog" data-action="click->ads-popup#backdropClose" aria-labelledby="dm-ads-popup-title" aria-modal="true"
+  .dm-ads-popup__panel
+    button.dm-ads-popup__x type="button" data-action="click->ads-popup#close" aria-label="Đóng"
+      | ×
+    = link_to ads_visual_url, class: "dm-ads-popup__visual", rel: "noopener" do
+      - if @ads_popup_post&.avatar&.attached?
+        = image_tag @ads_popup_post.avatar.variant(resize_to_limit: [960, 720]), alt: ads_alt, class: "dm-ads-popup__img", loading: "eager"
+      - else
+        = image_tag "blog_avatar_placeholder.svg", alt: ads_alt, class: "dm-ads-popup__img", loading: "eager"
+    .dm-ads-popup__form
+      h2#dm-ads-popup-title.dm-ads-popup__heading= @ads_popup_title
+      = form_with url: ad_leads_path, scope: :ad_lead, data: { turbo: false, ads_popup_target: "form", action: "submit->ads-popup#submit" }, html: { class: "dm-ads-popup__form-inner" } do |f|
+        = f.telephone_field :phone, required: true, autocomplete: "tel", placeholder: "Số điện thoại", class: "dm-input dm-ads-popup__input", data: { ads_popup_target: "phone" }
+        p.dm-ads-popup__error role="alert" hidden=true data-ads-popup-target="error"
+        = f.submit "Gửi thông tin", class: "btn dm-ads-popup__submit"

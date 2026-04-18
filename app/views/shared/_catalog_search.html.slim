@@ -1,0 +1,10 @@
+- url = local_assigns[:url]
+- q = local_assigns[:q].to_s
+- category_slug = local_assigns[:category_slug]
+- blog_mode = local_assigns[:blog_mode]
+.dm-catalog-search
+  = form_with url: url, method: :get, local: true, class: "dm-catalog-search__form", data: { turbo: false } do
+    - if category_slug.present?
+      = hidden_field_tag :category, category_slug
+    = text_field_tag :q, q, class: "dm-input dm-catalog-search__input", placeholder: (blog_mode ? "Tìm trong tin tức…" : "Tìm trong sản phẩm…"), autocomplete: "off"
+    = submit_tag "Tìm", class: "dm-catalog-search__btn"

@@ -1,0 +1,38 @@
+- content_for :title, "Người dùng"
+.admin-index-page
+  h1 Người dùng
+  .admin-index-toolbar
+    .admin-index-toolbar__left
+      = render "admin/shared/index_search", placeholder: "Tìm theo email…"
+    .admin-index-toolbar__right
+      = link_to "Thêm người dùng", new_admin_user_path, class: "btn"
+- if @users.any?
+  .admin-table-wrap
+    table
+      thead
+        tr
+          th = admin_sort_link("email", "Email")
+          th = admin_sort_link("role", "Vai trò")
+          th = admin_sort_link("updated_at", "Cập nhật")
+          th
+      tbody
+        - @users.each do |u|
+          tr
+            td = u.email
+            td
+              - if u == current_user
+                = u.admin? ? "Admin" : "Member"
+                span.muted<>  (bạn)
+              - else
+                = button_to toggle_role_admin_user_path(u), method: :patch, class: "admin-status-toggle#{' is-on' if u.admin?}", form: { data: { turbo: true } } do
+                  span.admin-status-toggle__track
+                    span.admin-status-toggle__knob
+                  span.visually-hidden = u.admin? ? "Admin — bấm thành Member" : "Member — bấm thành Admin"
+            td = u.updated_at.strftime("%d/%m/%Y %H:%M")
+            td.admin-table-actions
+              = admin_icon_edit_link(edit_admin_user_path(u), title: "Sửa người dùng")
+              - unless u == current_user
+                = admin_icon_destroy_link(admin_user_path(u), confirm: "Xóa #{u.email}?", title: "Xóa người dùng")
+- else
+  p Chưa có người dùng.
+= render "admin/shared/pagination"

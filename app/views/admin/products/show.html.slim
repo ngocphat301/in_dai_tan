@@ -1,0 +1,64 @@
+- content_for :title, @product.name
+p
+  = link_to "← Danh sách", admin_products_path, class: "btn ghost"
+  = " "
+  = link_to "Sửa", edit_admin_product_path(@product), class: "btn"
+h1 = @product.name
+p
+  strong Danh mục:
+  = " "
+  = @product.product_category&.name || "—"
+p
+  strong Giá gốc:
+  = " "
+  = number_to_currency(@product.original_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+p
+  strong Giá bán:
+  = " "
+  = number_to_currency(@product.sale_price_vnd, unit: "₫", precision: 0, format: "%n %u")
+- if @product.promo_starts_at.present? || @product.promo_ends_at.present?
+  p
+    strong Khuyến mãi:
+    = " "
+    = @product.promo_starts_at.present? ? l(@product.promo_starts_at, format: :short) : "—"
+    |  → 
+    = @product.promo_ends_at.present? ? l(@product.promo_ends_at, format: :short) : "—"
+p
+  strong Hiển thị công khai:
+  = " "
+  = @product.published? ? "Có" : "Không"
+- if @product.description.present?
+  h2 Mô tả
+  p == simple_format @product.description
+h2 Ảnh
+p.muted
+  | Tối đa #{Image::MAX_IMAGES_PER_PRODUCT} ảnh: 1 đại diện + #{Image::MAX_GALLERY_IMAGES} đi kèm.
+  = " Hiện có #{@product.images.count}/#{Image::MAX_IMAGES_PER_PRODUCT}."
+- if @product.images.count < Image::MAX_IMAGES_PER_PRODUCT
+  p = link_to "Thêm ảnh", new_admin_product_image_path(@product), class: "btn"
+- else
+  p.muted Đã đủ số ảnh — xóa bớt nếu cần thêm mới.
+- if @product.images.any?
+  table
+    thead
+      tr
+        th
+        th Loại
+        th Chú thích
+        th Thứ tự
+        th
+    tbody
+      - @product.images.each do |img|
+        tr
+          td
+            - if img.file.attached?
+              = image_tag img.file, style: "width:72px;height:72px;object-fit:cover;border-radius:4px"
+          td = img.cover? ? "Đại diện" : "Đi kèm"
+          td = img.caption
+          td = img.position
+          td
+            = link_to "Sửa", edit_admin_product_image_path(@product, img), class: "btn ghost"
+            = " "
+            = link_to "Xóa", admin_product_image_path(@product, img), class: "btn danger", data: { turbo_method: :delete, turbo_confirm: "Xóa ảnh?" }
+- else
+  p Chưa có ảnh.

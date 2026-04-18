@@ -1,0 +1,20 @@
+- content_for :title, "Đăng nhập"
+
+- if notice.present?
+  p.devise-alert.devise-alert--notice = notice
+- if alert.present?
+  p.devise-alert.devise-alert--error = alert
+
+= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "devise-form" }) do |f|
+  .devise-field
+    = f.label :email, "Email"
+    = f.email_field :email, autofocus: true, autocomplete: "email", class: "devise-input"
+  .devise-field
+    = f.label :password, "Mật khẩu"
+    = f.password_field :password, autocomplete: "current-password", class: "devise-input"
+  - if devise_mapping.rememberable?
+    .devise-field.devise-field--inline
+      = f.check_box :remember_me, class: "devise-check"
+      = f.label :remember_me, "Ghi nhớ đăng nhập"
+  .devise-actions
+    = f.submit "Đăng nhập", class: "devise-submit"
