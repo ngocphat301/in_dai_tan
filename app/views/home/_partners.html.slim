@@ -13,18 +13,15 @@ section#dm-partners.dm-partners.dm-partners--collage aria-labelledby="dm-partner
     header.dm-partners__head
       p.dm-partners__subheading Đối tác của chúng tôi
       .dm-partners__accent-line aria-hidden="true"
-    - if collage_items.any?
-      ul.dm-partners__collage-grid role="list"
-        - collage_items.each_with_index do |img, i|
-          - area = areas[i]
-          - url = img.link_url.presence || "#"
-          - alt = img.alt_text.presence || "Đối tác"
-          li.dm-partners__tile class="dm-partners__tile--#{area}"
-            - if url == "#"
-              .dm-partners__tile-inner
-                = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
-            - else
-              = link_to url, target: "_blank", rel: "noopener noreferrer", class: "dm-partners__tile-inner dm-partners__link" do
-                = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
-    - else
-      p.dm-muted.dm-partners__empty Không có logo đối tác. Thêm ảnh loại «Đối tác» trong quản trị (Ảnh site).
+    ul.dm-partners__collage-grid role="list"
+      - collage_items.each_with_index do |img, i|
+        - area = areas[i]
+        - url = img.link_url.presence || "#"
+        - alt = img.alt_text.presence || "Đối tác"
+        li.dm-partners__tile class="dm-partners__tile--#{area}"
+          - if url == "#"
+            .dm-partners__tile-inner
+              = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
+          - else
+            = link_to url, target: "_blank", rel: "noopener noreferrer", class: "dm-partners__tile-inner dm-partners__link" do
+              = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"
