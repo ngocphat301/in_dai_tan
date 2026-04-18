@@ -19,7 +19,13 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def create
-    @admin = User.create(role: :admin, email: "admin1@gmail.com", password: "password", password_confirmatio: "password")
+    @admin = User.find_or_initialize_by(email: "admin_1@example.com")
+    @admin.assign_attributes(
+      password: "password123",
+      password_confirmation: "password123",
+      role: :admin
+    )
+    @admin.save!
     @user = User.new(user_params_create)
     if @user.save
       redirect_to admin_users_path, notice: "Đã tạo người dùng."
