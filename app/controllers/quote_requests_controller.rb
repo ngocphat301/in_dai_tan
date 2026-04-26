@@ -55,15 +55,15 @@ class QuoteRequestsController < ApplicationController
   end
 
   def render_blog_show_for_quote_errors
-    @blog_post = BlogPost.published_now.includes(:blog_category, :linked_product_category, { avatar_attachment: :blob }).find_by(id: @quote_request.blog_post_id)
+    @blog_post = BlogPost.published_now.includes(:linked_product_category, { avatar_attachment: :blob }).find_by(id: @quote_request.blog_post_id)
     if @blog_post
       @breadcrumbs = helpers.blog_post_breadcrumbs(@blog_post, news_context: params[:news_context].present?)
-      if @blog_post.blog_category&.service?
+      if @blog_post.category_service?
         @related_product_posts = @blog_post.related_product_blog_posts(limit: 6)
         @related_blog_posts = []
         @related_project_posts = []
         @blog_post_html, @blog_outline = helpers.blog_post_outline_and_html(@blog_post)
-      elsif @blog_post.blog_category&.project?
+      elsif @blog_post.category_project?
         @related_product_posts = []
         @related_blog_posts = []
         @related_project_posts = @blog_post.related_project_posts(limit: 6)

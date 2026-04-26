@@ -8,8 +8,15 @@ class ProductCategory < ApplicationRecord
   validates :slug, presence: true,
                     uniqueness: { case_sensitive: true },
                     format: { with: /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/, message: "chỉ dùng chữ thường, số và gạch ngang" }
+  validates :blog_post_id,
+            uniqueness: {
+              allow_nil: true,
+              message: "đã được gán cho một danh mục sản phẩm khác (mỗi bài «Dịch vụ» chỉ gắn một danh mục)"
+            }
 
   before_validation :assign_slug, if: -> { name.present? && slug.blank? }
+
+  after_commit :expire_header_categories_cache
 
   validate :blog_post_belongs_to_service_category, if: -> { blog_post.present? }
 
@@ -17,8 +24,12 @@ class ProductCategory < ApplicationRecord
 
   private
 
+  def expire_header_categories_cache
+    LayoutCache.expire_header_categories!
+  end
+
   def blog_post_belongs_to_service_category
-    return if blog_post.blog_category&.slug == "service"
+    return if blog_post&.category_service?
 
     errors.add(:blog_post_id, "chỉ gắn bài thuộc danh mục blog «Dịch vụ»")
   end

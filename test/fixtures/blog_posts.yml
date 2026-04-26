@@ -9,7 +9,7 @@ one:
   status: hidden
   published_at:
   user: one
-  blog_category: one
+  category: news
 
 two:
   title: MyStringTwo
@@ -20,4 +20,4 @@ two:
   status: hidden
   published_at:
   user: two
-  blog_category: two
+  category: service

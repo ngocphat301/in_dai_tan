@@ -10,8 +10,7 @@ class BlogPostsController < ApplicationController
   def index
     @blog_list_title = "Tin tức"
     @blog_list_layout = :hub
-    project_scope = BlogCategory.where(kind: :project).select(:id)
-    scope = blog_posts_base_scope.where.not(blog_category_id: project_scope)
+    scope = blog_posts_base_scope.where.not(category: :project)
     assign_news_hub!(scope)
     @breadcrumbs = [ crumb_root, crumb_current("Tin tức") ]
     render :index
@@ -20,8 +19,7 @@ class BlogPostsController < ApplicationController
   def service_index
     @blog_list_title = "Dịch vụ in ấn"
     @blog_list_layout = :list
-    service_cat = BlogCategory.find_by(kind: :service) || BlogCategory.find_by(slug: "service")
-    scope = blog_posts_base_scope.where(blog_category: service_cat)
+    scope = blog_posts_base_scope.where(category: :service)
     assign_blog_list!(scope, pagination: :service)
     @breadcrumbs = [ crumb_root, crumb_current("Dịch vụ in ấn") ]
     render :index
@@ -30,8 +28,7 @@ class BlogPostsController < ApplicationController
   def project_index
     @blog_list_title = "Dự án"
     @blog_list_layout = :project_cards
-    project_cats = BlogCategory.where(kind: :project)
-    scope = blog_posts_base_scope.where(blog_category: project_cats)
+    scope = blog_posts_base_scope.where(category: :project)
     assign_blog_list!(scope, pagination: :project)
     @breadcrumbs = [ crumb_root, crumb_current("Dự án") ]
     render :index
@@ -39,12 +36,12 @@ class BlogPostsController < ApplicationController
 
   def show
     @breadcrumbs = helpers.blog_post_breadcrumbs(@blog_post, news_context: params[:news_context].present?)
-    if @blog_post.blog_category&.service?
+    if @blog_post.category_service?
       @related_product_posts = @blog_post.related_product_blog_posts(limit: 6)
       @related_blog_posts = []
       @related_project_posts = []
       @blog_post_html, @blog_outline = helpers.blog_post_outline_and_html(@blog_post)
-    elsif @blog_post.blog_category&.project?
+    elsif @blog_post.category_project?
       @related_product_posts = []
       @related_blog_posts = []
       @related_project_posts = @blog_post.related_project_posts(limit: 6)
@@ -60,11 +57,11 @@ class BlogPostsController < ApplicationController
   private
 
   def set_blog_post
-    @blog_post = BlogPost.published_now.includes(:blog_category, :linked_product_category, { avatar_attachment: :blob }).find_by!(slug: params[:slug])
+    @blog_post = BlogPost.published_now.includes(:linked_product_category, { avatar_attachment: :blob }).find_by!(slug: params[:slug])
   end
 
   def blog_posts_base_scope
-    BlogPost.published_now.includes(:user, :blog_category, { avatar_attachment: :blob })
+    BlogPost.published_now.includes(:user, { avatar_attachment: :blob })
   end
 
   def assign_blog_list!(scope, pagination:)

@@ -12,17 +12,16 @@ class SearchSuggestionsController < ApplicationController
   def suggestions_for(q)
     return [] if q.length < 2
 
-    kind = params[:kind].presence_in(%w[product post]) || "product"
+    kind = params[:kind].presence_in(%w[product post]) || "post"
     prefix = "#{ActiveRecord::Base.sanitize_sql_like(q.strip.downcase)}%"
     seen = {}
     out = []
 
     if kind == "post"
-      post_scope = params[:post_scope].presence_in(SearchesController::POST_SEARCH_SCOPES) || "all"
       rel = BlogPost.published_now.where(
         [ "unaccent(lower(blog_posts.title)) ILIKE unaccent(lower(?::text))", prefix ]
       )
-      rel = CatalogSearch.apply_post_kind_scope(rel, post_scope)
+      rel = CatalogSearch.apply_post_kind_scope(rel, "all")
       rel.order(:title).limit(12).each do |b|
         next if seen.key?(b.title)
 

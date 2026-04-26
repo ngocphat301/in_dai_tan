@@ -91,7 +91,7 @@ class QuoteRequest < ApplicationRecord
       errors.add(:blog_post_id, "không tồn tại")
     elsif !post.published_for_public?
       errors.add(:blog_post_id, "không còn hiển thị")
-    elsif !post.blog_category&.service?
+    elsif !post.category_service?
       errors.add(:blog_post_id, "phải là bài dịch vụ in")
     end
   end

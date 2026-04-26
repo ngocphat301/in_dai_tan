@@ -4,18 +4,28 @@
 - adjustable = local_assigns.fetch(:adjustable, true)
 - min_o = local_assigns.fetch(:min_output, 50)
 - max_o = local_assigns.fetch(:max_output, 4000)
+- shape_hint = local_assigns.fetch(:shape_hint, nil)
 .admin-image-crop data-controller="image-crop" data-image-crop-output-width-value=ow data-image-crop-output-height-value=oh data-image-crop-min-output-value=min_o data-image-crop-max-output-value=max_o data-image-crop-batch-value=batch_flag.to_s
   = yield
   dialog.admin-image-crop__dialog data-image-crop-target="dialog" data-action="click->image-crop#backdrop"
     .admin-image-crop__panel
       p.admin-image-crop__title
-        | Cắt ảnh — xuất ra
+        | Cắt ảnh — xuất
         span data-image-crop-target="dimsDisplay"
           strong #{ow}×#{oh}px
-        |  (kéo vùng chọn, sau đó bấm Áp dụng).
+        |  (kéo vùng chọn, bấm Áp dụng).
       - if adjustable
         .admin-image-crop__size
-          p.admin-image-crop__size-hint Kích thước xuất (ảnh sẽ được scale về đúng kích thước này)
+          - case shape_hint
+          - when :square
+            p.admin-image-crop__shape-hint
+              | Gợi ý: ảnh <strong>vuông</strong> (1:1), ví dụ #{ow}×#{oh}px.
+          - when :rectangle
+            p.admin-image-crop__shape-hint
+              | Gợi ý: ảnh <strong>chữ nhật</strong> (ngang), ví dụ #{ow}×#{oh}px.
+          - else
+            p.admin-image-crop__shape-hint
+              | Gợi ý kích thước xuất: #{ow}×#{oh}px (có thể chỉnh bên dưới).
           .admin-image-crop__size-row
             label.admin-image-crop__field
               span.admin-image-crop__field-label Rộng (px)
@@ -24,8 +34,8 @@
               span.admin-image-crop__field-label Cao (px)
               input.admin-image-crop__num type="number" min=min_o max=max_o step="1" value=oh data-image-crop-target="heightInput" data-action="input->image-crop#sizeInputsChanged"
           label.admin-image-crop__lock
-            input type="checkbox" checked=true data-image-crop-target="lockRatio" data-action="change->image-crop#lockToggled"
-            span Khóa tỷ lệ theo rộng / cao (bỏ chọn để cắt tỷ lệ tự do)
+            input type="checkbox" data-image-crop-target="lockRatio" data-action="change->image-crop#lockToggled"
+            span Khóa tỷ lệ theo rộng / cao (bật để giữ tỷ lệ khi đổi kích thước)
       .admin-image-crop__stage
         img.admin-image-crop__img data-image-crop-target="image" alt=""
       .admin-image-crop__actions

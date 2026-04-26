@@ -1,5 +1,5 @@
 - categories = product_categories_for_quote_select
-- prefill_pc_id = (defined?(@blog_post) && @blog_post&.blog_category&.service? && @blog_post.linked_product_category) ? @blog_post.linked_product_category.id : nil
+- prefill_pc_id = (defined?(@blog_post) && @blog_post&.category_service? && @blog_post.linked_product_category) ? @blog_post.linked_product_category.id : nil
 - category_select_html = { class: "dm-select dm-quote__category-select select2-quote-category" }
 - category_select_html[:data] = { prefill_category_id: prefill_pc_id } if prefill_pc_id.present?
 = form_with model: @quote_request, url: quote_requests_path, scope: :quote_request, method: :post, class: "dm-quote-modal__form", data: { turbo: false } do |f|

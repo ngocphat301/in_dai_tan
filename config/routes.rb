@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
 
+  get "robots.txt", to: "robots#show", as: :robots, defaults: { format: :text }
+  get "sitemap.xml", to: "sitemaps#index", as: :sitemap, defaults: { format: :xml }
+
   root "home#index"
   get "about", to: "pages#about"
   get "contact", to: "pages#contact", as: :contact
@@ -22,7 +25,6 @@ Rails.application.routes.draw do
       end
     end
     resources :product_categories, except: [ :show ]
-    resources :blog_categories, except: [ :show ]
     resources :blog_posts do
       member do
         patch :toggle_status

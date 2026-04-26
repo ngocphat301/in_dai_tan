@@ -1,6 +1,4 @@
 - partner_shown = @partner_images.select { |img| img.file.attached? }
-- collage_items = partner_shown.first(7)
-- areas = %w[hero c2 c3 c4 c5 c6 c7]
 section#dm-partners.dm-partners.dm-partners--collage aria-labelledby="dm-partners-heading"
   h2#dm-partners-heading.visually-hidden Đối tác của chúng tôi
   .dm-partners__shell
@@ -13,12 +11,11 @@ section#dm-partners.dm-partners.dm-partners--collage aria-labelledby="dm-partner
     header.dm-partners__head
       p.dm-partners__subheading Đối tác của chúng tôi
       .dm-partners__accent-line aria-hidden="true"
-    ul.dm-partners__collage-grid role="list"
-      - collage_items.each_with_index do |img, i|
-        - area = areas[i]
+    ul.dm-partners__grid role="list"
+      - partner_shown.each do |img|
         - url = img.link_url.presence || "#"
         - alt = img.alt_text.presence || "Đối tác"
-        li.dm-partners__tile class="dm-partners__tile--#{area}"
+        li.dm-partners__tile
           - if url == "#"
             .dm-partners__tile-inner
               = image_tag img.file, alt: alt, class: "dm-partners__logo", loading: "lazy"

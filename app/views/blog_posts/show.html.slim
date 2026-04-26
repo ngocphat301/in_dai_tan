@@ -2,7 +2,7 @@
 - content_for :head do
   meta name="description" content=(@blog_post.meta_description.presence || @blog_post.excerpt.to_s).truncate(300)
 
-- if @blog_post.blog_category&.service?
+- if @blog_post.category_service?
   - show_service_aside = @blog_outline.present? || @related_product_posts.present?
   article.dm-article.dm-blog-show.dm-blog-show--service
     div class=["dm-blog-show-layout", ("dm-blog-show-layout--single" unless show_service_aside)].compact.join(" ")
@@ -25,7 +25,7 @@
           = render "blog_outline", outline: @blog_outline, outline_title_id: "dm-outline-title"
           = render "related_articles_stack", posts: @related_product_posts, heading_id: "dm-related-articles-title"
 
-- elsif @blog_post.blog_category&.project?
+- elsif @blog_post.category_project?
   - show_project_aside = @blog_outline.present? || @related_project_posts.present?
   article.dm-article.dm-blog-show.dm-blog-show--story
     div class=["dm-blog-show-layout", ("dm-blog-show-layout--single" unless show_project_aside)].compact.join(" ")

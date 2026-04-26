@@ -29,8 +29,7 @@ end
   [ "Hộp giày", "hop-giay", 8 ],
   [ "Hộp rút", "hop-rut", 9 ],
   [ "Phong bì", "phong-bi", 10 ],
-  [ "Túi giấy gập miệng", "tui-giay-gap-mieng", 11 ],
-  [ "Túi giấy không gập miệng", "tui-giay-khong-gap-mieng", 12 ]
+  [ "Túi giấy gập miệng", "tui-giay-gap-mieng", 11 ]
 ].each do |name, slug, position|
   ProductCategory.find_or_initialize_by(slug: slug).tap do |c|
     c.assign_attributes(name: name, position: position)
@@ -38,20 +37,6 @@ end
   end
 end
 puts "[seeds] Danh mục sản phẩm: #{ProductCategory.count} bản ghi (mong đợi: 13+ nếu DB đã có bản ghi migration cũ)."
-
-[
-  [ "Tin tức", "news", 0, "news" ],
-  [ "Dự án", "project", 1, "project" ],
-  [ "Dịch vụ", "service", 2, "service" ],
-  [ "Sản phẩm", "san-pham", 3, "product" ],
-  [ "Quảng cáo", "quang-cao", 4, "ads" ],
-  [ "Quy mô xưởng in", "quy-mo-xuong-in", 5, "factory_scale" ]
-].each do |name, slug, position, kind|
-  BlogCategory.find_or_initialize_by(slug: slug).tap do |c|
-    c.assign_attributes(name: name, position: position, kind: kind)
-    c.save!
-  end
-end
 
 default_product_category = ProductCategory.find_by!(slug: "hop-nap-cai-day-cheo")
 
@@ -83,17 +68,10 @@ Product.find_or_initialize_by(name: "Sản phẩm nháp").tap do |p|
   p.save!
 end
 
-service_blog = BlogCategory.find_by!(slug: "service")
-product_blog = BlogCategory.find_by!(slug: "san-pham")
-news_blog = BlogCategory.find_by!(slug: "news")
-ads_blog = BlogCategory.find_by!(slug: "quang-cao")
-project_blog = BlogCategory.find_by!(slug: "project")
-scale_blog = BlogCategory.find_by!(slug: "quy-mo-xuong-in")
-
 BlogPost.find_or_initialize_by(slug: "uu-dai-in-an-thang-dau").tap do |post|
   post.assign_attributes(
     user: admin,
-    blog_category: ads_blog,
+    category: :ads,
     title: "Ưu đãi in ấn — chương trình khuyến mãi",
     excerpt: "Xem chi tiết ưu đãi, điều kiện áp dụng và báo giá nhanh.",
     meta_title: "Ưu đãi in ấn | In Tân Đại",
@@ -124,11 +102,12 @@ end
 
 BlogEntries::SEED_BLOG_POSTS.each do |row|
   category = case row[:kind]
-  when :news then news_blog
-  when :product then product_blog
-  when :service then service_blog
-  when :project then project_blog
-  when :factory_scale then scale_blog
+  when :news then :news
+  when :product then :product
+  when :service then :service
+  when :project then :project
+  when :factory_scale then :factory_scale
+  when :partners then :partners
   end
   next unless category
 
@@ -137,7 +116,7 @@ BlogEntries::SEED_BLOG_POSTS.each do |row|
   BlogPost.find_or_initialize_by(slug: row[:slug]).tap do |post|
     post.assign_attributes(
       user: admin,
-      blog_category: category,
+      category: category,
       title: row[:title],
       excerpt: row[:excerpt],
       meta_title: row[:meta_title],
@@ -207,7 +186,7 @@ puts "[seeds] Bài blog seed: #{n} bài (#{BlogEntries::SEED_BLOG_POSTS.count { 
   BlogPost.find_or_initialize_by(slug: row[:slug]).tap do |post|
     post.assign_attributes(
       user: admin,
-      blog_category: news_blog,
+      category: :news,
       title: row[:title],
       excerpt: row[:excerpt],
       meta_title: "#{row[:title]} | In Tân Đại",

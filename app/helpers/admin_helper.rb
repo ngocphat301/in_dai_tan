@@ -77,6 +77,7 @@ module AdminHelper
     h[:q] = params[:q] if params[:q].present?
     h[:sort] = params[:sort] if params[:sort].present?
     h[:dir] = params[:dir] if params[:dir].present?
+    h[:category] = params[:category] if params[:category].present?
     h
   end
 
