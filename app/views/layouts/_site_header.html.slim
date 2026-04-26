@@ -14,17 +14,29 @@
 
 header.dm-header
   .dm-container.dm-header__row
-    = link_to root_path, class: "dm-brand" do
-      = image_tag site_brand_logo_url, alt: "In Tân Đại", class: "dm-brand__logo", width: 300, height: 88, loading: "lazy"
-    = render "shared/header_search"
-    input#dm-menu-toggle.dm-menu-toggle type="checkbox" tabindex="-1" aria-hidden="true"
-    label.dm-menu-burger for="dm-menu-toggle" aria-label="Mở menu"
-      span
-      span
-      span
+    .dm-header__toolbar
+      = link_to root_path, class: "dm-brand" do
+        = image_tag site_brand_logo_url, alt: "In Tân Đại", class: "dm-brand__logo", width: 300, height: 88, loading: "lazy"
+      = render "shared/header_search"
+      input#dm-menu-toggle.dm-menu-toggle type="checkbox" tabindex="-1" aria-hidden="true"
+      label.dm-menu-burger for="dm-menu-toggle" aria-label="Mở menu"
+        .dm-menu-burger__lines
+          span
+          span
+          span
+    label.dm-menu-backdrop for="dm-menu-toggle"
+      span.visually-hidden Đóng menu
     nav.dm-nav aria-label="Menu chính"
+      .dm-nav__drawer-head
+        = link_to root_path, class: "dm-nav__drawer-brand" do
+          = image_tag site_brand_logo_url, alt: "In Tân Đại", class: "dm-nav__drawer-logo", width: 200, height: 58, loading: "lazy"
+        label.dm-menu-burger.dm-menu-burger--drawer for="dm-menu-toggle" aria-label="Đóng menu"
+          .dm-menu-burger__lines
+            span
+            span
+            span
       ul.dm-nav__list
-        li.dm-nav__item.dm-nav__item--mega class="#{'is-active' if nav_active?(:services_mega)}"
+        li.dm-nav__item class="#{'is-active' if nav_active?(:services_mega)}"
           button.dm-nav__trigger type="button" aria-expanded="false" class=nav_trigger_class(:services_mega)
             | Dịch vụ in
             span.dm-nav__caret aria-hidden="true"

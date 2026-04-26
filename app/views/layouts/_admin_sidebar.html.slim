@@ -7,8 +7,6 @@ nav.admin-sidebar__nav aria-label="Menu quản trị"
     | Người dùng
   = link_to admin_product_categories_path, class: "admin-sidebar__link#{' is-active' if controller.controller_name == 'product_categories'}"
     | Danh mục sản phẩm
-  = link_to admin_blog_categories_path, class: "admin-sidebar__link#{' is-active' if controller.controller_name == 'blog_categories'}"
-    | Danh mục blog
   = link_to admin_site_images_path, class: "admin-sidebar__link#{' is-active' if controller.controller_name == 'site_images'}"
     | Ảnh site
 

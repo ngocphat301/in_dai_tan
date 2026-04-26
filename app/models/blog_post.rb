@@ -2,6 +2,16 @@ class BlogPost < ApplicationRecord
   include ::PgSearch::Model
   include AccentInsensitiveCatalogMatch
 
+  CATEGORY_LABELS = {
+    "service" => "Dịch vụ",
+    "news" => "Tin tức",
+    "product" => "Sản phẩm",
+    "project" => "Dự án",
+    "factory_scale" => "Quy mô",
+    "partners" => "Đối tác",
+    "ads" => "Quảng cáo"
+  }.freeze
+
   pg_search_scope :by_catalog_query,
     against: %i[title excerpt meta_title meta_description],
     using: {
@@ -17,7 +27,6 @@ class BlogPost < ApplicationRecord
     order_within_rank: "blog_posts.published_at DESC NULLS LAST"
 
   belongs_to :user
-  belongs_to :blog_category, inverse_of: :blog_posts
 
   has_one :linked_product_category, class_name: "ProductCategory", foreign_key: :blog_post_id,
                                     dependent: :nullify, inverse_of: :blog_post
@@ -27,8 +36,19 @@ class BlogPost < ApplicationRecord
   has_rich_text :body
 
   attribute :status, :string, default: "hidden"
+  attribute :category, :string, default: "news"
 
   enum :status, { publish: "publish", hidden: "hidden" }, default: :hidden
+
+  enum :category, {
+    service: "service",
+    news: "news",
+    product: "product",
+    project: "project",
+    factory_scale: "factory_scale",
+    partners: "partners",
+    ads: "ads"
+  }, default: :news, prefix: :category
 
   validates :title, presence: true
   validates :slug, presence: true,
@@ -40,6 +60,8 @@ class BlogPost < ApplicationRecord
 
   before_save :sync_publish_state
 
+  after_commit :expire_layout_caches
+
   scope :accent_insensitive_catalog_match, lambda { |query|
     accent_insensitive_columns_match(query, %w[title excerpt meta_title meta_description])
   }
@@ -48,6 +70,10 @@ class BlogPost < ApplicationRecord
   scope :published_now, lambda {
     where(status: :publish).where.not(published_at: nil).where(published_at: ..Time.current).order(published_at: :desc)
   }
+
+  def self.category_options_for_select
+    categories.keys.map { |k| [ CATEGORY_LABELS[k] || k.humanize, k ] }
+  end
 
   def self.parse_tag_list(str)
     str.to_s.split(/[,;|]/).map { |t| t.strip.downcase.presence }.compact.uniq
@@ -70,11 +96,8 @@ class BlogPost < ApplicationRecord
     my = normalized_tag_tokens
     return self.class.none if my.empty?
 
-    pid = BlogCategory.find_by(kind: :product)&.id
-    return self.class.none unless pid
-
     self.class.published_now
-      .where(blog_category_id: pid)
+      .where(category: :product)
       .where.not(id: id)
       .order(published_at: :desc)
       .limit(120)
@@ -84,11 +107,10 @@ class BlogPost < ApplicationRecord
 
   # Bài đã xuất bản (trừ loại dự án): ưu tiên trùng tag, không có tag thì cùng danh mục blog.
   def related_blog_posts(limit: 6)
-    project_scope = BlogCategory.where(kind: :project).select(:id)
     base = self.class.published_now
-      .includes(:blog_category, { avatar_attachment: :blob })
+      .includes({ avatar_attachment: :blob })
       .where.not(id: id)
-      .where.not(blog_category_id: project_scope)
+      .where.not(category: :project)
       .order(published_at: :desc)
 
     my = normalized_tag_tokens
@@ -97,16 +119,15 @@ class BlogPost < ApplicationRecord
       return tagged if tagged.any?
     end
 
-    base.where(blog_category_id: blog_category_id).limit(limit).to_a
+    base.where(category: category).limit(limit).to_a
   end
 
   # Bài dự án liên quan: cùng loại dự án, ưu tiên tag.
   def related_project_posts(limit: 6)
-    project_scope = BlogCategory.where(kind: :project).select(:id)
     base = self.class.published_now
-      .includes(:blog_category, { avatar_attachment: :blob })
+      .includes({ avatar_attachment: :blob })
       .where.not(id: id)
-      .where(blog_category_id: project_scope)
+      .where(category: :project)
       .order(published_at: :desc)
 
     my = normalized_tag_tokens
@@ -115,7 +136,7 @@ class BlogPost < ApplicationRecord
       return tagged if tagged.any?
     end
 
-    base.where(blog_category_id: blog_category_id).limit(limit).to_a
+    base.where(category: category).limit(limit).to_a
   end
 
   # Tiêu đề, mô tả ngắn, meta (nội dung rich text xem trên trang bài)
@@ -143,7 +164,7 @@ class BlogPost < ApplicationRecord
   end
 
   def category_label
-    blog_category&.name
+    CATEGORY_LABELS[category] || category.to_s
   end
 
   def status_label
@@ -167,6 +188,11 @@ class BlogPost < ApplicationRecord
   end
 
   private
+
+  def expire_layout_caches
+    LayoutCache.expire_header_categories!
+    LayoutCache.expire_ads_popup!
+  end
 
   def acceptable_avatar
     type = avatar.blob&.content_type

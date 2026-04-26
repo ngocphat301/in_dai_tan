@@ -17,17 +17,17 @@ class CatalogSearch
     end
 
     # post_scope: "all" | "no_project" | "project"
-    def posts(query, blog_category_id: nil, post_scope: "all")
+    def posts(query, category: nil, post_scope: "all")
       q = query.to_s.strip
       return BlogPost.none if q.blank?
 
       rel = BlogPost.published_now.merge(
         BlogPost.by_catalog_query(q).or(BlogPost.accent_insensitive_catalog_match(q))
       )
-      rel = rel.where(blog_category_id: blog_category_id) if blog_category_id.present?
+      rel = rel.where(category: category) if category.present? && BlogPost.categories.key?(category.to_s)
       rel = apply_post_kind_scope(rel, post_scope)
       rel = order_blog_posts_for_search(rel, q)
-      rel.includes(:blog_category, { avatar_attachment: :blob })
+      rel.includes({ avatar_attachment: :blob })
          .limit(100)
     end
 
@@ -75,9 +75,9 @@ class CatalogSearch
     def apply_post_kind_scope(rel, post_scope)
       case post_scope.to_s
       when "no_project"
-        rel.where.not(blog_category_id: BlogCategory.where(kind: :project).select(:id))
+        rel.where.not(category: :project)
       when "project"
-        rel.where(blog_category_id: BlogCategory.where(kind: :project).select(:id))
+        rel.where(category: :project)
       else
         rel
       end

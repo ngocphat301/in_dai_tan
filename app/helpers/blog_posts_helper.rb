@@ -3,7 +3,7 @@
 module BlogPostsHelper
   # Link bài trong khối «Bài viết liên quan» (giống layout dịch vụ): bài loại sản phẩm → ?news_context=1.
   def blog_post_related_path(post)
-    post.blog_category&.product? ? blog_post_path(post.slug, news_context: 1) : blog_post_path(post.slug)
+    post.category_product? ? blog_post_path(post.slug, news_context: 1) : blog_post_path(post.slug)
   end
 
   # Gắn id cho h2/h3 trong nội dung Trix và trả về mảng mục lục { level:, text:, id: }.

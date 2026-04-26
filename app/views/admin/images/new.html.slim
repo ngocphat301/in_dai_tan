@@ -14,14 +14,14 @@ p.muted
   = f.select :kind, [["Ảnh đại diện", "cover"], ["Ảnh đi kèm", "gallery"]], {}, data: { admin_product_image_form_target: "kind", action: "change->admin-product-image-form#kindChanged" }
   div data-admin-product-image-form-target="coverBlock" class=(@image.gallery? ? "is-hidden" : nil)
     = f.label :file, "Tệp ảnh"
-    p.muted Sau khi chọn ảnh, hệ thống mở cắt (mặc định 1000×1250px — có thể chỉnh trong hộp thoại).
-    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250 do
+    p.muted Sau khi chọn ảnh, hệ thống mở cắt.
+    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250, shape_hint: :rectangle do
       = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
   div data-admin-product-image-form-target="galleryBlock" class=(@image.gallery? ? nil : "is-hidden")
     = label_tag "image_gallery_files", "Ảnh đi kèm (có thể chọn nhiều file)"
     p.muted
-      | Mỗi ảnh mở hộp thoại cắt (mặc định 1000×1250px, chỉnh được). Tối đa #{Image::MAX_IMAGES_PER_PRODUCT - @product.images.count} file mỗi lần theo số ô còn lại.
-    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250, batch: true do
+      | Mỗi ảnh mở hộp thoại cắt. Tối đa #{Image::MAX_IMAGES_PER_PRODUCT - @product.images.count} file mỗi lần theo số ô còn lại.
+    = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250, shape_hint: :rectangle, batch: true do
       = file_field_tag "image[gallery_files][]", multiple: true, accept: "image/*", id: "image_gallery_files", data: { image_crop_target: "file", action: "change->image-crop#pick" }
   = f.label :caption, "Chú thích"
   = f.text_field :caption

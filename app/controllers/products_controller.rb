@@ -2,12 +2,9 @@ class ProductsController < ApplicationController
   include PaginatedCatalog
 
   def index
-    product_cat = BlogCategory.find_by(kind: :product) || BlogCategory.find_by(slug: "san-pham")
-    scope = if product_cat
-      BlogPost.published_now.where(blog_category: product_cat).includes(:blog_category, { avatar_attachment: :blob })
-    else
-      BlogPost.none
-    end
+    scope = BlogPost.published_now
+      .where(category: :product)
+      .includes({ avatar_attachment: :blob })
 
     pag = paginate_scope(scope)
     @product_blog_posts = pag[:records]

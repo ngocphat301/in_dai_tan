@@ -21,7 +21,9 @@ class ApplicationController < ActionController::Base
   end
 
   def load_header_product_categories
-    @header_product_categories = ProductCategory.ordered.includes(:blog_post)
+    @header_product_categories = Rails.cache.fetch(LayoutCache::HEADER_CATEGORIES_KEY, expires_in: 10.minutes) do
+      ProductCategory.ordered.includes(:blog_post).to_a
+    end
   rescue ActiveRecord::StatementInvalid
     @header_product_categories = []
   end
@@ -47,10 +49,9 @@ class ApplicationController < ActionController::Base
   def load_ads_popup_data
     # Popup: bài blog thuộc danh mục loại «quảng cáo» (avatar → ảnh popup, không còn SiteImage riêng).
     @ads_popup_preview = Rails.env.development? && params[:ads_preview].to_s == "1"
-    ads_cat = BlogCategory.find_by(kind: :ads)
-    @ads_popup_post = if ads_cat
+    @ads_popup_post = Rails.cache.fetch(LayoutCache::ADS_POPUP_KEY, expires_in: 10.minutes) do
       BlogPost.published_now
-        .where(blog_category: ads_cat)
+        .where(category: :ads)
         .includes(avatar_attachment: :blob)
         .order(published_at: :desc)
         .first

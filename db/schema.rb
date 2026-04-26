@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -61,19 +61,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_190000) do
     t.index ["created_at"], name: "index_ad_leads_on_created_at"
   end
 
-  create_table "blog_categories", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "kind", default: "news", null: false
-    t.string "name", null: false
-    t.integer "position", default: 0, null: false
-    t.string "slug", null: false
-    t.datetime "updated_at", null: false
-    t.index ["kind"], name: "index_blog_categories_on_kind"
-    t.index ["slug"], name: "index_blog_categories_on_slug", unique: true
-  end
-
   create_table "blog_posts", force: :cascade do |t|
-    t.bigint "blog_category_id", null: false
+    t.string "category", default: "news", null: false
     t.datetime "created_at", null: false
     t.text "excerpt"
     t.text "meta_description"
@@ -85,7 +74,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_190000) do
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["blog_category_id"], name: "index_blog_posts_on_blog_category_id"
+    t.index ["category"], name: "index_blog_posts_on_category"
     t.index ["slug"], name: "index_blog_posts_on_slug", unique: true
     t.index ["status"], name: "index_blog_posts_on_status"
     t.index ["title"], name: "index_blog_posts_on_title_trgm", opclass: :gin_trgm_ops, using: :gin
@@ -179,7 +168,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_190000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "blog_posts", "blog_categories"
   add_foreign_key "blog_posts", "users"
   add_foreign_key "images", "products"
   add_foreign_key "product_categories", "blog_posts", on_delete: :nullify

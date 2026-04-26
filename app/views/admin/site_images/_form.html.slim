@@ -9,8 +9,9 @@
   = f.label :file, "Tệp ảnh"
   - if site_image.file.attached?
     p = image_tag site_image.file, style: "max-width:320px;border-radius:8px;border:1px solid var(--dm-border, #e2e8f0)"
-  p.muted Sau khi chọn ảnh sẽ mở bước cắt. Mặc định xuất 1920×600px (banner trang chủ); có thể chỉnh rộng/cao trong hộp thoại. Bỏ «Khóa tỷ lệ» để cắt tỷ lệ tự do. Để trống file khi sửa nếu không đổi ảnh.
-  = render "admin/shared/image_crop_shell", output_width: 1920, output_height: 600 do
+  - crop_ow, crop_oh, crop_shape = (site_image.banner? ? [1920, 600, :rectangle] : [1000, 1000, :square])
+  p.muted Sau khi chọn ảnh sẽ mở bước cắt. Để trống file khi sửa nếu không đổi ảnh.
+  = render "admin/shared/image_crop_shell", output_width: crop_ow, output_height: crop_oh, shape_hint: crop_shape do
     = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
   = f.label :alt_text, "Alt / mô tả ngắn (SEO & trợ năng)"
   = f.text_field :alt_text, placeholder: "Mô tả ảnh"

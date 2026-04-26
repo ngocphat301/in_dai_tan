@@ -2,10 +2,9 @@ class Admin::BlogPostsController < Admin::BaseController
   before_action :set_blog_post, only: %i[show edit update destroy toggle_status]
 
   def index
-    @blog_categories = BlogCategory.ordered
-    @blog_posts = BlogPost.all.includes(:user, :blog_category, { avatar_attachment: :blob })
-    if (cid = params[:blog_category_id].presence&.to_i)&.positive? && BlogCategory.exists?(cid)
-      @blog_posts = @blog_posts.where(blog_category_id: cid)
+    @blog_posts = BlogPost.all.includes(:user, { avatar_attachment: :blob })
+    if (cat = params[:category].presence_in(BlogPost.categories.keys))
+      @blog_posts = @blog_posts.where(category: cat)
     end
     if (p = admin_like_pattern)
       @blog_posts = @blog_posts.where(
@@ -34,7 +33,7 @@ class Admin::BlogPostsController < Admin::BaseController
   end
 
   def new
-    @blog_post = BlogPost.new(status: :hidden, blog_category_id: BlogCategory.ordered.first&.id)
+    @blog_post = BlogPost.new(status: :hidden, category: :news)
   end
 
   def edit
@@ -84,7 +83,7 @@ class Admin::BlogPostsController < Admin::BaseController
       :meta_title,
       :meta_description,
       :status,
-      :blog_category_id,
+      :category,
       :published_at,
       :avatar,
       :tag_list

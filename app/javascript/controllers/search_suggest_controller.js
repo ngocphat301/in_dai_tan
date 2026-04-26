@@ -5,8 +5,8 @@ export default class extends Controller {
   static values = {
     url: String,
     minLength: { type: Number, default: 2 },
-    kind: { type: String, default: "product" },
-    postScope: { type: String, default: "" }
+    kind: { type: String, default: "post" },
+    postScope: { type: String, default: "all" }
   }
 
   connect() {
@@ -47,7 +47,7 @@ export default class extends Controller {
     }
 
     try {
-      const kind = this.kindValue || "product"
+      const kind = this.kindValue || "post"
       let url = `${this.urlValue}?q=${encodeURIComponent(q)}&kind=${encodeURIComponent(kind)}`
       if (kind === "post") {
         const ps = (this.postScopeValue || "all").trim() || "all"

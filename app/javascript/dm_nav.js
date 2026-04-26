@@ -28,6 +28,13 @@ function initDmNav() {
       if (!nav) return
       nav.classList.toggle("dm-nav--open", toggle.checked)
       document.body.classList.toggle("dm-menu-open", toggle.checked)
+      if (!toggle.checked) {
+        document.querySelectorAll(".dm-nav__item--open").forEach((o) => {
+          o.classList.remove("dm-nav__item--open")
+          const b = o.querySelector(".dm-nav__trigger")
+          if (b) b.setAttribute("aria-expanded", "false")
+        })
+      }
     })
   })
 }

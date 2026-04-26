@@ -15,8 +15,8 @@ p.muted
   = f.label :kind, "Loại ảnh"
   = f.select :kind, [["Ảnh đại diện", "cover"], ["Ảnh đi kèm", "gallery"]]
   = f.label :file, "Thay ảnh (tuỳ chọn)"
-  p.muted Chọn ảnh mới để mở cắt (mặc định 1000×1250px, chỉnh được trong hộp thoại).
-  = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250 do
+  p.muted Chọn ảnh mới để mở cắt.
+  = render "admin/shared/image_crop_shell", output_width: 1000, output_height: 1250, shape_hint: :rectangle do
     = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
   = f.label :caption, "Chú thích"
   = f.text_field :caption

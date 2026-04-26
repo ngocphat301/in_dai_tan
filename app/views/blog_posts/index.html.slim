@@ -9,7 +9,7 @@
         .dm-news-hub__featured-media
           = blog_post_avatar_tag @featured_post, variant: { resize_to_fill: [960, 540] }, alt: @featured_post.title, class: "dm-news-hub__featured-img", loading: "eager"
         .dm-news-hub__featured-body
-          span.dm-news-hub__featured-badge= @featured_post.blog_category&.name.presence || "Tin"
+          span.dm-news-hub__featured-badge= @featured_post.category_label.presence || "Tin"
           h2.dm-news-hub__featured-title= @featured_post.title
           - feat_desc = @featured_post.excerpt.presence || truncate(@featured_post.search_body_plain, length: 320)
           - if feat_desc.present?

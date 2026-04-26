@@ -15,16 +15,16 @@
   p.muted Dùng để gợi ý bài «Sản phẩm» liên quan trên trang bài «Dịch vụ». Ví dụ: in-hop, brochure, name-card
   = f.text_field :tag_list, placeholder: "tag-một, tag-hai"
   = f.label :avatar, "Ảnh đại diện"
-  p.muted JPEG, PNG, WebP hoặc GIF — hiển thị trong danh sách blog và đầu bài viết công khai. Hộp thoại cắt mở với mặc định 1200×600px; có thể chỉnh kích thước xuất hoặc bỏ khóa tỷ lệ để cắt tự do.
+  p.muted JPEG, PNG, WebP hoặc GIF — hiển thị trong danh sách blog và đầu bài viết công khai.
   p = blog_post_avatar_tag blog_post, variant: { resize_to_limit: [400, 400] }, alt: "Ảnh đại diện bài viết", class: "admin-blog-avatar-preview"
-  = render "admin/shared/image_crop_shell", output_width: 1200, output_height: 600 do
+  = render "admin/shared/image_crop_shell", output_width: 1200, output_height: 1200, shape_hint: :square do
     = f.file_field :avatar, accept: "image/jpeg,image/png,image/webp,image/gif", data: { image_crop_target: "file", action: "change->image-crop#pick" }
   = f.label :meta_title, "Meta title (SEO)"
   = f.text_field :meta_title, placeholder: "Để trống = dùng tiêu đề bài"
   = f.label :meta_description, "Meta description (SEO)"
   = f.text_area :meta_description, rows: 3
-  = f.label :blog_category_id, "Danh mục"
-  = f.collection_select :blog_category_id, BlogCategory.ordered, :id, :name, {}, {}
+  = f.label :category, "Danh mục blog"
+  = f.select :category, BlogPost.category_options_for_select, {}, {}
   = f.label :status, "Trạng thái"
   = f.select :status, BlogPost.status_options_for_select, {}
   = f.label :body, "Nội dung (trình soạn thảo)"
