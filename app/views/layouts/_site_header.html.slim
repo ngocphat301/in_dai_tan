@@ -1,14 +1,14 @@
 .dm-topbar
   .dm-container.dm-topbar__inner
     span.dm-topbar__addr
-      | Lô D10 – 7, Cụm làng nghề Triều Khúc – Tân Triều – Thanh Trì – Hà Nội
+      | Số 39 Xuân Khôi, Cự Khối, Long Biên, Hà Nội
     .dm-topbar__contact
       = link_to social_hotline_tel, class: "dm-topbar__link" do
         span.dm-topbar__icon aria-hidden="true" ☎
         = social_hotline_display
-      = link_to "mailto:kinhdoanh@indaiminh.com", class: "dm-topbar__link" do
+      = link_to "mailto:inantandai@gmail.com", class: "dm-topbar__link" do
         span.dm-topbar__icon aria-hidden="true" ✉
-        | kinhdoanh@indaiminh.com
+        | inantandai@gmail.com
       button.dm-topbar__cta type="button" data-action="click->quote-modal#open" data-return-to="home"
         | Gửi yêu cầu báo giá
 
@@ -36,7 +36,7 @@ header.dm-header
             span
             span
       ul.dm-nav__list
-        li.dm-nav__item class="#{'is-active' if nav_active?(:services_mega)}"
+        li.dm-nav__item.dm-nav__item--mega class="#{'is-active' if nav_active?(:services_mega)}"
           button.dm-nav__trigger type="button" aria-expanded="false" class=nav_trigger_class(:services_mega)
             | Dịch vụ in
             span.dm-nav__caret aria-hidden="true"

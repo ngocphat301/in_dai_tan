@@ -1,5 +1,5 @@
 /*
- * In Tân Đại–inspired layout (demo). Assets: indaiminh.com
+ * In Tân Đại–inspired layout (demo). Assets: inantandai.com
  */
 
 :root {
@@ -6040,7 +6040,7 @@ button.dm-contact__btn {
 
 @media (min-width: 768px) {
   .dm-about__stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
