@@ -1,5 +1,5 @@
-- dm = "https://indaiminh.com"
-- bg_url = "https://indaiminh.com/wp-content/uploads/2021/11/bg-contact.jpg"
+- dm = "https://inantandai.com"
+- bg_url = ""
 
 footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
   .dm-footer__overlay
@@ -14,10 +14,10 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
             =<> link_to "0898387281", social_hotline_tel, class: "dm-footer__link"
           p.dm-footer__text
             | Email:
-            =<> link_to "kinhdoanh@indaiminh.com", "mailto:kinhdoanh@indaiminh.com", class: "dm-footer__link"
+            =<> link_to "inantandai@gmail.com", "mailto:inantandai@gmail.com", class: "dm-footer__link"
           p.dm-footer__text
             | Website:
-            =<> link_to "indaiminh.com", dm, class: "dm-footer__link", target: "_blank", rel: "noopener"
+            =<> link_to "inantandai.com", dm, class: "dm-footer__link", target: "_blank", rel: "noopener"
 
         .dm-footer__col.dm-footer__col--hours
           h3.dm-footer__heading Giờ làm việc
@@ -31,7 +31,7 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
             li = link_to "Chính Sách Thanh Toán", blog_post_path("chinh-sach-thanh-toan")
             li = link_to "Chính Sách Đổi Trả", blog_post_path("chinh-sach-doi-tra")
             li = link_to "Chính Sách Giao Hàng", blog_post_path("chinh-sach-giao-hang")
-          p.dm-footer__muted.dm-footer__hint Góp ý: cskh@indaiminh.com
+          p.dm-footer__muted.dm-footer__hint Góp ý: inantandai@gmail.com
 
     .dm-footer__bar
       .dm-container.dm-footer__bar-inner
@@ -39,4 +39,4 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
           | Copyright #{Time.current.year} ©
           strong<> In Tân Đại
           span.dm-footer__demo  — Giao diện demo mô phỏng theo&nbsp;
-          = link_to "indaiminh.com", dm, target: "_blank", rel: "noopener", class: "dm-footer__link"
+          = link_to "inantandai.com", dm, target: "_blank", rel: "noopener", class: "dm-footer__link"

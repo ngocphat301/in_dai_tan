@@ -29,7 +29,7 @@ end
   [ "Hộp giày", "hop-giay", 8 ],
   [ "Hộp rút", "hop-rut", 9 ],
   [ "Phong bì", "phong-bi", 10 ],
-  [ "Túi giấy gập miệng", "tui-giay-gap-mieng", 11 ]
+  [ "Túi giấy", "tui-giay", 11 ]
 ].each do |name, slug, position|
   ProductCategory.find_or_initialize_by(slug: slug).tap do |c|
     c.assign_attributes(name: name, position: position)

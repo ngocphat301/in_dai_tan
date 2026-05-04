@@ -11,7 +11,7 @@ module ApplicationHelper
 
   # Nhóm [ [ tên danh mục, [ [ tên SP, id ], ... ] ], ... ] cho grouped_options_for_select
   def social_facebook_url
-    ENV.fetch("SOCIAL_FACEBOOK_URL", "https://www.facebook.com/indaiminh.mn")
+    ENV.fetch("SOCIAL_FACEBOOK_URL", "https://www.facebook.com/baobitandai")
   end
 
   # Chỉ chữ số, mặc định hotline Zalo / gọi / WhatsApp (góc phải màn hình).
