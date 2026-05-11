@@ -32,7 +32,7 @@ jobs:
 
             DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
             DEPLOY_BRANCH="${{ github.ref_name }}"
-            COMPOSE_FILE="docker-compose.prod.yml"
+            COMPOSE_FILE="docker-compose.yml"
 
             echo "==> Vào thư mục $DEPLOY_PATH"
             cd "$DEPLOY_PATH"
