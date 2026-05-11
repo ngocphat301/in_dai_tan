@@ -1,0 +1,68 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to VPS via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH vào VPS và chạy docker compose
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
+          command_timeout: 30m
+          envs: DEPLOY_PATH,DEPLOY_BRANCH,COMPOSE_FILE
+          script: |
+            set -euo pipefail
+
+            DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+            DEPLOY_BRANCH="${{ github.ref_name }}"
+            COMPOSE_FILE="docker-compose.prod.yml"
+
+            echo "==> Vào thư mục $DEPLOY_PATH"
+            cd "$DEPLOY_PATH"
+
+            echo "==> Kéo code mới nhất từ branch $DEPLOY_BRANCH"
+            git fetch --all --prune
+            git reset --hard "origin/$DEPLOY_BRANCH"
+
+            if [ ! -f .env ]; then
+              echo "!! Thiếu file .env trên server tại $DEPLOY_PATH/.env" >&2
+              exit 1
+            fi
+
+            echo "==> Build image production"
+            docker compose -f "$COMPOSE_FILE" --env-file .env build web
+
+            echo "==> Khởi động/cập nhật services (db, web)"
+            docker compose -f "$COMPOSE_FILE" --env-file .env up -d --remove-orphans
+
+            echo "==> Chờ Postgres healthy"
+            for i in $(seq 1 30); do
+              if docker compose -f "$COMPOSE_FILE" --env-file .env exec -T db pg_isready -U "${POSTGRES_USER:-postgres}" >/dev/null 2>&1; then
+                break
+              fi
+              sleep 2
+            done
+
+            echo "==> Chạy db:prepare (tạo DB + migrate)"
+            docker compose -f "$COMPOSE_FILE" --env-file .env run --rm web bin/rails db:prepare
+
+            echo "==> Dọn image cũ không dùng"
+            docker image prune -f
+
+            echo "==> Trạng thái cuối"
+            docker compose -f "$COMPOSE_FILE" --env-file .env ps

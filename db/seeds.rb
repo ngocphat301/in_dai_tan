@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "stringio"
+
 admin = User.find_or_initialize_by(email: "admin@example.com")
 admin.assign_attributes(
   password: "password123",
@@ -217,9 +219,12 @@ if File.exist?(partner_icon)
     si.alt_text = "Đối tác minh họa #{i + 1}"
     si.link_url = nil
     unless si.file.attached?
-      File.open(partner_icon, "rb") do |io|
-        si.file.attach(io: io, filename: "partner-#{i + 1}.svg", content_type: "image/svg+xml")
-      end
+      # StringIO: File.open block đóng stream trước khi Active Storage đọc xong → IOError closed stream
+      si.file.attach(
+        io: StringIO.new(File.binread(partner_icon)),
+        filename: "partner-#{i + 1}.svg",
+        content_type: "image/svg+xml"
+      )
     end
     si.save!
   end

@@ -17,7 +17,11 @@ class ApplicationController < ActionController::Base
 
   # Form báo giá (modal) dùng chung layout kể cả trang đăng nhập — không gắn header danh mục.
   def html_quote_modal_layout?
-    request.format.html? && !request.path.start_with?("/admin")
+    return false if request.path.start_with?("/admin")
+
+    # Browser thường gửi text/html; curl/bot hay gửi */* — vẫn render HTML nhưng format.html? là false.
+    navigational_html_format = request.format.html? || request.format == Mime::Type.lookup("*/*")
+    navigational_html_format
   end
 
   def load_header_product_categories
