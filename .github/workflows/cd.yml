@@ -23,7 +23,7 @@ jobs:
           host: ${{ vars.SSH_HOST }}
           username: ${{ vars.SSH_USER }}
           port: ${{ vars.SSH_PORT || '22' }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ vars.SSH_PRIVATE_KEY }}
           script_stop: true
           command_timeout: 30m
           envs: DEPLOY_PATH,DEPLOY_BRANCH,COMPOSE_FILE
