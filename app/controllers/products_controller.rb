@@ -15,6 +15,15 @@ class ProductsController < ApplicationController
     @prev_path = products_path(page: @page - 1) if @page > 1
     @next_path = products_path(page: @page + 1) if @page < @total_pages
     @breadcrumbs = [ crumb_root, crumb_current("Sản phẩm") ]
+    @seo = {
+      title: "Sản phẩm",
+      description: seo_truncate_description(
+        "Bài giới thiệu bao bì và giải pháp in — danh mục blog loại Sản phẩm tại In Tân Đại."
+      ),
+      canonical: seo_current_canonical_url(request),
+      og_type: "website",
+      og_image: seo_default_og_image_url(request)
+    }
   end
 
   def show
@@ -26,5 +35,33 @@ class ProductsController < ApplicationController
       { label: "Sản phẩm", path: products_path },
       crumb_current(@product.name)
     ]
+
+    desc = @product.description.to_s.strip.presence || "#{@product.name} — báo giá in ấn tại In Tân Đại."
+    canonical = seo_current_canonical_url(request)
+    origin = seo_site_origin(request)
+
+    @seo = {
+      title: @product.name,
+      description: seo_truncate_description(desc),
+      canonical: canonical,
+      og_type: "product",
+      og_image: seo_product_og_image_url(@product, request)
+    }
+    @seo_json_ld_extra = {
+      "@type" => "Product",
+      "name" => @product.name,
+      "description" => seo_truncate_description(desc, 500),
+      "image" => product_gallery_items(@product).map do |item|
+        image_url = item[:url].to_s
+        image_url.start_with?("http://", "https://") ? image_url : "#{origin}#{image_url}"
+      end,
+      "offers" => {
+        "@type" => "Offer",
+        "priceCurrency" => "VND",
+        "price" => @product.sale_price_vnd.to_i,
+        "availability" => "https://schema.org/InStock",
+        "url" => canonical
+      }
+    }
   end
 end

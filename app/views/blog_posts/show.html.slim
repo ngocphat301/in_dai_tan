@@ -1,6 +1,4 @@
 - content_for :title, @blog_post.meta_title.presence || @blog_post.title
-- content_for :head do
-  meta name="description" content=(@blog_post.meta_description.presence || @blog_post.excerpt.to_s).truncate(300)
 
 - if @blog_post.category_service?
   - show_service_aside = @blog_outline.present? || @related_product_posts.present?

@@ -1,83 +1,71 @@
-# name: CD
+name: CD
 
-# on:
-#   push:
-#     branches: [ main ]
-#   workflow_dispatch:
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-# concurrency:
-#   group: cd-${{ github.ref }}
-#   cancel-in-progress: false
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
 
-# jobs:
-#   deploy:
-#     name: Deploy to VPS via SSH
-#     runs-on: ubuntu-latest
+jobs:
+  deploy:
+    name: Deploy to VPS via SSH
+    runs-on: ubuntu-latest
 
-#     steps:
-#       # Host/user/port/path đặt ở Settings → Secrets and variables → Actions → Variables (vars.*).
-#       # Chỉ SSH_PRIVATE_KEY nên là Secret (secrets.*).
-#       - name: SSH vào VPS và chạy docker compose
-#         uses: appleboy/ssh-action@v1.2.0
-#         with:
-#           host: ${{ vars.SSH_HOST }}
-#           username: ${{ vars.SSH_USER }}
-#           port: ${{ vars.SSH_PORT || '22' }}
-#           key: ${{ vars.SSH_PRIVATE_KEY }}
-#           script_stop: true
-#           command_timeout: 30m
-#           envs: DEPLOY_PATH,DEPLOY_BRANCH,COMPOSE_FILE
-#           script: |
-#             set -euo pipefail
+    steps:
+      # Host/user/port/path đặt ở Settings → Secrets and variables → Actions → Variables (vars.*).
+      # SSH_PRIVATE_KEY nên lưu ở Secrets (secrets.SSH_PRIVATE_KEY).
+      - name: SSH vào VPS và triển khai (bin/server-dev, không Docker Compose)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ vars.SSH_HOST }}
+          username: ${{ vars.SSH_USER }}
+          port: ${{ vars.SSH_PORT || '22' }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
+          command_timeout: 30m
+          envs: DEPLOY_PATH,DEPLOY_BRANCH
+          script: |
+            set -euo pipefail
 
-#             DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
-#             DEPLOY_BRANCH="${{ github.ref_name }}"
-#             COMPOSE_FILE="${{ vars.COMPOSE_FILE || 'docker-compose.yml' }}"
+            DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
+            DEPLOY_BRANCH="${{ github.ref_name }}"
 
-#             echo "==> Vào thư mục $DEPLOY_PATH"
-#             cd "$DEPLOY_PATH"
+            echo "==> Vào thư mục $DEPLOY_PATH"
+            cd "$DEPLOY_PATH"
 
-#             echo "==> Kéo code mới nhất từ branch $DEPLOY_BRANCH"
-#             git fetch --all --prune
-#             git reset --hard "origin/$DEPLOY_BRANCH"
+            echo "==> Kéo code mới nhất từ branch $DEPLOY_BRANCH"
+            git fetch --all --prune
+            git reset --hard "origin/$DEPLOY_BRANCH"
 
-#             if [ ! -f .env ]; then
-#               echo "!! Thiếu file .env trên server tại $DEPLOY_PATH/.env" >&2
-#               exit 1
-#             fi
+            if [ ! -f .env ]; then
+              echo "!! Thiếu file .env trên server tại $DEPLOY_PATH/.env" >&2
+              exit 1
+            fi
 
-#             echo "==> Build image production"
-#             docker compose -f "$COMPOSE_FILE" --env-file .env build web
+            echo "==> Nạp biến môi trường từ .env"
+            set -a
+            # shellcheck disable=SC1091
+            . ./.env
+            set +a
+            export RAILS_ENV=development
 
-#             echo "==> Khởi động/cập nhật services (db, web)"
-#             docker compose -f "$COMPOSE_FILE" --env-file .env up -d --remove-orphans
+            echo "==> Cài gems"
+            bundle check || bundle install --jobs 4 --retry 3
 
-#             echo "==> Chờ Postgres healthy"
-#             for i in $(seq 1 30); do
-#               if docker compose -f "$COMPOSE_FILE" --env-file .env exec -T db pg_isready -U "${POSTGRES_USER:-postgres}" >/dev/null 2>&1; then
-#                 break
-#               fi
-#               sleep 2
-#             done
+            echo "==> Precompile assets"
+            bundle exec rails assets:precompile
 
-#             echo "==> Chờ web cài xong gems"
-#             for i in $(seq 1 60); do
-#               if docker compose -f "$COMPOSE_FILE" --env-file .env exec -T web bundle check >/dev/null 2>&1; then
-#                 break
-#               fi
-#               if [ "$i" -eq 60 ]; then
-#                 echo "!! Web chưa sẵn sàng sau 120s (bundle check fail)" >&2
-#                 docker compose -f "$COMPOSE_FILE" --env-file .env logs --tail=120 web || true
-#                 exit 1
-#               fi
-#               sleep 2
-#             done
+            echo "==> Chuẩn bị database (migrate / tạo DB nếu cần)"
+            bundle exec rails db:prepare
 
-#             echo "==> Chạy db:prepare (tạo DB + migrate) trong container web đang chạy"
-#             docker compose -f "$COMPOSE_FILE" --env-file .env exec -T web bin/rails db:prepare
+            echo "==> Khởi động lại app (bin/server-dev)"
+            BIND="${BIND:-127.0.0.1}"
+            PORT="${PORT:-3000}"
+            export BIND PORT
+            bin/server-dev restart
 
-#             echo "==> Dọn image cũ không dùng"
-#             docker image prune -f
-
-#             echo "==> Trạng thái cuối"
-#             docker compose -f "$COMPOSE_FILE" --env-file .env ps
+            echo "==> Trạng thái cuối"
+            bin/server-dev status || true

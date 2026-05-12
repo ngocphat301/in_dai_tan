@@ -1,0 +1,24 @@
+- seo = @seo || {}
+- title = seo[:title].to_s
+- desc = seo[:description].to_s
+- canonical = seo[:canonical].to_s
+- og_type = seo[:og_type].presence || "website"
+- og_image = seo[:og_image].presence || seo_default_og_image_url(request)
+- doc_title = title.present? ? "#{title} | In Tân Đại" : "In Tân Đại"
+- if seo[:noindex]
+  meta name="robots" content="noindex, nofollow"
+meta name="description" content=desc
+link rel="canonical" href=canonical
+meta property="og:title" content=doc_title
+meta property="og:description" content=desc
+meta property="og:url" content=canonical
+meta property="og:image" content=og_image
+meta property="og:type" content=og_type
+meta property="og:locale" content="vi_VN"
+meta name="twitter:card" content="summary_large_image"
+meta name="twitter:title" content=doc_title
+meta name="twitter:description" content=desc
+meta name="twitter:image" content=og_image
+- graph = seo_json_ld_graph(seo, request: request)
+- if graph.present?
+  script type="application/ld+json" == json_ld_escape(graph)

@@ -15,3 +15,11 @@ two:
   sale_price_vnd: 1
   published: false
   product_category: one
+
+published_product:
+  name: Sản phẩm SEO fixture
+  description: Mô tả sản phẩm fixture.
+  original_price_vnd: 100000
+  sale_price_vnd: 50000
+  published: true
+  product_category: one

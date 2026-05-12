@@ -13,6 +13,13 @@ class BlogPostsController < ApplicationController
     scope = blog_posts_base_scope.where.not(category: :project)
     assign_news_hub!(scope)
     @breadcrumbs = [ crumb_root, crumb_current("Tin tức") ]
+    @seo = {
+      title: @blog_list_title,
+      description: seo_truncate_description("Tin tức in ấn, bao bì, chia sẻ kinh nghiệm và cập nhật xu hướng tại In Tân Đại."),
+      canonical: seo_current_canonical_url(request),
+      og_type: "website",
+      og_image: (@featured_post ? seo_blog_og_image_url(@featured_post, request) : seo_default_og_image_url(request))
+    }
     render :index
   end
 
@@ -22,6 +29,13 @@ class BlogPostsController < ApplicationController
     scope = blog_posts_base_scope.where(category: :service)
     assign_blog_list!(scope, pagination: :service)
     @breadcrumbs = [ crumb_root, crumb_current("Dịch vụ in ấn") ]
+    @seo = {
+      title: @blog_list_title,
+      description: seo_truncate_description("Dịch vụ in ấn theo yêu cầu: tư vấn vật liệu, quy cách và báo giá minh bạch tại In Tân Đại."),
+      canonical: seo_current_canonical_url(request),
+      og_type: "website",
+      og_image: seo_default_og_image_url(request)
+    }
     render :index
   end
 
@@ -31,6 +45,13 @@ class BlogPostsController < ApplicationController
     scope = blog_posts_base_scope.where(category: :project)
     assign_blog_list!(scope, pagination: :project)
     @breadcrumbs = [ crumb_root, crumb_current("Dự án") ]
+    @seo = {
+      title: @blog_list_title,
+      description: seo_truncate_description("Các dự án in ấn và bao bì tiêu biểu do In Tân Đại triển khai cho khách hàng doanh nghiệp."),
+      canonical: seo_current_canonical_url(request),
+      og_type: "website",
+      og_image: seo_default_og_image_url(request)
+    }
     render :index
   end
 
@@ -52,6 +73,27 @@ class BlogPostsController < ApplicationController
       @related_blog_posts = @blog_post.related_blog_posts(limit: 6)
       @blog_post_html, @blog_outline = helpers.blog_post_outline_and_html(@blog_post)
     end
+
+    title = @blog_post.meta_title.presence || @blog_post.title
+    desc = @blog_post.meta_description.presence || @blog_post.excerpt.to_s
+    @seo = {
+      title: title,
+      description: seo_truncate_description(desc),
+      canonical: seo_current_canonical_url(request),
+      og_type: "article",
+      og_image: seo_blog_og_image_url(@blog_post, request)
+    }
+
+    canonical = @seo[:canonical]
+    published = @blog_post.published_at
+    @seo_json_ld_extra = {
+      "@type" => "BlogPosting",
+      "headline" => @blog_post.title,
+      "description" => seo_truncate_description(desc, 500),
+      "url" => canonical,
+      "datePublished" => published&.iso8601,
+      "image" => (seo_blog_og_image_url(@blog_post, request) if @blog_post.avatar.attached?)
+    }.compact
   end
 
   private

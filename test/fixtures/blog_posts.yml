@@ -21,3 +21,14 @@ two:
   published_at:
   user: two
   category: service
+
+published_news:
+  title: Tin SEO fixture
+  slug: published-seo-news
+  excerpt: Mô tả ngắn fixture cho SEO.
+  meta_title: Meta title fixture
+  meta_description: Meta description fixture cho bài tin.
+  status: publish
+  published_at: <%= 2.days.ago.to_fs(:db) %>
+  user: one
+  category: news

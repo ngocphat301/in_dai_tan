@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Breadcrumbs
+  include SeoHelper
 
   allow_browser versions: :modern
 

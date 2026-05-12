@@ -13,6 +13,10 @@ html lang="vi" data-controller="quote-modal" data-quote-modal-open-on-load-value
     = csrf_meta_tags
     = csp_meta_tag
     = yield :head
+    - if @seo.present?
+      = render "layouts/seo_tags"
+    - elsif Rails.env.development?
+      - Rails.logger.warn("[seo] missing @seo for #{controller_path}##{action_name}")
     link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any"
     = stylesheet_link_tag "application", "actiontext", "data-turbo-track": "reload"
     link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" crossorigin="anonymous"
