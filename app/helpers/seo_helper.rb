@@ -88,8 +88,103 @@ module SeoHelper
     }
 
     graph = [ org, web_site ]
-    graph << @seo_json_ld_extra if @seo_json_ld_extra.present?
+    seo_json_ld_extra_nodes.each { |node| graph << node }
 
     { "@context" => "https://schema.org", "@graph" => graph }
+  end
+
+  # Một hoặc nhiều node JSON-LD (ví dụ BlogPosting + BreadcrumbList).
+  def seo_json_ld_extra_nodes
+    case @seo_json_ld_extra
+    when nil then []
+    when Array then @seo_json_ld_extra.compact
+    else [ @seo_json_ld_extra ]
+    end
+  end
+
+  def seo_absolute_url_from_path(request, path)
+    p = path.to_s
+    return p if p.start_with?("http://", "https://")
+
+    base = seo_site_origin(request)
+    p = "/#{p.delete_prefix('/')}"
+    "#{base}#{p}"
+  end
+
+  # crumbs: [{ label:, path: }], path nil = trang hiện tại (dùng page_url).
+  def seo_breadcrumb_list_json_ld(crumbs, request, page_url:)
+    return nil if crumbs.blank?
+
+    elements = crumbs.each_with_index.map do |c, idx|
+      item_url =
+        if c[:path].present?
+          seo_absolute_url_from_path(request, c[:path])
+        else
+          page_url
+        end
+      {
+        "@type" => "ListItem",
+        "position" => idx + 1,
+        "name" => c[:label].to_s,
+        "item" => item_url
+      }
+    end
+    return nil if elements.blank?
+
+    { "@type" => "BreadcrumbList", "itemListElement" => elements }
+  end
+
+  # ItemList các bài blog (trang danh sách tin / dịch vụ / dự án hoặc /products).
+  def seo_blog_post_item_list_json_ld(posts, request, name:, description:)
+    list = Array(posts).compact
+    return nil if list.empty?
+
+    routes = Rails.application.routes.url_helpers
+    {
+      "@type" => "ItemList",
+      "name" => name,
+      "description" => seo_truncate_description(description),
+      "numberOfItems" => list.size,
+      "itemListElement" => list.each_with_index.map do |post, i|
+        {
+          "@type" => "ListItem",
+          "position" => i + 1,
+          "name" => post.title,
+          "url" => seo_absolute_url_from_path(request, routes.blog_post_path(post.slug))
+        }
+      end
+    }
+  end
+
+  # Google BlogPosting — author, publisher, mainEntityOfPage, dateModified, inLanguage.
+  def seo_blog_posting_structured_data(blog_post, request, canonical:, description:)
+    published = blog_post.published_at
+    img_url = seo_blog_og_image_url(blog_post, request)
+    {
+      "@type" => "BlogPosting",
+      "headline" => blog_post.title,
+      "description" => description,
+      "url" => canonical,
+      "datePublished" => published&.iso8601,
+      "dateModified" => blog_post.updated_at.iso8601,
+      "inLanguage" => "vi",
+      "mainEntityOfPage" => {
+        "@type" => "WebPage",
+        "@id" => canonical
+      },
+      "image" => [ img_url ],
+      "author" => {
+        "@type" => "Person",
+        "name" => blog_post.user&.quote_display_name.presence || "In Tân Đại"
+      },
+      "publisher" => {
+        "@type" => "Organization",
+        "name" => "In Tân Đại",
+        "logo" => {
+          "@type" => "ImageObject",
+          "url" => seo_default_og_image_url(request)
+        }
+      }
+    }.compact
   end
 end

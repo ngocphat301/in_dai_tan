@@ -32,3 +32,23 @@ published_news:
   published_at: <%= 2.days.ago.to_fs(:db) %>
   user: one
   category: news
+
+published_product_post:
+  title: Bài sản phẩm SEO fixture
+  slug: published-seo-product-post
+  excerpt: Giới thiệu bao bì fixture.
+  meta_title: Meta SP fixture
+  meta_description: Mô tả meta SP fixture.
+  status: publish
+  published_at: <%= 3.days.ago.to_fs(:db) %>
+  user: one
+  category: product
+
+published_service_post:
+  title: Dịch vụ SEO fixture
+  slug: published-seo-service-post
+  excerpt: Mô tả dịch vụ fixture.
+  status: publish
+  published_at: <%= 4.days.ago.to_fs(:db) %>
+  user: one
+  category: service

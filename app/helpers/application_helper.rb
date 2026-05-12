@@ -187,4 +187,30 @@ module ApplicationHelper
     }
     content_tag(:script, raw(ERB::Util.json_escape(data.to_json)), type: "application/ld+json")
   end
+
+  # JSON-LD ItemList khi khối «Quy mô xưởng in» lấy ảnh từ SiteImage (quản trị).
+  def factory_scale_site_images_itemlist_json_ld(site_images)
+    list = site_images.respond_to?(:to_a) ? site_images.to_a : []
+    list.select! { |img| img.file.attached? }
+    return ActiveSupport::SafeBuffer.new if list.blank?
+
+    data = {
+      "@context" => "https://schema.org",
+      "@type" => "ItemList",
+      "name" => "Quy mô xưởng in — In Tân Đại",
+      "description" => "Hình ảnh thiết bị và năng lực sản xuất in ấn tại xưởng.",
+      "numberOfItems" => list.size,
+      "itemListElement" => list.map.with_index(1) do |img, i|
+        name = img.alt_text.presence || img.popup_title.presence || "Hình ảnh quy mô #{i}"
+        url = img.link_url.presence || root_url(anchor: "dm-factory-scale")
+        {
+          "@type" => "ListItem",
+          "position" => i,
+          "name" => name,
+          "url" => url
+        }
+      end
+    }
+    content_tag(:script, raw(ERB::Util.json_escape(data.to_json)), type: "application/ld+json")
+  end
 end

@@ -1,7 +1,14 @@
+- scale_imgs = @factory_scale_site_images.select(&:file?)
 - scale_posts = @factory_scale_mosaic_posts
-- if (ld = factory_scale_itemlist_json_ld(scale_posts)).present?
-  - content_for :head do
-    = ld
+- use_site_images = scale_imgs.any?
+- if use_site_images
+  - if (ld = factory_scale_site_images_itemlist_json_ld(scale_imgs)).present?
+    - content_for :head do
+      = ld
+- elsif scale_posts.any?
+  - if (ld = factory_scale_itemlist_json_ld(scale_posts)).present?
+    - content_for :head do
+      = ld
 
 section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="dm-factory-scale-title"
   h2#dm-factory-scale-title.dm-section-title.dm-factory-scale__title
@@ -9,10 +16,22 @@ section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="d
     span xưởng in
 
   ul.dm-factory-scale-grid role="list"
-    - scale_posts.each do |post|
-      li.dm-factory-scale-grid__cell
-        = link_to blog_post_path(post.slug), class: "dm-factory-scale-grid__link", title: post.title do
-          - alt = "#{post.title} — quy mô xưởng in"
-          = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
-  p.visually-hidden Sáu ảnh đại diện cùng kích thước, hai hàng ba cột; bấm ảnh để xem bài quy mô xưởng in.
+    - if use_site_images
+      - scale_imgs.each do |img|
+        li.dm-factory-scale-grid__cell
+          - alt = img.alt_text.presence || "#{img.popup_title.presence || 'In Tân Đại'} — quy mô xưởng in"
+          - title = img.popup_title.presence || alt
+          - if img.link_url.present?
+            = link_to img.link_url, target: "_blank", rel: "noopener", class: "dm-factory-scale-grid__link", title: title do
+              = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+          - else
+            span.dm-factory-scale-grid__link.dm-factory-scale-grid__link--static
+              = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+    - else
+      - scale_posts.each do |post|
+        li.dm-factory-scale-grid__cell
+          = link_to blog_post_path(post.slug), class: "dm-factory-scale-grid__link", title: post.title do
+            - alt = "#{post.title} — quy mô xưởng in"
+            = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+  p.visually-hidden Lưới ảnh quy mô xưởng in; có thể bấm để mở liên kết hoặc bài viết chi tiết.
 

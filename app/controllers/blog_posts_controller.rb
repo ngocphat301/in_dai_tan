@@ -20,6 +20,7 @@ class BlogPostsController < ApplicationController
       og_type: "website",
       og_image: (@featured_post ? seo_blog_og_image_url(@featured_post, request) : seo_default_og_image_url(request))
     }
+    assign_blog_index_item_list!
     render :index
   end
 
@@ -36,6 +37,7 @@ class BlogPostsController < ApplicationController
       og_type: "website",
       og_image: seo_default_og_image_url(request)
     }
+    assign_blog_index_item_list!
     render :index
   end
 
@@ -52,6 +54,7 @@ class BlogPostsController < ApplicationController
       og_type: "website",
       og_image: seo_default_og_image_url(request)
     }
+    assign_blog_index_item_list!
     render :index
   end
 
@@ -76,30 +79,51 @@ class BlogPostsController < ApplicationController
 
     title = @blog_post.meta_title.presence || @blog_post.title
     desc = @blog_post.meta_description.presence || @blog_post.excerpt.to_s
+    canonical = seo_current_canonical_url(request)
+    published = @blog_post.published_at
+    desc_ld = seo_truncate_description(desc, 500)
     @seo = {
       title: title,
       description: seo_truncate_description(desc),
-      canonical: seo_current_canonical_url(request),
+      canonical: canonical,
       og_type: "article",
-      og_image: seo_blog_og_image_url(@blog_post, request)
+      og_image: seo_blog_og_image_url(@blog_post, request),
+      article_published_at: published&.iso8601,
+      article_modified_at: @blog_post.updated_at.iso8601
     }
 
-    canonical = @seo[:canonical]
-    published = @blog_post.published_at
-    @seo_json_ld_extra = {
-      "@type" => "BlogPosting",
-      "headline" => @blog_post.title,
-      "description" => seo_truncate_description(desc, 500),
-      "url" => canonical,
-      "datePublished" => published&.iso8601,
-      "image" => (seo_blog_og_image_url(@blog_post, request) if @blog_post.avatar.attached?)
-    }.compact
+    crumbs = helpers.blog_post_breadcrumbs(@blog_post, news_context: params[:news_context].present?)
+    blog_ld = seo_blog_posting_structured_data(
+      @blog_post,
+      request,
+      canonical: canonical,
+      description: desc_ld
+    )
+    trail_ld = seo_breadcrumb_list_json_ld(crumbs, request, page_url: canonical)
+    @seo_json_ld_extra = [ blog_ld, trail_ld ].compact
   end
 
   private
 
+  def assign_blog_index_item_list!
+    posts =
+      if @blog_list_layout == :hub && @page == 1 && @featured_post.present?
+        [ @featured_post, *@blog_posts.to_a ].uniq
+      else
+        @blog_posts.to_a
+      end
+    @seo_json_ld_extra = seo_blog_post_item_list_json_ld(
+      posts,
+      request,
+      name: @blog_list_title,
+      description: @seo[:description]
+    )
+  end
+
   def set_blog_post
-    @blog_post = BlogPost.published_now.includes(:linked_product_category, { avatar_attachment: :blob }).find_by!(slug: params[:slug])
+    @blog_post = BlogPost.published_now
+      .includes(:user, :linked_product_category, { avatar_attachment: :blob })
+      .find_by!(slug: params[:slug])
   end
 
   def blog_posts_base_scope

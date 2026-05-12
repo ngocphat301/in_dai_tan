@@ -8,6 +8,10 @@ module HomePageData
   def load_home_page_data
     @banner_slides = SiteImage.with_attached_file.for_home_banner.includes(file_attachment: :blob).load
     @partner_images = SiteImage.for_home_partners.includes(file_attachment: :blob).limit(40)
+    @factory_scale_site_images = SiteImage.with_attached_file.for_home_factory_scale
+      .includes(file_attachment: :blob)
+      .limit(6)
+      .load
 
     @featured_blog_posts = BlogPost.published_now
       .where(category: :news)

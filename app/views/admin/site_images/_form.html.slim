@@ -24,6 +24,6 @@
   = f.number_field :position, min: 0, step: 1
   = f.label :published do
     = f.check_box :published
-    |  Hiển thị (banner chỉ lấy ảnh đã bật)
+    |  Hiển thị (trang chủ chỉ lấy ảnh đã bật: banner, đối tác, quy mô…)
   p style="margin-top:1rem"
     = f.submit (site_image.new_record? ? "Tạo" : "Cập nhật"), class: "btn"

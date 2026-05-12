@@ -83,7 +83,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params_create
-    params.require(:user).permit(:email, :role, :password, :password_confirmation)
+    params.require(:user).permit(:email, :password, :password_confirmation)
   end
 
   def user_params_update

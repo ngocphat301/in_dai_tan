@@ -24,6 +24,12 @@ class ProductsController < ApplicationController
       og_type: "website",
       og_image: seo_default_og_image_url(request)
     }
+    @seo_json_ld_extra = seo_blog_post_item_list_json_ld(
+      @product_blog_posts,
+      request,
+      name: "Sản phẩm",
+      description: @seo[:description]
+    )
   end
 
   def show
@@ -47,7 +53,7 @@ class ProductsController < ApplicationController
       og_type: "product",
       og_image: seo_product_og_image_url(@product, request)
     }
-    @seo_json_ld_extra = {
+    product_ld = {
       "@type" => "Product",
       "name" => @product.name,
       "description" => seo_truncate_description(desc, 500),
@@ -63,5 +69,7 @@ class ProductsController < ApplicationController
         "url" => canonical
       }
     }
+    trail_ld = seo_breadcrumb_list_json_ld(@breadcrumbs, request, page_url: canonical)
+    @seo_json_ld_extra = [ product_ld, trail_ld ].compact
   end
 end

@@ -6,12 +6,18 @@ class SiteImage < ApplicationRecord
 
   attribute :category, :string, default: "banner"
 
-  enum :category, { banner: "banner", poster: "poster", partner: "partner" }, default: :banner
+  enum :category, {
+    banner: "banner",
+    poster: "poster",
+    partner: "partner",
+    factory_scale: "factory_scale",
+  }, default: :banner
 
   CATEGORY_LABELS = {
     "banner" => "Banner (slide)",
     "poster" => "Poster",
     "partner" => "Đối tác (logo trang chủ)",
+    "factory_scale" => "Quy mô (xưởng in)",
   }.freeze
 
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -22,12 +28,14 @@ class SiteImage < ApplicationRecord
   scope :published_only, -> { where(published: true) }
   scope :for_home_banner, -> { banner.published_only.ordered }
   scope :for_home_partners, -> { partner.published_only.ordered }
+  scope :for_home_factory_scale, -> { factory_scale.published_only.ordered }
 
   def self.category_options_for_select
     [
       [ "Banner (slide trang chủ)", "banner" ],
       [ "Poster", "poster" ],
       [ "Đối tác (logo hàng ngang)", "partner" ],
+      [ "Quy mô (lưới trang chủ)", "factory_scale" ],
     ]
   end
 
