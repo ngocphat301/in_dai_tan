@@ -24,9 +24,9 @@ section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="d
           .dm-factory-scale-grid__tile
             .dm-factory-scale-grid__media
               = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
-              - if caption.present?
-                .dm-factory-scale-grid__caption aria-hidden="true"
-                  span.dm-factory-scale-grid__caption-inner = caption
+            - if caption.present?
+              .dm-factory-scale-grid__caption aria-hidden="true"
+                span.dm-factory-scale-grid__caption-inner = caption
     - else
       - scale_posts.each do |post|
         li.dm-factory-scale-grid__cell
@@ -35,7 +35,7 @@ section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="d
           .dm-factory-scale-grid__tile
             .dm-factory-scale-grid__media
               = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
-              - if caption.present?
-                .dm-factory-scale-grid__caption aria-hidden="true"
-                  span.dm-factory-scale-grid__caption-inner = caption
+            - if caption.present?
+              .dm-factory-scale-grid__caption aria-hidden="true"
+                span.dm-factory-scale-grid__caption-inner = caption
   p.visually-hidden Lưới ảnh quy mô xưởng in trên trang chủ.

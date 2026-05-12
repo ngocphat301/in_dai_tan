@@ -12,6 +12,18 @@ class SeoPublicPagesTest < ActionDispatch::IntegrationTest
     assert_select 'script[type="application/ld+json"]', minimum: 1
   end
 
+  test "factory scale captions render as overlay siblings inside each tile" do
+    get root_path
+
+    assert_response :success
+    assert_select ".dm-factory-scale-grid__tile" do
+      assert_select "> .dm-factory-scale-grid__media", count: 1
+      assert_select "> .dm-factory-scale-grid__caption", count: 1
+      assert_select "> .dm-factory-scale-grid__caption .dm-factory-scale-grid__caption-inner",
+        text: /Mô tả quy mô xưởng fixture/
+    end
+  end
+
   test "blog show includes article OG, BlogPosting and BreadcrumbList" do
     get blog_post_path("published-seo-news")
 

@@ -52,3 +52,12 @@ published_service_post:
   published_at: <%= 4.days.ago.to_fs(:db) %>
   user: one
   category: service
+
+published_factory_scale_post:
+  title: Quy mô xưởng fixture
+  slug: published-factory-scale-post
+  excerpt: Mô tả quy mô xưởng fixture.
+  status: publish
+  published_at: <%= 1.day.ago.to_fs(:db) %>
+  user: one
+  category: factory_scale
