@@ -20,18 +20,20 @@ section#dm-factory-scale.dm-factory.dm-factory--scale-uniform aria-labelledby="d
       - scale_imgs.each do |img|
         li.dm-factory-scale-grid__cell
           - alt = img.alt_text.presence || "#{img.popup_title.presence || 'In Tân Đại'} — quy mô xưởng in"
-          - title = img.popup_title.presence || alt
-          - if img.link_url.present?
-            = link_to img.link_url, target: "_blank", rel: "noopener", class: "dm-factory-scale-grid__link", title: title do
+          - caption = img.alt_text.presence || img.popup_title.presence
+          .dm-factory-scale-grid__tile
+            .dm-factory-scale-grid__media
               = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
-          - else
-            span.dm-factory-scale-grid__link.dm-factory-scale-grid__link--static
-              = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+              - if caption.present?
+                span.dm-factory-scale-grid__caption aria-hidden="true" = caption
     - else
       - scale_posts.each do |post|
         li.dm-factory-scale-grid__cell
-          = link_to blog_post_path(post.slug), class: "dm-factory-scale-grid__link", title: post.title do
-            - alt = "#{post.title} — quy mô xưởng in"
-            = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
-  p.visually-hidden Lưới ảnh quy mô xưởng in; có thể bấm để mở liên kết hoặc bài viết chi tiết.
-
+          - alt = "#{post.title} — quy mô xưởng in"
+          - caption = post.excerpt.presence || post.title
+          .dm-factory-scale-grid__tile
+            .dm-factory-scale-grid__media
+              = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-grid__img", loading: "lazy"
+              - if caption.present?
+                span.dm-factory-scale-grid__caption aria-hidden="true" = caption
+  p.visually-hidden Lưới ảnh quy mô xưởng in trên trang chủ.

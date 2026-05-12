@@ -181,7 +181,7 @@ module ApplicationHelper
           "@type" => "ListItem",
           "position" => i,
           "name" => post.title,
-          "url" => blog_post_url(post.slug)
+          "url" => root_url(anchor: "dm-factory-scale")
         }
       end
     }
@@ -202,12 +202,11 @@ module ApplicationHelper
       "numberOfItems" => list.size,
       "itemListElement" => list.map.with_index(1) do |img, i|
         name = img.alt_text.presence || img.popup_title.presence || "Hình ảnh quy mô #{i}"
-        url = img.link_url.presence || root_url(anchor: "dm-factory-scale")
         {
           "@type" => "ListItem",
           "position" => i,
           "name" => name,
-          "url" => url
+          "url" => root_url(anchor: "dm-factory-scale")
         }
       end
     }
