@@ -37,8 +37,16 @@ Rails.application.configure do
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
-  # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  # Host/protocol for URL generation when running dev behind a reverse proxy.
+  public_host = ENV.fetch("APP_HOST", "inantandai.com")
+  public_scheme = ENV.fetch("APP_SCHEME", "https")
+  public_port = ENV["APP_PORT"].presence
+  default_url_options = { host: public_host, protocol: public_scheme }
+  default_url_options[:port] = public_port.to_i if public_port
+  config.action_mailer.default_url_options = default_url_options
+
+  # Respect https when TLS is terminated at nginx/reverse proxy.
+  config.assume_ssl = true if public_scheme == "https"
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -81,4 +89,6 @@ Rails.application.configure do
   config.hosts << "127.0.0.1"
   config.hosts << "target-tutor-gently.ngrok-free.dev"
   config.hosts << "inantandai.com"
+  config.hosts << "www.inantandai.com"
+  config.hosts << public_host
 end
