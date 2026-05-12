@@ -12,14 +12,15 @@ class SeoPublicPagesTest < ActionDispatch::IntegrationTest
     assert_select 'script[type="application/ld+json"]', minimum: 1
   end
 
-  test "factory scale captions render as overlay siblings inside each tile" do
+  test "factory scale renders v2 deploy probe structure with figure captions" do
     get root_path
 
     assert_response :success
-    assert_select ".dm-factory-scale-grid__tile" do
-      assert_select "> .dm-factory-scale-grid__media", count: 1
-      assert_select "> .dm-factory-scale-grid__caption", count: 1
-      assert_select "> .dm-factory-scale-grid__caption .dm-factory-scale-grid__caption-inner",
+    assert_select '#dm-factory-scale[data-deploy-probe="factory-scale-v2-20260512"]', count: 1
+    assert_select ".dm-factory-scale-v2__grid", count: 1
+    assert_select ".dm-factory-scale-v2__card" do
+      assert_select "> .dm-factory-scale-v2__figure", count: 1
+      assert_select ".dm-factory-scale-v2__caption-text",
         text: /Mô tả quy mô xưởng fixture/
     end
   end
