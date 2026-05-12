@@ -60,17 +60,7 @@ jobs:
             bundle exec rails assets:precompile
 
             echo "==> Kiểm tra asset manifest"
-            ruby -rjson -e '
-              manifest_path = "public/assets/.manifest.json"
-              abort "Missing asset manifest: #{manifest_path}" unless File.exist?(manifest_path)
-
-              manifest = JSON.parse(File.read(manifest_path))
-              asset = manifest.fetch("application.css")
-              path = File.join("public/assets", asset)
-              abort "Missing compiled application.css: #{path}" unless File.exist?(path)
-
-              puts "application.css => #{asset}"
-            '
+            ruby -rjson -e 'manifest_path = "public/assets/.manifest.json"; abort "Missing asset manifest: #{manifest_path}" unless File.exist?(manifest_path); manifest = JSON.parse(File.read(manifest_path)); asset = manifest.fetch("application.css"); path = File.join("public/assets", asset); abort "Missing compiled application.css: #{path}" unless File.exist?(path); puts "application.css => #{asset}"'
 
             echo "==> Chuẩn bị database (migrate / tạo DB nếu cần)"
             bundle exec rails db:prepare
