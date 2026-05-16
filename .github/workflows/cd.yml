@@ -17,7 +17,7 @@ jobs:
     steps:
       # Host/user/port/path đặt ở Settings → Secrets and variables → Actions → Variables (vars.*).
       # SSH_PRIVATE_KEY nên lưu ở Secrets (secrets.SSH_PRIVATE_KEY).
-      - name: SSH vào VPS và triển khai (bin/server-dev, không Docker Compose)
+      - name: SSH vào VPS và triển khai (systemd + Puma, không Docker Compose)
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ vars.SSH_HOST }}
@@ -56,20 +56,55 @@ jobs:
             bundle check || bundle install --jobs 4 --retry 3
 
             echo "==> Dọn và precompile assets"
+            rm -rf public/assets
+            mkdir -p public/assets
             bundle exec rails assets:clobber
             bundle exec rails assets:precompile
 
             echo "==> Kiểm tra asset manifest"
-            ruby -rjson -e 'manifest_path = "public/assets/.manifest.json"; abort "Missing asset manifest: #{manifest_path}" unless File.exist?(manifest_path); manifest = JSON.parse(File.read(manifest_path)); entry = manifest.fetch("application.css"); asset = entry.is_a?(Hash) ? entry.fetch("digested_path") : entry; path = File.join("public/assets", asset); abort "Missing compiled application.css: #{path}" unless File.exist?(path); puts "application.css => #{asset}"'
+            APPLICATION_CSS="$(ruby -rjson -e 'manifest_path = "public/assets/.manifest.json"; abort "Missing asset manifest: #{manifest_path}" unless File.exist?(manifest_path); manifest = JSON.parse(File.read(manifest_path)); entry = manifest.fetch("application.css"); asset = entry.is_a?(Hash) ? entry.fetch("digested_path") : entry; path = File.join("public/assets", asset); abort "Missing compiled application.css: #{path}" unless File.exist?(path); print asset')"
+            echo "application.css => ${APPLICATION_CSS}"
+            ls -la "public/assets/${APPLICATION_CSS}"
 
             echo "==> Chuẩn bị database (migrate / tạo DB nếu cần)"
             bundle exec rails db:prepare
 
-            echo "==> Khởi động lại app (bin/server-dev)"
+            echo "==> Chuẩn bị thư mục runtime cho Puma"
+            mkdir -p tmp/pids log
+
+            PUMA_SERVICE="${PUMA_SERVICE:-in_dai_tan_puma}"
             BIND="${BIND:-127.0.0.1}"
             PORT="${PORT:-3000}"
-            export BIND PORT
-            bin/server-dev restart
+
+            if [ "$(id -u)" -eq 0 ]; then
+              SYSTEMCTL=(systemctl)
+              JOURNALCTL=(journalctl)
+            else
+              SYSTEMCTL=(sudo systemctl)
+              JOURNALCTL=(sudo journalctl)
+            fi
+
+            echo "==> Khởi động lại Puma qua systemd (${PUMA_SERVICE})"
+            "${SYSTEMCTL[@]}" restart "${PUMA_SERVICE}"
+            "${SYSTEMCTL[@]}" is-active --quiet "${PUMA_SERVICE}"
+
+            echo "==> Chờ Puma sẵn sàng trên ${BIND}:${PORT}"
+            ready=0
+            for _ in $(seq 1 30); do
+              if curl -fsSI "http://${BIND}:${PORT}/" >/dev/null 2>&1; then
+                ready=1
+                break
+              fi
+              sleep 1
+            done
+            if [ "$ready" -ne 1 ]; then
+              echo "!! Puma chưa phản hồi sau 30s. Log gần đây:" >&2
+              "${JOURNALCTL[@]}" -u "${PUMA_SERVICE}" -n 50 --no-pager >&2 || true
+              exit 1
+            fi
+
+            echo "==> Kiểm tra Rails phục vụ application.css"
+            curl -fsSI "http://${BIND}:${PORT}/assets/${APPLICATION_CSS}" >/dev/null
 
             echo "==> Trạng thái cuối"
-            bin/server-dev status || true
+            "${SYSTEMCTL[@]}" status "${PUMA_SERVICE}" --no-pager || true
