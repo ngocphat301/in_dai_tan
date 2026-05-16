@@ -18,7 +18,7 @@ jobs:
       # Host/user/port/path đặt ở Settings → Secrets and variables → Actions → Variables (vars.*).
       # SSH_PRIVATE_KEY nên lưu ở Secrets (secrets.SSH_PRIVATE_KEY).
       - name: SSH vào VPS và triển khai (systemd + Puma, không Docker Compose)
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ vars.SSH_HOST }}
           username: ${{ vars.SSH_USER }}
