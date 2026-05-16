@@ -4,4 +4,5 @@ import "controllers"
 import "dm_nav"
 
 import "trix"
+import "admin_trix"
 import "@rails/actiontext"

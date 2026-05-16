@@ -8,7 +8,7 @@ module BlogPostsHelper
     post.category_product? ? blog_post_path(post.slug, news_context: 1) : blog_post_path(post.slug)
   end
 
-  # Gắn id cho h2/h3 trong nội dung Trix, rel cho link ngoài, và trả về mảng mục lục { level:, text:, id: }.
+  # Gắn id cho h1/h2/h3 trong nội dung (thẻ HTML ngữ nghĩa), rel cho link ngoài, mảng mục lục { level:, text:, id: }.
   def blog_post_outline_and_html(blog_post)
     return [ nil, [] ] unless blog_post.body.present?
 
@@ -41,7 +41,7 @@ module BlogPostsHelper
     doc = Nokogiri::HTML::DocumentFragment.parse(html)
     outline = []
     idx = 0
-    doc.css("h2, h3").each do |node|
+    doc.css("h1, h2, h3").each do |node|
       idx += 1
       slug = node["id"].presence
       if slug.blank?

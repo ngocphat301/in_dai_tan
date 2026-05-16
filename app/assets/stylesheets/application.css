@@ -3168,6 +3168,10 @@ a.dm-partners__tile-inner:focus-visible {
   line-height: 1.35;
 }
 
+.dm-blog-outline__item--h2 {
+  padding-left: 0.35rem;
+}
+
 .dm-blog-outline__item--h3 {
   padding-left: 0.75rem;
 }
@@ -4314,12 +4318,33 @@ button.dm-contact__btn {
   margin-top: 0;
 }
 
+.dm-blog-prose h1,
 .dm-blog-prose h2,
 .dm-blog-prose h3,
+.dm-blog-prose .trix-content h1,
 .dm-blog-prose .trix-content h2,
 .dm-blog-prose .trix-content h3 {
-  margin-top: 1.75rem;
   color: var(--dm-navy);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.dm-blog-prose h1,
+.dm-blog-prose .trix-content h1 {
+  margin: 1.75rem 0 0.65rem;
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+}
+
+.dm-blog-prose h2,
+.dm-blog-prose .trix-content h2 {
+  margin: 1.75rem 0 0.55rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+}
+
+.dm-blog-prose h3,
+.dm-blog-prose .trix-content h3 {
+  margin: 1.35rem 0 0.45rem;
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
 }
 
 .dm-blog-prose table,
@@ -5748,6 +5773,56 @@ button.dm-contact__btn {
 
 .admin-trix-wrap trix-editor {
   min-height: 22rem;
+}
+
+.admin-content trix-toolbar .trix-button--text {
+  width: auto;
+  min-width: 2.25rem;
+  height: 1.6em;
+  max-width: none;
+  padding: 0 0.45em;
+  text-indent: 0;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admin-content trix-toolbar .trix-button--icon-heading-1 {
+  display: none !important;
+}
+
+.admin-content trix-toolbar .trix-button--heading-1,
+.admin-content trix-toolbar .trix-button--heading-2,
+.admin-content trix-toolbar .trix-button--heading-3 {
+  color: var(--dm-navy);
+}
+
+.admin-content trix-editor h1,
+.admin-content trix-editor h2,
+.admin-content trix-editor h3,
+.admin-content .trix-content h1,
+.admin-content .trix-content h2,
+.admin-content .trix-content h3 {
+  color: var(--dm-navy);
+  line-height: 1.25;
+}
+
+.admin-content trix-editor h1,
+.admin-content .trix-content h1 {
+  font-size: 1.35rem;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.admin-content trix-editor h2,
+.admin-content .trix-content h2 {
+  font-size: 1.2rem;
+  margin: 0.65rem 0 0.3rem;
+}
+
+.admin-content trix-editor h3,
+.admin-content .trix-content h3 {
+  font-size: 1.05rem;
+  margin: 0.55rem 0 0.25rem;
 }
 
 .admin-blog-avatar-preview {

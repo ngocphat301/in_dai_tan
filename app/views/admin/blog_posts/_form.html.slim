@@ -29,7 +29,9 @@
   = f.select :status, BlogPost.status_options_for_select, {}
   = f.label :body, "Nội dung (trình soạn thảo)"
   p.muted
-    | Định dạng in đậm, tiêu đề, danh sách, trích dẫn, liên kết, chèn ảnh / tệp đính kèm — tương tự bài mẫu&nbsp;
+    | Dùng nút&nbsp;
+    strong H1 / H2 / H3
+    | &nbsp;để tạo thẻ tiêu đề HTML thật (hiển thị đúng trên trang công khai, chuẩn SEO) — không thay bằng in đậm. Tiêu đề bài ở trên đã là H1; trong nội dung nên ưu tiên H2, H3. Còn in đậm, danh sách, trích dẫn, liên kết, ảnh — tương tự bài mẫu&nbsp;
     = link_to "In sách theo yêu cầu", "https://inantandai.com/in-sach-theo-yeu-cau/", target: "_blank", rel: "noopener"
     | .
   .admin-trix-wrap
