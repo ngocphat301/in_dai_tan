@@ -10,8 +10,7 @@ html lang="vi"
     = csrf_meta_tags
     = csp_meta_tag
     link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any"
-    = stylesheet_link_tag "application", "actiontext", "data-turbo-track": "reload"
-    link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" crossorigin="anonymous"
+    = stylesheet_link_tag "application", "actiontext", "cropper.min", "data-turbo-track": "reload"
     = javascript_importmap_tags
   body.admin-body
     input#admin-sidebar-toggle.admin-sidebar-toggle type="checkbox" tabindex="-1" aria-hidden="true"

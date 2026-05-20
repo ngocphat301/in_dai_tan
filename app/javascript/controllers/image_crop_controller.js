@@ -31,6 +31,7 @@ export default class extends Controller {
     if (this._sizeDebounce) clearTimeout(this._sizeDebounce)
     this._teardownCropper()
     this._revokeObjectUrl()
+    this._revokePreviewObjectUrl()
     this._clearBatchState()
   }
 
@@ -235,6 +236,28 @@ export default class extends Controller {
       const dt = new DataTransfer()
       dt.items.add(file)
       this.fileTarget.files = dt.files
+
+      // Update the page preview image
+      this._revokePreviewObjectUrl()
+      this._previewObjectUrl = URL.createObjectURL(blob)
+
+      let previewImg = null
+      let prev = this.element.previousElementSibling
+      while (prev) {
+        previewImg = prev.querySelector("img") || (prev.tagName === "IMG" ? prev : null)
+        if (previewImg) break
+        prev = prev.previousElementSibling
+      }
+      if (!previewImg) {
+        const form = this.element.closest("form")
+        if (form) {
+          previewImg = form.querySelector("img.admin-blog-avatar-preview, img.admin-avatar-preview, img[src*='placeholder']")
+        }
+      }
+      if (previewImg) {
+        previewImg.src = this._previewObjectUrl
+      }
+
       cropper.destroy()
       this._cropper = null
       if (this.dialogTarget.open) this.dialogTarget.close()
@@ -293,6 +316,13 @@ export default class extends Controller {
     if (this._objectUrl) {
       URL.revokeObjectURL(this._objectUrl)
       this._objectUrl = null
+    }
+  }
+
+  _revokePreviewObjectUrl () {
+    if (this._previewObjectUrl) {
+      URL.revokeObjectURL(this._previewObjectUrl)
+      this._previewObjectUrl = null
     }
   }
 }
