@@ -3,7 +3,7 @@
     ul style="margin:0;padding-left:1.25rem"
       - blog_post.errors.full_messages.each do |msg|
         li = msg
-= form_with model: [:admin, blog_post], html: { multipart: true } do |f|
+= form_with model: [:admin, blog_post], html: { multipart: true }, data: { turbo: false } do |f|
   = f.label :title, "Tiêu đề"
   = f.text_field :title
   = f.label :slug, "Slug (URL)"

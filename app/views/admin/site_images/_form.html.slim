@@ -6,20 +6,29 @@
 = form_with model: [:admin, site_image], html: { multipart: true } do |f|
   = f.label :category, "Danh mục"
   = f.select :category, SiteImage.category_options_for_select, {}
-  = f.label :file, "Tệp ảnh"
-  - if site_image.file.attached?
-    p = image_tag site_image.file, style: "max-width:320px;border-radius:8px;border:1px solid var(--dm-border, #e2e8f0)"
-  - crop_ow, crop_oh, crop_shape = (site_image.banner? ? [1920, 600, :rectangle] : [1000, 1000, :square])
-  p.muted Sau khi chọn ảnh sẽ mở bước cắt. Để trống file khi sửa nếu không đổi ảnh.
-  = render "admin/shared/image_crop_shell", output_width: crop_ow, output_height: crop_oh, shape_hint: crop_shape do
-    = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
-  = f.label :alt_text, "Alt / mô tả ngắn (SEO & trợ năng)"
-  = f.text_field :alt_text, placeholder: "Mô tả ảnh"
-  = f.label :popup_title, "Tiêu đề popup (dự phòng)"
-  p.muted Popup công khai lấy tiêu đề từ bài blog loại «Quảng cáo». Trường này có thể để trống.
-  = f.text_field :popup_title, placeholder: "vd: Nhận ưu đãi in ấn"
-  = f.label :link_url, "Liên kết khi bấm (tùy chọn)"
-  = f.url_field :link_url, placeholder: "https://..."
+  - if site_image.home_video?
+    = f.label :link_url, "Link YouTube (bắt buộc)"
+    p.muted Dán link watch hoặc youtu.be — hiển thị embed trong mục Quy mô xưởng trên trang chủ.
+    = f.url_field :link_url, placeholder: "https://www.youtube.com/watch?v=..."
+    = f.label :file, "Ảnh poster (tùy chọn)"
+    - if site_image.file.attached?
+      p = image_tag site_image.file, style: "max-width:320px;border-radius:8px;border:1px solid var(--dm-border, #e2e8f0)"
+    = f.file_field :file, accept: "image/*"
+  - else
+    = f.label :file, "Tệp ảnh"
+    - if site_image.file.attached?
+      p = image_tag site_image.file, style: "max-width:320px;border-radius:8px;border:1px solid var(--dm-border, #e2e8f0)"
+    - crop_ow, crop_oh, crop_shape = (site_image.banner? ? [1920, 600, :rectangle] : site_image.customer_feedback? ? [960, 720, :rectangle] : [1000, 1000, :square])
+    p.muted Sau khi chọn ảnh sẽ mở bước cắt. Để trống file khi sửa nếu không đổi ảnh.
+    = render "admin/shared/image_crop_shell", output_width: crop_ow, output_height: crop_oh, shape_hint: crop_shape do
+      = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
+    = f.label :alt_text, "Alt / mô tả ngắn (SEO & trợ năng)"
+    = f.text_field :alt_text, placeholder: "Mô tả ảnh"
+    = f.label :popup_title, "Tiêu đề popup (dự phòng)"
+    p.muted Popup công khai lấy tiêu đề từ bài blog loại «Quảng cáo». Trường này có thể để trống.
+    = f.text_field :popup_title, placeholder: "vd: Nhận ưu đãi in ấn"
+    = f.label :link_url, "Liên kết khi bấm (tùy chọn)"
+    = f.url_field :link_url, placeholder: "https://..."
   = f.label :position, "Thứ tự (trong cùng danh mục)"
   = f.number_field :position, min: 0, step: 1
   = f.label :published do

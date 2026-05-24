@@ -22,9 +22,7 @@ article.dm-article.dm-about
           = image_tag "about/section-philosophy.png", alt: "Không gian và sản phẩm minh họa", class: "dm-about__philosophy-img", loading: "lazy", width: 640, height: 480
         .dm-about__philosophy-copy
           p.dm-about__eyebrow Về chúng tôi
-          h2.dm-about__h2 
-            span.dm-about__accent Triết lý 
-            | kinh doanh
+          h2.dm-about__h2 Về Tân Đại
           p.dm-about__lead
             | Công ty Cổ phần SXTM Tân Đại chuyên cung cấp giải pháp in ấn bao bì chất lượng cao. Với quy trình hiện đại và đội ngũ giàu kinh nghiệm, Tân Đại cam kết mang đến sản phẩm thẩm mỹ, bền đẹp, nâng tầm giá trị thương hiệu cho khách hàng.
     section.dm-about__split
@@ -49,15 +47,19 @@ article.dm-article.dm-about
             .dm-about__mini-stat
               span.dm-about__mini-num 100%
               span.dm-about__mini-label cam kết tiến độ
-          p.dm-about__cta-wrap
-            = link_to "Tìm hiểu thêm →", products_path, class: "dm-about__cta"
-
     section.dm-about__block.dm-about__block--center
       h2.dm-about__h2.dm-about__h2--center
         span.dm-about__accent Đội ngũ 
         | nhân viên
+      .dm-about__team-grid
+        figure.dm-about__team-fig
+          = image_tag "about/section-philosophy.png", alt: "Đội ngũ nhân viên In Tân Đại", class: "dm-about__team-img", loading: "lazy", width: 360, height: 270
+        figure.dm-about__team-fig
+          = image_tag "about/section-showcase.png", alt: "Không gian làm việc tại xưởng in", class: "dm-about__team-img", loading: "lazy", width: 360, height: 270
+        figure.dm-about__team-fig
+          = image_tag "about/section-philosophy.png", alt: "Nhân sự sản xuất và kinh doanh", class: "dm-about__team-img", loading: "lazy", width: 360, height: 270
       p.dm-about__prose
-        | Đội ngũ nhân sự tại Tấn Đại bao gồm các kỹ thuật viên, công nhân lành nghề và nhân viên kinh doanh giàu kinh nghiệm trong lĩnh vực bao bì. Nhân viên được đào tạo bài bản, có tinh thần trách nhiệm cao và luôn cập nhật xu hướng mới trong ngành in ấn. Sự phối hợp chặt chẽ giữa các bộ phận từ thiết kế, sản xuất đến chăm sóc khách hàng giúp đảm bảo tiến độ, chất lượng và mang lại trải nghiệm dịch vụ chuyên nghiệp cho đối tác.
+        | Đội ngũ nhân sự tại Tân Đại bao gồm các kỹ thuật viên, công nhân lành nghề và nhân viên kinh doanh giàu kinh nghiệm trong lĩnh vực bao bì. Nhân viên được đào tạo bài bản, có tinh thần trách nhiệm cao và luôn cập nhật xu hướng mới trong ngành in ấn. Sự phối hợp chặt chẽ giữa các bộ phận từ thiết kế, sản xuất đến chăm sóc khách hàng giúp đảm bảo tiến độ, chất lượng và mang lại trải nghiệm dịch vụ chuyên nghiệp cho đối tác.
 
     p.dm-about__footer-actions
       = link_to "Liên hệ", contact_path, class: "dm-about__cta dm-about__cta--ghost"

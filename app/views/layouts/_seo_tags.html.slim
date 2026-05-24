@@ -4,7 +4,7 @@
 - canonical = seo[:canonical].to_s
 - og_type = seo[:og_type].presence || "website"
 - og_image = seo[:og_image].presence || seo_default_og_image_url(request)
-- doc_title = title.present? ? "#{title} | In Tân Đại" : "In Tân Đại"
+- doc_title = seo[:document_title].presence || (title.present? ? "#{title} | In Tân Đại" : "In Tân Đại")
 - if seo[:noindex]
   meta name="robots" content="noindex, nofollow"
 meta name="description" content=desc

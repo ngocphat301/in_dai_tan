@@ -8,7 +8,7 @@ class SeoPublicPagesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select 'link[rel="canonical"][href^="http"]', count: 1
-    assert_select 'meta[property="og:title"][content*="Trang chủ"]', count: 1
+    assert_select 'meta[property="og:title"][content*="In Ấn Tân Đại"]', count: 1
     assert_select 'script[type="application/ld+json"]', minimum: 1
   end
 

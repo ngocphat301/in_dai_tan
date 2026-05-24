@@ -14,9 +14,6 @@
           - feat_desc = @featured_post.excerpt.presence || truncate(@featured_post.search_body_plain, length: 320)
           - if feat_desc.present?
             p.dm-news-hub__featured-desc= feat_desc
-          - if @featured_post.published_at.present?
-            time.dm-news-hub__featured-date datetime=@featured_post.published_at.iso8601
-              = @featured_post.published_at.strftime("%d/%m/%Y")
           span.dm-news-hub__featured-cta Xem Ngay
 
     section.dm-news-hub__all aria-labelledby="dm-news-hub-all-title"
@@ -87,11 +84,8 @@
             .dm-blog-list__body
               = link_to blog_post_path(p.slug) do
                 strong= p.title
-              p.dm-muted
-                = p.published_at&.strftime("%d/%m/%Y")
-                - if p.excerpt.present?
-                  |  — 
-                  = p.excerpt.truncate(180)
+              - if p.excerpt.present?
+                p.dm-muted= p.excerpt.truncate(180)
     - else
       p.dm-muted Chưa có bài tin nào được xuất bản.
 

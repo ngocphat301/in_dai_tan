@@ -1,0 +1,11 @@
+- feedback_shown = @customer_feedback_images.select { |img| img.file.attached? }
+- if feedback_shown.any?
+  section#dm-customer-feedback.dm-customer-feedback aria-labelledby="dm-customer-feedback-title"
+    h2#dm-customer-feedback-title.dm-section-title
+      | Phản hồi 
+      span từ khách hàng
+    ul.dm-customer-feedback__grid role="list"
+      - feedback_shown.each do |img|
+        - alt = img.alt_text.presence || "Phản hồi khách hàng In Tân Đại"
+        li.dm-customer-feedback__item
+          = image_tag img.file, alt: alt, class: "dm-customer-feedback__img", loading: "lazy"

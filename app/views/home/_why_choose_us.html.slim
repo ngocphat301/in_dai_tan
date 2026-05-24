@@ -1,0 +1,12 @@
+- reasons = [ { icon: "https://inantandai.com/wp-content/uploads/2021/11/d1.png", title: "Miễn Phí Thiết kế", desc: "Tư vấn và thiết kế mẫu theo nhận diện thương hiệu." }, { icon: "https://inantandai.com/wp-content/uploads/2021/11/d2.png", title: "Uy Tín Hàng Đầu", desc: "Hàng nghìn khách hàng doanh nghiệp tin tưởng lựa chọn." }, { icon: "https://inantandai.com/wp-content/uploads/2021/11/d3.png", title: "Đảm Bảo Chất Lượng Đồng Đều", desc: "Quy trình kiểm soát chặt từng công đoạn in và gia công." }, { icon: "https://inantandai.com/wp-content/uploads/2021/11/d4.png", title: "Giao Hàng Đúng Tiến Độ Cam Kết", desc: "Cam kết thời gian bàn giao minh bạch, đúng hẹn." } ]
+section#dm-why-choose.dm-why-choose aria-labelledby="dm-why-choose-title"
+  h2#dm-why-choose-title.dm-section-title
+    | Tại sao nên chọn 
+    span Tân Đại
+  ul.dm-why-choose__grid role="list"
+    - reasons.each do |r|
+      li.dm-why-choose__item
+        .dm-why-choose__icon-wrap
+          = image_tag r[:icon], alt: "", class: "dm-why-choose__icon", loading: "lazy", width: 72, height: 72
+        h3.dm-why-choose__item-title= r[:title]
+        p.dm-why-choose__item-desc= r[:desc]

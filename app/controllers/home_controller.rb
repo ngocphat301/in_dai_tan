@@ -6,8 +6,9 @@ class HomeController < ApplicationController
     @breadcrumbs = nil
     @seo = {
       title: "Trang chủ",
+      document_title: "In Ấn Tân Đại: Dịch vụ In hộp giấy, túi giấy, hộp carton chất lượng cao",
       description: seo_truncate_description(
-        "In Tân Đại — xưởng in offset, hộp giấy, bao bì và ấn phẩm thương mại tại Hà Nội. Báo giá minh bạch, đúng tiến độ."
+        "Xưởng in Tân Đại nhận thiết kế và sản xuất hộp giấy, túi giấy, hộp carton sóng chất lượng cao tại Hà Nội và miền Bắc, báo giá nhanh, giao hàng đúng hẹn."
       ),
       canonical: seo_current_canonical_url(request),
       og_type: "website",

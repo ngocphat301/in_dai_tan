@@ -13,6 +13,7 @@
             == @blog_post_html
           - else
             == @blog_post.body
+        = render "blog_posts/author_box"
         .dm-service-quote-cta
           p.dm-service-quote-cta__text Bạn cần báo giá theo nội dung dịch vụ trên?
           button.dm-service-quote-cta__btn type="button" data-action="click->quote-modal#open" data-return-to="blog" data-blog-post-id=@blog_post.id data-product-category-id=@blog_post.linked_product_category&.id
@@ -36,6 +37,7 @@
             == @blog_post_html
           - else
             == @blog_post.body
+        = render "blog_posts/author_box"
 
       - if show_project_aside
         aside.dm-blog-show-layout__aside aria-label="Mục lục và bài liên quan"
@@ -55,6 +57,7 @@
             == @blog_post_html
           - else
             == @blog_post.body
+        = render "blog_posts/author_box"
 
       - if show_story_aside
         aside.dm-blog-show-layout__aside aria-label="Mục lục và bài liên quan"

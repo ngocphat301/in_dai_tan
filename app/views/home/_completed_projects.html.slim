@@ -1,0 +1,14 @@
+- if @home_completed_projects.any?
+  section#dm-completed-projects.dm-home-projects aria-labelledby="dm-completed-projects-title"
+    h2#dm-completed-projects-title.dm-section-title
+      | Dự án 
+      span mới hoàn thành
+    .dm-home-projects__grid
+      - @home_completed_projects.each do |post|
+        = link_to blog_post_path(post.slug), class: "dm-home-projects__card"
+          .dm-home-projects__media
+            = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 360] }, alt: post.title, class: "dm-home-projects__img", loading: "lazy"
+          .dm-home-projects__body
+            strong.dm-home-projects__title= post.title.truncate(72)
+            - if post.excerpt.present?
+              p.dm-home-projects__excerpt= post.excerpt.to_s.truncate(100)

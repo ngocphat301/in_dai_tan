@@ -10,12 +10,17 @@
     - content_for :head do
       = ld
 
+- embed_src = @home_video && youtube_embed_url(@home_video.link_url)
 section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="factory-scale-v2-20260512" aria-labelledby="dm-factory-scale-title"
   .dm-factory-scale-v2__header
     p.dm-factory-scale-v2__eyebrow Năng lực xưởng in
     h2#dm-factory-scale-title.dm-section-title.dm-factory-scale-v2__title
       | Quy mô
       span xưởng in
+
+  - if embed_src.present?
+    .dm-factory-scale-v2__video-wrap
+      iframe.dm-factory-scale-v2__video src=embed_src title="Video quy mô xưởng in Tân Đại" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"
 
   .dm-factory-scale-v2__viewport
     ul.dm-factory-scale-v2__grid role="list"

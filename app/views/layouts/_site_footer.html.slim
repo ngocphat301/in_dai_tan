@@ -1,5 +1,8 @@
 - dm = "https://inantandai.com"
 - bg_url = ""
+- service_cats = ProductCategory.ordered.limit(12).to_a
+- services_row1 = service_cats.first((service_cats.size / 2.0).ceil)
+- services_row2 = service_cats.drop(services_row1.size)
 
 footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
   .dm-footer__overlay
@@ -18,6 +21,19 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
           p.dm-footer__text
             | Website:
             =<> link_to "inantandai.com", dm, class: "dm-footer__link", target: "_blank", rel: "noopener"
+
+        .dm-footer__col.dm-footer__col--services
+          h3.dm-footer__heading Dịch vụ
+          - if services_row1.any?
+            ul.dm-footer__list.dm-footer__list--services
+              - services_row1.each do |cat|
+                li = link_to cat.name, products_path(category: cat.slug)
+            - if services_row2.any?
+              ul.dm-footer__list.dm-footer__list--services
+                - services_row2.each do |cat|
+                  li = link_to cat.name, products_path(category: cat.slug)
+          - else
+            p.dm-footer__muted Chưa có danh mục dịch vụ.
 
         .dm-footer__col.dm-footer__col--hours
           h3.dm-footer__heading Giờ làm việc
@@ -38,5 +54,3 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
         p.dm-footer__copy
           | Copyright #{Time.current.year} ©
           strong<> In Tân Đại
-          span.dm-footer__demo  — Giao diện demo mô phỏng theo&nbsp;
-          = link_to "inantandai.com", dm, target: "_blank", rel: "noopener", class: "dm-footer__link"
