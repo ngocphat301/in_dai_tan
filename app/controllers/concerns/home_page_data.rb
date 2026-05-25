@@ -38,7 +38,7 @@ module HomePageData
     @factory_scale_mosaic_posts = scale_scope.limit(6).to_a
 
     cats = ProductCategory.ordered.includes(blog_post: { avatar_attachment: :blob }).to_a
-    @home_service_frames = cats.first(4).map do |cat|
+    @home_service_frames = cats.map do |cat|
       post = cat.blog_post
       if post&.published_for_public?
         { type: :blog, post: post }

@@ -24,9 +24,15 @@ if (Trix) {
 }
 
 const ADMIN_TRIX_SELECTOR = ".admin-trix-wrap trix-editor, trix-editor.admin-trix"
+const TABLE_HTML =
+  "<table><tbody><tr><th>&nbsp;</th><th>&nbsp;</th></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>"
 
 function isAdminTrixEditor (editor) {
   return editor.matches(ADMIN_TRIX_SELECTOR) || editor.closest(".admin-trix-wrap")
+}
+
+function trixEditor (element) {
+  return element.editor
 }
 
 function createTextButton (label, title, onClick) {
@@ -43,21 +49,55 @@ function createTextButton (label, title, onClick) {
   return button
 }
 
-function insertLink (editor, rel) {
+function escapeHtml (value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+}
+
+function selectedPlainText (element) {
+  const editor = trixEditor(element)
+  if (!editor) return ""
+  const range = editor.getSelectedRange()
+  if (!range || range[0] === range[1]) return ""
+  return editor.getDocument().toString().slice(range[0], range[1]).trim()
+}
+
+function insertLink (element, rel) {
+  const editor = trixEditor(element)
+  if (!editor) return
+
   const url = window.prompt("URL liên kết")
   if (!url) return
-  const text = window.prompt("Nhãn hiển thị (để trống = URL)", url) || url
-  const esc = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;")
-  const relAttr = rel ? ` rel="${esc(rel)}"` : ""
+
+  const selected = selectedPlainText(element)
+  const defaultLabel = selected || url
+  const textInput = window.prompt("Nhãn hiển thị (để trống = URL)", defaultLabel)
+  if (textInput === null) return
+  const text = (textInput.trim() || url).trim()
+  const relAttr = rel ? ` rel="${escapeHtml(rel)}"` : ""
   editor.insertHTML(
-    `<a href="${esc(url)}" target="_blank"${relAttr}>${esc(text)}</a>`
+    `<a href="${escapeHtml(url)}" target="_blank"${relAttr}>${escapeHtml(text)}</a>`
   )
 }
 
-function insertTable (editor) {
-  editor.insertHTML(
-    "<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>"
-  )
+function insertTable (element) {
+  const editor = trixEditor(element)
+  if (!editor || !Trix?.Attachment) return
+
+  const attachment = new Trix.Attachment({
+    content: TABLE_HTML,
+    contentType: "text/html"
+  })
+  editor.insertAttachment(attachment)
+}
+
+function promptImageAlt (attachment) {
+  const current = attachment.getAttributes().alt || ""
+  const alt = window.prompt("Alt text cho ảnh (SEO)", current)
+  if (alt === null) return
+  attachment.setAttributes({ ...attachment.getAttributes(), alt: alt.trim() })
 }
 
 function createHeadingButton (level, attribute, title) {
@@ -89,7 +129,7 @@ function addHeadingButtons (toolbar) {
   group.insertBefore(h3, h2.nextSibling)
 }
 
-function addAdminToolbarExtras (toolbar, editor) {
+function addAdminToolbarExtras (toolbar, editorElement) {
   if (toolbar.dataset.adminExtrasReady === "true") return
   toolbar.dataset.adminExtrasReady = "true"
 
@@ -99,24 +139,41 @@ function addAdminToolbarExtras (toolbar, editor) {
   if (!group) return
 
   group.appendChild(
-    createTextButton("Link↓", "Liên kết nofollow", () =>
-      insertLink(editor, "noopener noreferrer nofollow")
+    createTextButton("LK↓", "Liên kết: noopener noreferrer nofollow", () =>
+      insertLink(editorElement, "noopener noreferrer nofollow")
     )
   )
   group.appendChild(
-    createTextButton("Link↑", "Liên kết dofollow", () => insertLink(editor, "noopener"))
+    createTextButton("LK↑", "Liên kết: noopener dofollow", () =>
+      insertLink(editorElement, "noopener")
+    )
   )
   group.appendChild(
-    createTextButton("Bảng", "Chèn bảng 2×2", () => insertTable(editor))
+    createTextButton("Bảng", "Chèn bảng 2×2", () => insertTable(editorElement))
+  )
+  group.appendChild(
+    createTextButton("Alt ảnh", "Chỉnh alt ảnh đang chọn (bấm vào ảnh trước)", () =>
+      promptAltForSelectedImage(editorElement)
+    )
   )
 }
 
-function setupAdminTrixEditor (editor) {
-  if (!isAdminTrixEditor(editor)) return
-  const toolbar = editor.toolbarElement
+function promptAltForSelectedImage (element) {
+  const editor = trixEditor(element)
+  const attachment = editor?.composition?.editingAttachment
+  if (!attachment?.isPreviewable?.()) {
+    window.alert("Hãy bấm vào ảnh trong bài trước, rồi bấm nút Alt ảnh.")
+    return
+  }
+  promptImageAlt(attachment)
+}
+
+function setupAdminTrixEditor (editorElement) {
+  if (!isAdminTrixEditor(editorElement)) return
+  const toolbar = editorElement.toolbarElement
   if (!toolbar) return
   addHeadingButtons(toolbar)
-  addAdminToolbarExtras(toolbar, editor)
+  addAdminToolbarExtras(toolbar, editorElement)
 }
 
 document.addEventListener("trix-initialize", (event) => {
@@ -124,19 +181,15 @@ document.addEventListener("trix-initialize", (event) => {
 })
 
 document.addEventListener("trix-attachment-add", (event) => {
-  const editor = event.target
-  if (!isAdminTrixEditor(editor)) return
+  const editorElement = event.target
+  if (!isAdminTrixEditor(editorElement)) return
   const attachment = event.attachment
   if (!attachment.file) return
-  window.setTimeout(() => {
-    const current = attachment.getAttributes().alt || ""
-    const alt = window.prompt("Alt text cho ảnh (SEO)", current)
-    if (alt != null && alt !== "") attachment.setAttributes({ ...attachment.getAttributes(), alt })
-  }, 0)
+  window.setTimeout(() => promptImageAlt(attachment), 0)
 })
 
 document.addEventListener("turbo:load", () => {
-  document.querySelectorAll(ADMIN_TRIX_SELECTOR).forEach((editor) => {
-    setupAdminTrixEditor(editor)
+  document.querySelectorAll(ADMIN_TRIX_SELECTOR).forEach((editorElement) => {
+    setupAdminTrixEditor(editorElement)
   })
 })

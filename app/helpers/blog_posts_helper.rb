@@ -67,8 +67,19 @@ module BlogPostsHelper
       next unless blog_post_external_link?(href)
 
       anchor["target"] = "_blank"
-      anchor["rel"] = blog_post_merge_link_rel(anchor["rel"], BLOG_POST_EXTERNAL_LINK_REL)
+      required_rel = if blog_post_editor_dofollow_link?(anchor["rel"])
+        "noopener noreferrer"
+      else
+        BLOG_POST_EXTERNAL_LINK_REL
+      end
+      anchor["rel"] = blog_post_merge_link_rel(anchor["rel"], required_rel)
     end
+  end
+
+  # Liên kết chèn bằng nút dofollow trong admin: rel có noopener, không có nofollow.
+  def blog_post_editor_dofollow_link?(rel)
+    tokens = rel.to_s.downcase.split
+    tokens.include?("noopener") && !tokens.include?("nofollow")
   end
 
   def blog_post_external_link?(href)

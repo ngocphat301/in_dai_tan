@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class RobotsControllerTest < ActionDispatch::IntegrationTest
-  test "show lists sitemap and disallows private paths" do
-    get "/robots.txt"
-    assert_response :success
-    assert_match %r{Sitemap: http://www\.example\.com/sitemap\.xml}, response.body
-    assert_includes response.body, "Disallow: /admin"
-    assert_includes response.body, "Disallow: /users"
-    assert_includes response.body, "Disallow: /search"
+class RobotsTxtTest < ActiveSupport::TestCase
+  test "public/robots.txt disallows private paths and lists sitemap" do
+    body = Rails.public_path.join("robots.txt").read
+
+    assert_includes body, "Disallow: /admin"
+    assert_includes body, "Disallow: /users"
+    assert_includes body, "Disallow: /search"
+    assert_includes body, "Sitemap: https://inantandai.com/sitemap.xml"
   end
 end

@@ -53,9 +53,21 @@ class BlogPostsHelperTest < ActionView::TestCase
     assert_equal "h3", outline[2][:level]
   end
 
-  test "blog_post_outline_and_html merges existing rel tokens" do
+  test "blog_post_outline_and_html preserves dofollow external links from editor" do
     post = stub_blog_post_html(
-      '<a href="https://other.test/x" rel="noopener" target="_blank">Go</a>'
+      '<a href="https://partner.test/page" rel="noopener" target="_blank">Đối tác</a>'
+    )
+
+    html, = blog_post_outline_and_html(post)
+
+    assert_includes html, "noopener"
+    assert_includes html, "noreferrer"
+    assert_not_includes html, "nofollow"
+  end
+
+  test "blog_post_outline_and_html keeps explicit nofollow from editor" do
+    post = stub_blog_post_html(
+      '<a href="https://other.test/x" rel="noopener noreferrer nofollow" target="_blank">Go</a>'
     )
 
     html, = blog_post_outline_and_html(post)

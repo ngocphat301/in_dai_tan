@@ -36,9 +36,9 @@ h2.dm-section-title
   span được lựa chọn nhiều nhất
 
 - if @home_service_frames.any?
-  .dm-services-wrap
+  .dm-services-wrap data-controller="home-services-expand" data-home-services-expand-limit-value="4"
     p.dm-services__eyebrow Khám phá dịch vụ in ấn
-    .dm-services.dm-services--frames.dm-services--home
+    .dm-services.dm-services--frames.dm-services--home data-home-services-expand-target="grid"
       - @home_service_frames.each do |f|
         - if f[:type] == :blog
           - post = f[:post]
@@ -47,7 +47,7 @@ h2.dm-section-title
               = blog_post_avatar_tag post, variant: { resize_to_fill: [400, 520] }, alt: post.title, class: "dm-svc-frame__img", loading: "lazy"
             .dm-svc-frame__overlay aria-hidden="true"
             .dm-svc-frame__content
-              span.dm-svc-frame__title= post.title
+              span.dm-svc-frame__titlesty= post.title
               span.dm-svc-frame__cta Tìm hiểu thêm
         - else
           - cat = f[:category]
@@ -58,6 +58,10 @@ h2.dm-section-title
             .dm-svc-frame__content
               span.dm-svc-frame__title= cat.name
               span.dm-svc-frame__cta Xem sản phẩm
+    - if @home_service_frames.size > 4
+      .dm-services__more-wrap
+        button.dm-services__more type="button" data-home-services-expand-target="moreBtn" data-action="home-services-expand#expand" aria-expanded="false"
+          | Xem thêm
 - else
   p.dm-muted Chưa có danh mục sản phẩm. Thêm danh mục trong quản trị.
   p.dm-muted

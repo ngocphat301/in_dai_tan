@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
 
-  get "robots.txt", to: "robots#show", as: :robots, defaults: { format: :text }
   get "sitemap.xml", to: "sitemaps#index", as: :sitemap, defaults: { format: :xml }
 
   root "home#index"

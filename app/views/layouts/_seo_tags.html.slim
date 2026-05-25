@@ -7,7 +7,6 @@
 - doc_title = seo[:document_title].presence || (title.present? ? "#{title} | In Tân Đại" : "In Tân Đại")
 - if seo[:noindex]
   meta name="robots" content="noindex, nofollow"
-meta name="description" content=desc
 link rel="canonical" href=canonical
 meta property="og:title" content=doc_title
 meta property="og:description" content=desc

@@ -13,9 +13,8 @@
 - embed_src = @home_video && youtube_embed_url(@home_video.link_url)
 section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="factory-scale-v2-20260512" aria-labelledby="dm-factory-scale-title"
   .dm-factory-scale-v2__header
-    p.dm-factory-scale-v2__eyebrow Năng lực xưởng in
     h2#dm-factory-scale-title.dm-section-title.dm-factory-scale-v2__title
-      | Quy mô
+      | Quy mô 
       span xưởng in
 
   - if embed_src.present?
@@ -39,7 +38,7 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
         - scale_posts.each do |post|
           li.dm-factory-scale-v2__cell
             - alt = "#{post.title} — quy mô xưởng in"
-            - caption = post.excerpt.presence || post.title
+            - caption = post.title
             article.dm-factory-scale-v2__card
               figure.dm-factory-scale-v2__figure
                 = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-v2__image", loading: "lazy"

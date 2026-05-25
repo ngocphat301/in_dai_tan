@@ -3,10 +3,13 @@ html lang="vi" data-controller="quote-modal" data-quote-modal-open-on-load-value
   head
     title
       - if content_for?(:title)
-        = "#{yield :title} | In Tân Đại"
+        = "#{yield :title} | In Ấn Tân Đại: Dịch vụ In hộp giấy, túi giấy, hộp carton chất lượng cao"
       - else
-        | In Tân Đại - Dịch vụ in ấn giá rẻ
+        | In Ấn Tân Đại: Dịch vụ In hộp giấy, túi giấy, hộp carton chất lượng cao
     meta name="viewport" content="width=device-width,initial-scale=1"
+    - default_meta_description = "Xưởng in Tân Đại nhận thiết kế và sản xuất hộp giấy, túi giấy, hộp carton sóng chất lượng cao tại Hà Nội và miền Bắc, báo giá nhanh, giao hàng đúng hẹn."
+    - meta_description = @seo&.dig(:description).presence || default_meta_description
+    meta name="description" content=meta_description
     = render "layouts/analytics_head"
     link rel="preconnect" href="https://code.jquery.com" crossorigin="anonymous"
     link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous"
