@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72" fill="none">
+  <defs>
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5a623" />
+      <stop offset="48%" stop-color="#e67e22" />
+      <stop offset="100%" stop-color="#d35400" />
+    </linearGradient>
+    <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#e67e22" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Background Shield/Artboard -->
+  <rect x="6" y="6" width="60" height="60" rx="16" fill="#fff" stroke="url(#brand-grad)" stroke-width="2.5" filter="url(#glow)"/>
+
+  <!-- Speed lines in background -->
+  <path d="M14 26 L22 26 M12 32 L20 32 M15 38 L24 38" stroke="#f5a623" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Delivery Van / Truck -->
+  <g transform="translate(18, 22)">
+    <!-- Cabin Front Window / Shape -->
+    <path d="M28 6 L36 12 L36 22 L28 22 Z" fill="#d35400"/>
+    
+    <!-- Main Truck Body (Cargo Container) -->
+    <rect x="2" y="2" width="28" height="20" rx="2" fill="url(#brand-grad)"/>
+
+    <!-- Sparkle/Speed detail on cargo -->
+    <path d="M8 8 L24 8 L20 14 L12 14 Z" fill="#fff" opacity="0.25"/>
+
+    <!-- Wheel 1 -->
+    <circle cx="9" cy="23" r="4.5" fill="#333" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="9" cy="23" r="1.5" fill="#fff"/>
+
+    <!-- Wheel 2 -->
+    <circle cx="27" cy="23" r="4.5" fill="#333" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="27" cy="23" r="1.5" fill="#fff"/>
+  </g>
+</svg>

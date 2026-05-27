@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72" fill="none">
+  <defs>
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5a623" />
+      <stop offset="48%" stop-color="#e67e22" />
+      <stop offset="100%" stop-color="#d35400" />
+    </linearGradient>
+    <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#e67e22" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Background Shield/Artboard -->
+  <rect x="6" y="6" width="60" height="60" rx="16" fill="#fff" stroke="url(#brand-grad)" stroke-width="2.5" filter="url(#glow)"/>
+
+  <!-- Golden Laurels / Wings of Trust -->
+  <path d="M16 46 C16 34, 24 26, 30 26 M56 46 C56 34, 48 26, 42 26" stroke="#f5a623" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <path d="M18 42 L20 40 M20 36 L22 35 M54 42 L52 40 M52 36 L50 35" stroke="#e67e22" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Centered Shield/Badge -->
+  <path d="M36 18 C42 18, 48 21, 48 26 C48 36, 36 46, 36 52 C36 46, 24 36, 24 26 C24 21, 30 18, 36 18 Z" fill="url(#brand-grad)"/>
+
+  <!-- Central Star of Prestige -->
+  <polygon points="36,25 38.5,30 44,30.5 40,34.5 41.5,40 36,37 30.5,40 32,34.5 28,30.5 33.5,30" fill="#fff"/>
+</svg>

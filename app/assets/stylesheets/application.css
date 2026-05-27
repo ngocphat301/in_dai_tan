@@ -1593,7 +1593,7 @@ mark.dm-search-hit {
 }
 
 .dm-svc-frame__title {
-  font-size: clamp(0.78rem, 1.35vw, 1.05rem);
+  font-size: 18px;
   font-weight: 800;
   line-height: 1.2;
   text-transform: uppercase;
