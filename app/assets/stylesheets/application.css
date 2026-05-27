@@ -1569,13 +1569,13 @@ mark.dm-search-hit {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to top,
     rgba(67, 20, 7, 0.92) 0%,
     rgba(124, 45, 18, 0.55) 38%,
     rgba(15, 23, 42, 0.12) 62%,
     transparent 100%
-  );
+  ); */
 }
 
 .dm-svc-frame__content {
@@ -2324,7 +2324,7 @@ mark.dm-search-hit {
 .dm-factory-scale-v2__caption-text {
   color: #fff;
   display: -webkit-box;
-  font-size: clamp(0.65rem, 2vw, 0.78rem);
+  font-size: 18px;
   font-weight: 800;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
