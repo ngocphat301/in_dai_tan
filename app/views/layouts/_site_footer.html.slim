@@ -9,7 +9,7 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
     .dm-container
       .dm-footer__grid
         .dm-footer__col.dm-footer__col--brand
-          h3.dm-footer__heading Công ty TNHH SX & TM Tân Đại
+          p.dm-footer__heading Công ty TNHH SX & TM Tân Đại
           p.dm-footer__text
             | Số 228, đường Phan Trọng Tuệ, Phường Thanh Liệt, TP Hà Nội
           p.dm-footer__text
@@ -23,7 +23,7 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
             =<> link_to "inantandai.com", dm, class: "dm-footer__link", target: "_blank", rel: "noopener"
 
         .dm-footer__col.dm-footer__col--services
-          h3.dm-footer__heading Dịch vụ
+          p.dm-footer__heading Dịch vụ
           - if services_row1.any?
             ul.dm-footer__list.dm-footer__list--services
               - services_row1.each do |cat|
@@ -36,13 +36,13 @@ footer#contact.dm-footer style="--dm-footer-bg: url(#{bg_url})"
             p.dm-footer__muted Chưa có danh mục dịch vụ.
 
         .dm-footer__col.dm-footer__col--hours
-          h3.dm-footer__heading Giờ làm việc
+          p.dm-footer__heading Giờ làm việc
           p.dm-footer__text Sáng: 8h00 – 12h00
           p.dm-footer__text Chiều: 13h30 – 17h30
           p.dm-footer__muted (Nghỉ chiều Thứ 7 &amp; CN)
 
         .dm-footer__col.dm-footer__col--policy
-          h3.dm-footer__heading Chính sách
+          p.dm-footer__heading Chính sách
           ul.dm-footer__list
             li = link_to "Chính Sách Thanh Toán", blog_post_path("chinh-sach-thanh-toan")
             li = link_to "Chính Sách Đổi Trả", blog_post_path("chinh-sach-doi-tra")
