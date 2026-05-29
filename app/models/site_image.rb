@@ -25,9 +25,38 @@ class SiteImage < ApplicationRecord
   }.freeze
 
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :file, presence: true, on: :create, unless: :home_video?
+  validates :file, presence: true, on: :create, unless: -> { home_video? || (factory_scale? && youtube_video?) }
   validate :home_video_link_required, if: :home_video?
   validate :file_must_be_image, if: -> { file.attached? }
+
+  def youtube_video_id
+    s = link_url.to_s.strip
+    return nil if s.blank?
+
+    if (m = s.match(%r{youtu\.be/([A-Za-z0-9_-]{6,})}))
+      return m[1]
+    end
+
+    uri = URI.parse(s)
+    if uri.host&.include?("youtube.com")
+      if uri.path == "/watch"
+        return URI.decode_www_form(uri.query.to_s).to_h["v"].presence
+      end
+      if (m = uri.path.match(%r{/embed/([A-Za-z0-9_-]{6,})}))
+        return m[1]
+      end
+      if (m = uri.path.match(%r{/shorts/([A-Za-z0-9_-]{6,})}))
+        return m[1]
+      end
+    end
+    nil
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  def youtube_video?
+    youtube_video_id.present?
+  end
 
   scope :ordered, -> { order(:position, :id) }
   scope :published_only, -> { where(published: true) }

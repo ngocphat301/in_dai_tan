@@ -28,7 +28,8 @@
     p.muted Popup công khai lấy tiêu đề từ bài blog loại «Quảng cáo». Trường này có thể để trống.
     = f.text_field :popup_title, placeholder: "vd: Nhận ưu đãi in ấn"
     = f.label :link_url, "Liên kết khi bấm (tùy chọn)"
-    = f.url_field :link_url, placeholder: "https://..."
+    p.muted Với danh mục «Quy mô (xưởng in)», dán link YouTube (watch hoặc youtu.be) để hiển thị video trực tiếp thay vì ảnh tĩnh.
+    = f.url_field :link_url, placeholder: "https://www.youtube.com/watch?v=..."
   = f.label :position, "Thứ tự (trong cùng danh mục)"
   = f.number_field :position, min: 0, step: 1
   = f.label :published do

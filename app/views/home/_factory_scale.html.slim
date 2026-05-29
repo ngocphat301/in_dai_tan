@@ -1,12 +1,8 @@
-- scale_imgs = @factory_scale_site_images.select(&:file?)
+- scale_imgs = @factory_scale_site_images.select { |img| img.file.attached? || img.youtube_video? }
 - scale_posts = @factory_scale_mosaic_posts
-- use_site_images = scale_imgs.any?
-- if use_site_images
-  - if (ld = factory_scale_site_images_itemlist_json_ld(scale_imgs)).present?
-    - content_for :head do
-      = ld
-- elsif scale_posts.any?
-  - if (ld = factory_scale_itemlist_json_ld(scale_posts)).present?
+- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(6)
+- if combined_items.any?
+  - if (ld = factory_scale_combined_itemlist_json_ld(combined_items)).present?
     - content_for :head do
       = ld
 
@@ -19,29 +15,44 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
 
   - if embed_src.present?
     .dm-factory-scale-v2__video-wrap
-      iframe.dm-factory-scale-v2__video src=embed_src title="Video quy mô xưởng in Tân Đại" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"
+      iframe.dm-factory-scale-v2__video(
+        src=embed_src
+        title="Video quy mô xưởng in Tân Đại"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen="true"
+        loading="lazy"
+      )
 
   .dm-factory-scale-v2__viewport
     ul.dm-factory-scale-v2__grid role="list"
-      - if use_site_images
-        - scale_imgs.each do |img|
-          li.dm-factory-scale-v2__cell
-            - alt = img.alt_text.presence || "#{img.popup_title.presence || 'In Tân Đại'} — quy mô xưởng in"
-            - caption = img.alt_text.presence || img.popup_title.presence
+      - combined_items.each do |item|
+        li.dm-factory-scale-v2__cell
+          - if item.is_a?(SiteImage)
+            - alt = item.alt_text.presence || "#{item.popup_title.presence || 'In Tân Đại'} — quy mô xưởng in"
+            - caption = item.alt_text.presence || item.popup_title.presence
             article.dm-factory-scale-v2__card
               figure.dm-factory-scale-v2__figure
-                = image_tag img.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-v2__image", loading: "lazy"
-                - if caption.present?
-                  figcaption.dm-factory-scale-v2__caption
-                    span.dm-factory-scale-v2__caption-text = caption
-      - else
-        - scale_posts.each do |post|
-          li.dm-factory-scale-v2__cell
-            - alt = "#{post.title} — quy mô xưởng in"
-            - caption = post.title
+                - if item.youtube_video? && (embed_url = youtube_embed_url(item.link_url)).present?
+                  iframe.dm-factory-scale-v2__image(
+                    src=embed_url
+                    title=(caption || "Video quy mô xưởng in")
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen="true"
+                    loading="lazy"
+                    style="border:none;"
+                  )
+                - else
+                  - if item.file.attached?
+                    = image_tag item.file.variant(resize_to_fill: [480, 480]), alt: alt, class: "dm-factory-scale-v2__image", loading: "lazy"
+                  - if caption.present?
+                    figcaption.dm-factory-scale-v2__caption
+                      span.dm-factory-scale-v2__caption-text = caption
+          - elsif item.is_a?(BlogPost)
+            - alt = "#{item.title} — quy mô xưởng in"
+            - caption = item.title
             article.dm-factory-scale-v2__card
               figure.dm-factory-scale-v2__figure
-                = blog_post_avatar_tag post, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-v2__image", loading: "lazy"
+                = blog_post_avatar_tag item, variant: { resize_to_fill: [480, 480] }, alt: alt, class: "dm-factory-scale-v2__image", loading: "lazy"
                 - if caption.present?
                   figcaption.dm-factory-scale-v2__caption
                     span.dm-factory-scale-v2__caption-text = caption

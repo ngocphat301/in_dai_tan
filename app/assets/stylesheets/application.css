@@ -5634,6 +5634,7 @@ button.dm-contact__btn {
 .admin-content input[type="text"],
 .admin-content input[type="number"],
 .admin-content input[type="email"],
+.admin-content input[type="url"],
 .admin-content input[type="password"],
 .admin-content textarea,
 .admin-content select {

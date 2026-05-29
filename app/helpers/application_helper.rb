@@ -191,7 +191,7 @@ module ApplicationHelper
   # JSON-LD ItemList khi khối «Quy mô xưởng in» lấy ảnh từ SiteImage (quản trị).
   def factory_scale_site_images_itemlist_json_ld(site_images)
     list = site_images.respond_to?(:to_a) ? site_images.to_a : []
-    list.select! { |img| img.file.attached? }
+    list = list.select { |img| img.file.attached? }
     return ActiveSupport::SafeBuffer.new if list.blank?
 
     data = {
@@ -202,6 +202,33 @@ module ApplicationHelper
       "numberOfItems" => list.size,
       "itemListElement" => list.map.with_index(1) do |img, i|
         name = img.alt_text.presence || img.popup_title.presence || "Hình ảnh quy mô #{i}"
+        {
+          "@type" => "ListItem",
+          "position" => i,
+          "name" => name,
+          "url" => root_url(anchor: "dm-factory-scale")
+        }
+      end
+    }
+    content_tag(:script, raw(ERB::Util.json_escape(data.to_json)), type: "application/ld+json")
+  end
+
+  def factory_scale_combined_itemlist_json_ld(items)
+    list = items.respond_to?(:to_a) ? items.to_a : []
+    return ActiveSupport::SafeBuffer.new if list.blank?
+
+    data = {
+      "@context" => "https://schema.org",
+      "@type" => "ItemList",
+      "name" => "Quy mô xưởng in — In Tân Đại",
+      "description" => "Giới thiệu trang thiết bị và năng lực sản xuất in ấn tại xưởng.",
+      "numberOfItems" => list.size,
+      "itemListElement" => list.map.with_index(1) do |item, i|
+        name = if item.is_a?(BlogPost)
+          item.title
+        else
+          item.alt_text.presence || item.popup_title.presence || "Hình ảnh quy mô #{i}"
+        end
         {
           "@type" => "ListItem",
           "position" => i,
