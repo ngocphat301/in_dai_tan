@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module BlogPostsHelper
+  include ActionText::ContentHelper
+
   BLOG_POST_EXTERNAL_LINK_REL = "nofollow noopener noreferrer"
 
   # Link bài trong khối «Bài viết liên quan» (giống layout dịch vụ): bài loại sản phẩm → ?news_context=1.
@@ -28,12 +30,16 @@ module BlogPostsHelper
 
   def blog_post_body_html(blog_post)
     rt = blog_post.body
-    if rt.respond_to?(:body) && rt.body.respond_to?(:to_html)
-      rt.body.to_html
-    elsif rt.respond_to?(:to_html)
-      rt.to_html
-    else
-      rt.to_s
+    begin
+      render_action_text_content(rt.body)
+    rescue StandardError, NoMethodError
+      if rt.respond_to?(:body) && rt.body.respond_to?(:to_html)
+        rt.body.to_html
+      elsif rt.respond_to?(:to_html)
+        rt.to_html
+      else
+        rt.to_s
+      end
     end
   end
 
