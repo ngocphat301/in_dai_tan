@@ -7,7 +7,7 @@ module HomePageData
 
   def load_home_page_data
     @banner_slides = SiteImage.with_attached_file.for_home_banner.includes(file_attachment: :blob).load
-    @partner_images = SiteImage.for_home_partners.includes(file_attachment: :blob).limit(40)
+    @partner_images = SiteImage.for_home_partners.includes(file_attachment: :blob).limit(6)
     @customer_feedback_images = SiteImage.for_home_customer_feedback
       .includes(file_attachment: :blob)
       .limit(3)

@@ -601,10 +601,10 @@ mark.dm-search-hit {
 
 /* Trang chủ: banner full width, khung thiết kế 1920×600 px (giữ tỷ lệ, tối đa 600px cao) */
 .dm-hero--banner {
-  --dm-banner-design-w: 1920;
-  --dm-banner-design-h: 600;
+  --dm-banner-design-w: 2560;
+  --dm-banner-design-h: 500;
   --dm-hero-banner-h: min(
-    600px,
+    500px,
     calc(100vw * var(--dm-banner-design-h) / var(--dm-banner-design-w))
   );
   width: 100vw;
@@ -1434,8 +1434,8 @@ mark.dm-search-hit {
 }
 
 .dm-services--home .dm-svc-frame__title {
-  font-size: clamp(0.62rem, 1.05vw, 0.82rem);
-  letter-spacing: 0.04em;
+  font-size: clamp(0.78rem, 1.35vw, 0.95rem);
+  letter-spacing: 0.03em;
 }
 
 .dm-services--home .dm-svc-frame__cta {
@@ -1471,8 +1471,16 @@ mark.dm-search-hit {
   }
 }
 
-.dm-services-wrap.is-collapsed .dm-services--home > .dm-svc-frame:nth-child(n + 5) {
-  display: none;
+@media (max-width: 767px) {
+  .dm-services-wrap.is-collapsed .dm-services--home > .dm-svc-frame:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .dm-services__more-wrap {
+    display: none;
+  }
 }
 
 .dm-services__more-wrap {
@@ -1596,8 +1604,7 @@ mark.dm-search-hit {
   font-size: 18px;
   font-weight: 800;
   line-height: 1.2;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   display: -webkit-box;
@@ -2530,7 +2537,7 @@ mark.dm-search-hit {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: clamp(0.55rem, 1.4vw, 0.95rem);
   list-style: none;
   margin: 0;
@@ -6570,13 +6577,13 @@ button.dm-contact__btn {
 }
 
 .dm-home-projects__title {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   line-height: 1.35;
 }
 
 .dm-home-projects__excerpt {
   margin: 0.35rem 0 0;
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   color: var(--dm-muted);
 }
 
@@ -6584,13 +6591,6 @@ button.dm-contact__btn {
   .dm-home-projects__card {
     flex: 0 1 calc((100% - 1rem) / 2);
     max-width: calc((100% - 1rem) / 2);
-  }
-}
-
-@media (max-width: 520px) {
-  .dm-home-projects__card {
-    flex: 0 1 100%;
-    max-width: 100%;
   }
 }
 
@@ -6680,6 +6680,18 @@ button.dm-contact__btn {
   background: #fff;
   border: 1px solid var(--dm-border);
   padding: 0.5rem;
+}
+
+.dm-customer-feedback__quote {
+  margin: 0.65rem 0 0;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.88rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--dm-muted);
+  border-left: 3px solid var(--dm-red);
+  background: #faf9f7;
+  border-radius: 0 6px 6px 0;
 }
 
 @media (max-width: 720px) {

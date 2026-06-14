@@ -37,7 +37,6 @@ h2.dm-section-title
 
 - if @home_service_frames.any?
   .dm-services-wrap data-controller="home-services-expand" data-home-services-expand-limit-value="4"
-    p.dm-services__eyebrow Khám phá dịch vụ in ấn
     .dm-services.dm-services--frames.dm-services--home data-home-services-expand-target="grid"
       - @home_service_frames.each do |f|
         - if f[:type] == :blog

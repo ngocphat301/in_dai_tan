@@ -65,6 +65,3 @@ header.dm-header
         - if nav_user
           li.dm-nav__item
             = link_to "Đăng xuất", destroy_user_session_path, class: "dm-nav__link", data: { turbo_method: :delete }
-        - else
-          li.dm-nav__item
-            = link_to "Đăng nhập", new_user_session_path, class: "dm-nav__link"
