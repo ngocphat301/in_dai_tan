@@ -1,20 +1,20 @@
 - scale_imgs = @factory_scale_site_images.select { |img| img.file.attached? || img.youtube_video? }
 - scale_posts = @factory_scale_mosaic_posts
-- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(9)
+- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(5)
 - if combined_items.any?
   - if (ld = factory_scale_combined_itemlist_json_ld(combined_items)).present?
     - content_for :head do
       = ld
 
-- embed_src = @home_video && youtube_embed_url(@home_video.link_url)
 section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="factory-scale-v2-20260512" aria-labelledby="dm-factory-scale-title"
   .dm-factory-scale-v2__header
     h2#dm-factory-scale-title.dm-section-title.dm-factory-scale-v2__title
-      | Quy mô 
+      | Quy mô
       span xưởng in
 
-  - if embed_src.present?
-    - is_short = @home_video && youtube_short?(@home_video.link_url)
+  - first_video = @home_videos.first
+  - if first_video && (embed_src = youtube_embed_url(first_video.link_url)).present?
+    - is_short = youtube_short?(first_video.link_url)
     .dm-factory-scale-v2__video-wrap class=(is_short ? "dm-factory-scale-v2__video-wrap--short" : nil)
       iframe.dm-factory-scale-v2__video(
         src=embed_src
@@ -59,4 +59,17 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
                 - if caption.present?
                   figcaption.dm-factory-scale-v2__caption
                     span.dm-factory-scale-v2__caption-text = caption
+  - @home_videos.drop(1).each do |hv|
+    - embed_src = youtube_embed_url(hv.link_url)
+    - if embed_src.present?
+      - is_short = youtube_short?(hv.link_url)
+      .dm-factory-scale-v2__video-wrap class=(is_short ? "dm-factory-scale-v2__video-wrap--short" : nil)
+        iframe.dm-factory-scale-v2__video(
+          src=embed_src
+          title="Video quy mô xưởng in Tân Đại"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen="true"
+          loading="lazy"
+        )
+
   p.visually-hidden Lưới ảnh quy mô xưởng in trên trang chủ phiên bản v2.

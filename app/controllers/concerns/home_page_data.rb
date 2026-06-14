@@ -12,7 +12,7 @@ module HomePageData
       .includes(file_attachment: :blob)
       .limit(3)
       .load
-    @home_video = SiteImage.for_home_video.includes(file_attachment: :blob).first
+    @home_videos = SiteImage.for_home_video.includes(file_attachment: :blob).limit(4).load
     @factory_scale_site_images = SiteImage.with_attached_file.for_home_factory_scale
       .includes(file_attachment: :blob)
       .limit(9)
