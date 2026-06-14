@@ -6656,6 +6656,13 @@ button.dm-contact__btn {
   max-width: 400px;
 }
 
+.dm-factory-scale-v2__video-wrap--short .dm-factory-scale-v2__video {
+  width: 316%;
+  height: 100%;
+  max-width: none;
+  margin-left: -108%;
+}
+
 .dm-factory-scale-v2__video {
   width: 100%;
   height: 100%;

@@ -1,6 +1,6 @@
 - scale_imgs = @factory_scale_site_images.select { |img| img.file.attached? || img.youtube_video? }
 - scale_posts = @factory_scale_mosaic_posts
-- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(5)
+- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(6)
 - if combined_items.any?
   - if (ld = factory_scale_combined_itemlist_json_ld(combined_items)).present?
     - content_for :head do
