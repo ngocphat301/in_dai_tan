@@ -15,7 +15,7 @@ module HomePageData
     @home_video = SiteImage.for_home_video.includes(file_attachment: :blob).first
     @factory_scale_site_images = SiteImage.with_attached_file.for_home_factory_scale
       .includes(file_attachment: :blob)
-      .limit(6)
+      .limit(9)
       .load
 
     @featured_blog_posts = BlogPost.published_now
@@ -35,7 +35,7 @@ module HomePageData
       .where(category: :factory_scale)
       .includes({ avatar_attachment: :blob })
       .order(published_at: :desc)
-    @factory_scale_mosaic_posts = scale_scope.limit(6).to_a
+    @factory_scale_mosaic_posts = scale_scope.limit(9).to_a
 
     cats = ProductCategory.ordered.includes(blog_post: { avatar_attachment: :blob }).to_a
     @home_service_frames = cats.map do |cat|

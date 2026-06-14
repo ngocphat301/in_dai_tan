@@ -1,6 +1,6 @@
 - scale_imgs = @factory_scale_site_images.select { |img| img.file.attached? || img.youtube_video? }
 - scale_posts = @factory_scale_mosaic_posts
-- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(6)
+- combined_items = (scale_imgs + scale_posts).uniq { |item| "#{item.class.name}_#{item.id}" }.first(9)
 - if combined_items.any?
   - if (ld = factory_scale_combined_itemlist_json_ld(combined_items)).present?
     - content_for :head do
@@ -14,7 +14,8 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
       span xưởng in
 
   - if embed_src.present?
-    .dm-factory-scale-v2__video-wrap
+    - is_short = @home_video && youtube_short?(@home_video.link_url)
+    .dm-factory-scale-v2__video-wrap class=(is_short ? "dm-factory-scale-v2__video-wrap--short" : nil)
       iframe.dm-factory-scale-v2__video(
         src=embed_src
         title="Video quy mô xưởng in Tân Đại"
@@ -33,6 +34,7 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
             article.dm-factory-scale-v2__card
               figure.dm-factory-scale-v2__figure
                 - if item.youtube_video? && (embed_url = youtube_embed_url(item.link_url)).present?
+                  - cell_short = youtube_short?(item.link_url)
                   iframe.dm-factory-scale-v2__image(
                     src=embed_url
                     title=(caption || "Video quy mô xưởng in")
@@ -40,6 +42,7 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
                     allowfullscreen="true"
                     loading="lazy"
                     style="border:none;"
+                    class=(cell_short ? "dm-factory-scale-v2__image--short" : nil)
                   )
                 - else
                   - if item.file.attached?

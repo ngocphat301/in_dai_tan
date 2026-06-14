@@ -33,4 +33,14 @@ module YoutubeHelper
   rescue URI::InvalidURIError
     nil
   end
+
+  def youtube_short?(raw)
+    s = raw.to_s.strip
+    return false if s.blank?
+
+    uri = URI.parse(s)
+    uri.host&.include?("youtube.com") && uri.path.include?("/shorts/")
+  rescue URI::InvalidURIError
+    false
+  end
 end

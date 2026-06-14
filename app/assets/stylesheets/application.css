@@ -6651,11 +6651,20 @@ button.dm-contact__btn {
   margin-right: auto;
 }
 
+.dm-factory-scale-v2__video-wrap--short {
+  aspect-ratio: 9 / 16;
+  max-width: 400px;
+}
+
 .dm-factory-scale-v2__video {
   width: 100%;
   height: 100%;
   border: 0;
   display: block;
+}
+
+.dm-factory-scale-v2__image--short {
+  aspect-ratio: 9 / 16;
 }
 
 .dm-customer-feedback {
