@@ -24,9 +24,12 @@
       = f.file_field :file, accept: "image/*", data: { image_crop_target: "file", action: "change->image-crop#pick" }
     = f.label :alt_text, "Alt / mô tả ngắn (SEO & trợ năng)"
     = f.text_field :alt_text, placeholder: "Mô tả ảnh"
-    = f.label :popup_title, "Tiêu đề popup (dự phòng)"
-    p.muted Popup công khai lấy tiêu đề từ bài blog loại «Quảng cáo». Trường này có thể để trống.
-    = f.text_field :popup_title, placeholder: "vd: Nhận ưu đãi in ấn"
+    = f.label :popup_title, "Trích dẫn / Tiêu đề popup"
+    - if site_image.customer_feedback?
+      p.muted Hiển thị dưới ảnh phản hồi khách hàng ở trang chủ.
+    - else
+      p.muted Popup công khai lấy tiêu đề từ bài blog loại «Quảng cáo». Có thể để trống.
+    = f.text_field :popup_title, placeholder: (site_image.customer_feedback? ? "vd: Dịch vụ in ấn rất chuyên nghiệp..." : "vd: Nhận ưu đãi in ấn")
     = f.label :link_url, "Liên kết khi bấm (tùy chọn)"
     p.muted Với danh mục «Quy mô (xưởng in)», dán link YouTube (watch hoặc youtu.be) để hiển thị video trực tiếp thay vì ảnh tĩnh.
     = f.url_field :link_url, placeholder: "https://www.youtube.com/watch?v=..."

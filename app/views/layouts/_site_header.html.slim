@@ -62,6 +62,6 @@ header.dm-header
         - if current_admin?
           li.dm-nav__item
             = link_to "Quản trị", admin_blog_posts_path, class: "dm-nav__link dm-nav__link--accent"
-        - if nav_user
+        - if nav_user && !current_page?(root_path)
           li.dm-nav__item
             = link_to "Đăng xuất", destroy_user_session_path, class: "dm-nav__link", data: { turbo_method: :delete }
