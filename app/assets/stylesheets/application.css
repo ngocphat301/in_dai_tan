@@ -602,9 +602,9 @@ mark.dm-search-hit {
 /* Trang chủ: banner full width, khung thiết kế 1920×600 px (giữ tỷ lệ, tối đa 600px cao) */
 .dm-hero--banner {
   --dm-banner-design-w: 2560;
-  --dm-banner-design-h: 500;
+  --dm-banner-design-h: 700;
   --dm-hero-banner-h: min(
-    500px,
+    700px,
     calc(100vw * var(--dm-banner-design-h) / var(--dm-banner-design-w))
   );
   width: 100vw;
