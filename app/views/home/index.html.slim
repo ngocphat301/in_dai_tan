@@ -15,7 +15,9 @@ h1.visually-hidden In Tân Đại — xưởng in offset, hộp giấy, bao bì 
             - hero_loading = idx.zero? ? "eager" : "lazy"
             - hero_priority = idx.zero? ? "high" : "low"
             = link_to url, target: "_blank", rel: "noopener", class: "dm-hero-carousel__link" do
-              = image_tag slide.file, alt: alt, loading: hero_loading, fetchpriority: hero_priority, class: "dm-hero-carousel__img"
+              = image_tag slide.file, alt: alt, loading: hero_loading, fetchpriority: hero_priority, class: "dm-hero-carousel__img dm-hero-carousel__img--desktop"
+              - if slide.mobile_file.attached?
+                = image_tag slide.mobile_file, alt: alt, loading: hero_loading, fetchpriority: hero_priority, class: "dm-hero-carousel__img dm-hero-carousel__img--mobile"
     - if n > 1
       button.dm-hero-carousel__btn.dm-hero-carousel__btn--prev type="button" data-action="carousel#prev" aria-label="Ảnh trước"
         | ‹
@@ -71,6 +73,25 @@ h2.dm-section-title
 = render "home/printing_process"
 
 = render "home/factory_scale"
+
+- more_videos = @home_videos.drop(1).select { |hv| youtube_embed_url(hv.link_url).present? }
+- if more_videos.any?
+  section#dm-home-videos.dm-home-videos aria-labelledby="dm-home-videos-title"
+    h2#dm-home-videos-title.dm-section-title
+      | Video
+      span  nổi bật
+    .dm-home-videos__grid
+      - more_videos.each do |hv|
+        - embed_src = youtube_embed_url(hv.link_url)
+        - is_short = youtube_short?(hv.link_url)
+        .dm-home-videos__item class=(is_short ? "dm-home-videos__item--short" : nil)
+          iframe.dm-home-videos__video(
+            src=embed_src
+            title="Video In Tân Đại"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen="true"
+            loading="lazy"
+          )
 
 = render "home/why_choose_us"
 

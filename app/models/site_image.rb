@@ -3,6 +3,7 @@
 # Ảnh dùng cho site (banner trang chủ, poster, quảng cáo…)
 class SiteImage < ApplicationRecord
   has_one_attached :file
+  has_one_attached :mobile_file
 
   attribute :category, :string, default: "banner"
 

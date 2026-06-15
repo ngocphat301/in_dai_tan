@@ -65,6 +65,6 @@ class Admin::SiteImagesController < Admin::BaseController
   end
 
   def site_image_params
-    params.require(:site_image).permit(:category, :position, :published, :link_url, :alt_text, :popup_title, :file)
+    params.require(:site_image).permit(:category, :position, :published, :link_url, :alt_text, :popup_title, :file, :mobile_file)
   end
 end

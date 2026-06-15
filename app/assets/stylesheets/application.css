@@ -601,10 +601,10 @@ mark.dm-search-hit {
 
 /* Trang chủ: banner full width, khung thiết kế 1920×600 px (giữ tỷ lệ, tối đa 600px cao) */
 .dm-hero--banner {
-  --dm-banner-design-w: 2560;
-  --dm-banner-design-h: 700;
+  --dm-banner-design-w: 1920;
+  --dm-banner-design-h: 800;
   --dm-hero-banner-h: min(
-    700px,
+    800px,
     calc(100vw * var(--dm-banner-design-h) / var(--dm-banner-design-w))
   );
   width: 100vw;
@@ -643,6 +643,20 @@ mark.dm-search-hit {
   object-fit: cover;
   object-position: center;
   display: block;
+}
+
+.dm-hero-carousel__img--mobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .dm-hero-carousel__img--desktop {
+    display: none !important;
+  }
+
+  .dm-hero-carousel__img--mobile {
+    display: block !important;
+  }
 }
 
 .dm-hero--banner figure {
@@ -6712,6 +6726,42 @@ button.dm-contact__btn {
 
 @media (max-width: 720px) {
   .dm-customer-feedback__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dm-home-videos {
+  margin: 2.5rem 0;
+}
+
+.dm-home-videos__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.dm-home-videos__item {
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+}
+
+.dm-home-videos__item--short {
+  aspect-ratio: 9 / 16;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dm-home-videos__video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .dm-home-videos__grid {
     grid-template-columns: 1fr;
   }
 }

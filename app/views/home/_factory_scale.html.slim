@@ -59,17 +59,4 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
                 - if caption.present?
                   figcaption.dm-factory-scale-v2__caption
                     span.dm-factory-scale-v2__caption-text = caption
-  - @home_videos.drop(1).each do |hv|
-    - embed_src = youtube_embed_url(hv.link_url)
-    - if embed_src.present?
-      - is_short = youtube_short?(hv.link_url)
-      .dm-factory-scale-v2__video-wrap class=(is_short ? "dm-factory-scale-v2__video-wrap--short" : nil)
-        iframe.dm-factory-scale-v2__video(
-          src=embed_src
-          title="Video quy mô xưởng in Tân Đại"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen="true"
-          loading="lazy"
-        )
-
   p.visually-hidden Lưới ảnh quy mô xưởng in trên trang chủ phiên bản v2.
