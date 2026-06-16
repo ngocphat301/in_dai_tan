@@ -122,7 +122,7 @@ module ApplicationHelper
   def blog_post_avatar_tag(blog_post, variant:, alt: nil, **html_options)
     alt_text = alt.presence || blog_post.title
     opts = html_options.merge(alt: alt_text)
-    if blog_post.avatar.attached?
+    if blog_post.avatar.attached? && blog_post.avatar.blob.persisted?
       image_tag blog_post.avatar.variant(variant), **opts
     else
       image_tag "blog_avatar_placeholder.svg", **opts

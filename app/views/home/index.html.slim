@@ -78,8 +78,7 @@ h2.dm-section-title
 - if more_videos.any?
   section#dm-home-videos.dm-home-videos aria-labelledby="dm-home-videos-title"
     h2#dm-home-videos-title.dm-section-title
-      | Video
-      span  nổi bật
+      | Quy Trình In Ấn Tại Tân Đại
     .dm-home-videos__grid
       - more_videos.each do |hv|
         - embed_src = youtube_embed_url(hv.link_url)
