@@ -74,7 +74,7 @@ h2.dm-section-title
 
 = render "home/factory_scale"
 
-- more_videos = @home_videos.drop(1).select { |hv| youtube_embed_url(hv.link_url).present? }
+- more_videos = @home_videos.select { |hv| youtube_embed_url(hv.link_url).present? }.first(3)
 - if more_videos.any?
   section#dm-home-videos.dm-home-videos aria-labelledby="dm-home-videos-title"
     h2#dm-home-videos-title.dm-section-title

@@ -12,18 +12,6 @@ section#dm-factory-scale.dm-factory.dm-factory-scale-v2 data-deploy-probe="facto
       | Quy mô
       span xưởng in
 
-  - first_video = @home_videos.first
-  - if first_video && (embed_src = youtube_embed_url(first_video.link_url)).present?
-    - is_short = youtube_short?(first_video.link_url)
-    .dm-factory-scale-v2__video-wrap class=(is_short ? "dm-factory-scale-v2__video-wrap--short" : nil)
-      iframe.dm-factory-scale-v2__video(
-        src=embed_src
-        title="Video quy mô xưởng in Tân Đại"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen="true"
-        loading="lazy"
-      )
-
   .dm-factory-scale-v2__viewport
     ul.dm-factory-scale-v2__grid role="list"
       - combined_items.each do |item|
