@@ -16,7 +16,7 @@ module ApplicationHelper
 
   # Chỉ chữ số, mặc định hotline Zalo / gọi / WhatsApp (góc phải màn hình).
   def social_hotline
-    ENV.fetch("SOCIAL_HOTLINE", "0898387281").gsub(/\D/, "")
+    "0398451231"
   end
 
   def social_hotline_tel
@@ -43,13 +43,10 @@ module ApplicationHelper
     "https://wa.me/84#{rest}"
   end
 
-  # Logo thương hiệu (header + đăng nhập). Mặc định: Google Drive — file cần bật «Ai có liên kết đều xem được».
+  # Logo thương hiệu (header + đăng nhập). Mặc định: file local public/logo-tan-dai.png.
   # Ghi đè: ENV["SITE_BRAND_LOGO_URL"] hoặc URL trực tiếp tải ảnh.
   def site_brand_logo_url
-    ENV.fetch(
-      "SITE_BRAND_LOGO_URL",
-      "https://drive.google.com/thumbnail?id=1nDB2EV1oe02c-rGQtzsTfT3qT0fxn-6i&sz=w800"
-    )
+    ENV.fetch("SITE_BRAND_LOGO_URL", "/logo-tan-dai.png")
   end
 
   def published_products_grouped_options_for_select

@@ -22,7 +22,10 @@ module SeoHelper
   end
 
   def seo_default_og_image_url(request)
-    ENV["SEO_DEFAULT_OG_IMAGE_URL"].presence || site_brand_logo_url
+    url = ENV["SEO_DEFAULT_OG_IMAGE_URL"].presence || site_brand_logo_url
+    return url if url.start_with?("http://", "https://")
+
+    "#{seo_site_origin(request)}#{url}"
   end
 
   # URL tuyệt đối cho avatar blog (ActiveStorage); fallback logo site.
