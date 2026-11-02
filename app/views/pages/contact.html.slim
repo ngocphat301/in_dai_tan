@@ -31,19 +31,6 @@ article.dm-article.dm-contact
           |  0109309910
 
       .dm-contact__card
-        h3.dm-contact__card-title Văn phòng
-        p.dm-contact__text
-          | 30 Ngõ 304 Hồ Tùng Mậu, Phú Diễn, Hà Nội
-        p.dm-contact__text
-          strong Điện thoại:
-          |  
-          = link_to social_hotline_display, social_hotline_tel, class: "dm-back"
-        p.dm-contact__text
-          strong Email:
-          |  
-          = link_to "inantandai@gmail.com", "mailto:inantandai@gmail.com", class: "dm-back"
-
-      .dm-contact__card
         h3.dm-contact__card-title Thời gian làm việc
         p.dm-contact__text Sáng: 8h00 – 12h00
         p.dm-contact__text Chiều: 13h30 – 17h30
@@ -64,10 +51,6 @@ article.dm-article.dm-contact
           = link_to "Gửi email", "inantandai@gmail.com", class: "dm-contact__btn dm-contact__btn--ghost"
           button.dm-contact__btn type="button" data-action="click->quote-modal#open" data-return-to="contact"
             | Mở form báo giá
-
-    p.dm-muted style="margin-top:1.5rem"
-      | Trang tham khảo nội dung chính thức:&nbsp;
-      = link_to "inantandai.com/lien-he/", "#{dm}/lien-he/", target: "_blank", rel: "noopener", class: "dm-back"
 
   .dm-contact__map
     h3.dm-contact__card-title Bản đồ
